@@ -7,6 +7,7 @@ exports.authAll = async (req, res) => {
   knex
     .select('*') // select all records
     .from('authors') // from 'authors' table
+    .limit(10)
     .then(userData => {
       // Send auth extracted from database in response
       res.json(userData)

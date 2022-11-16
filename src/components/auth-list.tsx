@@ -28,15 +28,15 @@ export const AuthList = (props: AuthListUI) => {
   // Show loading message
   if (props.loading) return <p>Leaderboard table is loading...</p>
 
+  const cols = ['Id','Url','Name','Plain','Description']
+
   return (
     <table className="table">
         <thead>
           <tr>
-            <th className="table-head-item">Id</th>
-            <th className="table-head-item">Url</th>
-            <th className="table-head-item">Name</th>
-            <th className="table-head-item">Plain</th>
-            <th className="table-head-item">Description</th>
+            {
+              cols.map((col) => ( <th className="table-head-item">{col}</th> ))
+            }
             <th className="table-head-item" />
           </tr>
         </thead>
