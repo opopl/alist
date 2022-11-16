@@ -6,7 +6,7 @@ exports.authAll = async (req, res) => {
   // Get all auth from database
   knex
     .select('*') // select all records
-    .from('auth') // from 'auth' table
+    .from('authors') // from 'authors' table
     .then(userData => {
       // Send auth extracted from database in response
       res.json(userData)
@@ -22,14 +22,15 @@ exports.authCreate = async (req, res) => {
   // Add new book to database
   knex('authors')
     .insert({ // insert new record, a book
-      'author': req.body.author,
-      'title': req.body.title,
-      'pubDate': req.body.pubDate,
-      'rating': req.body.rating
+      'id'   : req.body.id,
+      'url'  : req.body.url,
+      'name' : req.body.name,
+      'plain': req.body.plain,
+      'description': req.body.description
     })
     .then(() => {
       // Send a success message in response
-      res.json({ message: `Book \'${req.body.title}\' by ${req.body.author} created.` })
+      res.json({ message: `Author with id = \'${req.body.id}\' and name = ${req.body.name} created.` })
     })
     .catch(err => {
       // Send a error message in response
@@ -37,7 +38,7 @@ exports.authCreate = async (req, res) => {
     })
 }
 
-// Remove specific book
+// Remove specific author
 exports.authDelete = async (req, res) => {
   // Find specific book in the database and remove it
   knex('authors')
@@ -49,23 +50,7 @@ exports.authDelete = async (req, res) => {
     })
     .catch(err => {
       // Send a error message in response
-      res.json({ message: `There was an error deleting ${req.body.id} book: ${err}` })
+      res.json({ message: `There was an error deleting ${req.body.id} author: ${err}` })
     })
 }
 
-// Remove all auth on the list
-exports.authReset = async (req, res) => {
-  // Remove all auth from database
-  knex
-    .select('*') // select all records
-    .from('auth') // from 'auth' table
-    .truncate() // remove the selection
-    .then(() => {
-      // Send a success message in response
-      res.json({ message: 'Book list cleared.' })
-    })
-    .catch(err => {
-      // Send a error message in response
-      res.json({ message: `There was an error resetting book list: ${err}.` })
-    })
-}

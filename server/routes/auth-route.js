@@ -22,10 +22,5 @@ router.post('/create', authRoutes.authCreate)
 // this means that '/delete' translates to '/auth/delete'
 router.put('/delete', authRoutes.authDelete)
 
-// Add route for PUT request to reset authhelf list
-// In server.js, auth route is specified as '/auth'
-// this means that '/reset' translates to '/auth/reset'
-router.put('/reset', authRoutes.authReset)
-
 // Export router
 module.exports = router
