@@ -39,6 +39,7 @@ knex.schema
           knex
               .table('authors')
               .innerJoin('auth_details', 'authors.id', '=', 'auth_details.id')
+              .limit(10)
               .then(data => console.log('data:', data))
       }
     })

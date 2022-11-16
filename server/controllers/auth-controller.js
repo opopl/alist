@@ -20,9 +20,9 @@ exports.authAll = async (req, res) => {
 
 // Create new author
 exports.authCreate = async (req, res) => {
-  // Add new book to database
+  // Add new author to database
   knex('authors')
-    .insert({ // insert new record, a book
+    .insert({ // insert new author record
       'id'   : req.body.id,
       'url'  : req.body.url,
       'name' : req.body.name,
@@ -35,7 +35,7 @@ exports.authCreate = async (req, res) => {
     })
     .catch(err => {
       // Send a error message in response
-      res.json({ message: `There was an error creating ${req.body.title} book: ${err}` })
+      res.json({ message: `There was an error creating ${req.body.id} author: ${err}` })
     })
 }
 
