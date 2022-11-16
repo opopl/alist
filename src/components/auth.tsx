@@ -3,19 +3,22 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 // Import components
-import { BookshelfList } from './bookshelf-list'
+import { AuthList } from './auth-list'
 
 // Import styles
-import './../styles/bookshelf.css'
+import './../styles/auth.css'
 
-// Create Bookshelf component
-export const Bookshelf = () => {
+// Create Auth component
+export const Auth = () => {
   // Prepare states
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [pubDate, setPubDate] = useState('')
-  const [rating, setRating] = useState('')
-  const [books, setBooks] = useState([])
+  const [id, setId] = useState('')
+
+  const [name, setName] = useState('')
+  const [plain, setPlain] = useState('')
+  const [url, setUrl] = useState('')
+  const [description, setDescription] = useState('')
+
+  const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
 
   // Fetch all books on initial render
