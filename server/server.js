@@ -6,7 +6,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 
 // Import routes
-const booksRouter = require('./routes/books-route')
+const authRouter = require('./routes/auth-route')
 
 // Set default port for express app
 const PORT = process.env.PORT || 4001
@@ -22,8 +22,8 @@ app.use(compression())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// Implement books route
-app.use('/books', booksRouter)
+// Implement auth route
+app.use('/auth', authRouter)
 
 // Implement 500 error route
 app.use(function (err, req, res, next) {
