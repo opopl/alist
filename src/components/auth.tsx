@@ -21,62 +21,64 @@ export const Auth = () => {
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Fetch all books on initial render
+  // Fetch all authors on initial render
   useEffect(() => {
-    fetchBooks()
+    fetchAuthors()
   }, [])
 
-  // Fetch all books
-  const fetchBooks = async () => {
-    // Send GET request to 'books/all' endpoint
+  // Fetch all authors
+  const fetchAuthors = async () => {
+    // Send GET request to 'auth/all' endpoint
     axios
-      .get('http://localhost:4001/books/all')
+      .get('http://localhost:4001/auth/all')
       .then(response => {
-        // Update the books state
-        setBooks(response.data)
+        // Update the authors state
+        setAuthors(response.data)
 
         // Update loading state
         setLoading(false)
       })
-      .catch(error => console.error(`There was an error retrieving the book list: ${error}`))
+      .catch(error => console.error(`There was an error retrieving the author list: ${error}`))
   }
 
   // Reset all input fields
   const handleInputsReset = () => {
-    setAuthor('')
-    setTitle('')
-    setPubDate('')
-    setRating('')
+    setId('')
+    setUrl('')
+    setName('')
+    setPlain('')
+    setDescription('')
   }
 
-  // Create new book
-  const handleBookCreate = () => {
-    // Send POST request to 'books/create' endpoint
+  // Create new author
+  const handleAuthorCreate = () => {
+    // Send POST request to 'auth/create' endpoint
     axios
-      .post('http://localhost:4001/books/create', {
-        author: author,
-        title: title,
-        pubDate: pubDate,
-        rating: rating
+      .post('http://localhost:4001/auth/create', {
+        id: id,
+        url: url,
+        name: name,
+        plain: plain,
+        description: description
       })
       .then(res => {
         console.log(res.data)
 
-        // Fetch all books to refresh
-        // the books on the bookshelf list
-        fetchBooks()
+        // Fetch all authors to refresh
+        // the authors on the author list
+        fetchAuthors()
       })
-      .catch(error => console.error(`There was an error creating the ${title} book: ${error}`))
+      .catch(error => console.error(`There was an error creating the ${id} author: ${error}`))
   }
 
   // Submit new book
-  const handleBookSubmit = () => {
+  const handleAuthorSubmit = () => {
     // Check if all fields are filled
-    if (author.length > 0 && title.length > 0 && pubDate.length > 0 && rating.length > 0) {
+    if (id.length > 0 && ( plain.length > 0 || name.length > 0 )) {
       // Create new book
-      handleBookCreate()
+      handleAuthorCreate()
 
-      console.info(`Book ${title} by ${author} added.`)
+      console.info(`Author ${id} added.`)
 
       // Reset all input fields
       handleInputsReset()
@@ -84,72 +86,63 @@ export const Auth = () => {
   }
 
   // Remove book
-  const handleBookRemove = (id: number, title: string) => {
-    // Send PUT request to 'books/delete' endpoint
+  const handleAuthorRemove = (id: number) => {
+    // Send PUT request to 'auth/delete' endpoint
     axios
-      .put('http://localhost:4001/books/delete', { id: id })
+      .put('http://localhost:4001/auth/delete', { id: id })
       .then(() => {
-        console.log(`Book ${title} removed.`)
+        console.log(`Author ${id} removed.`)
 
-        // Fetch all books to refresh
-        // the books on the bookshelf list
-        fetchBooks()
+        // Fetch all authors to refresh the list
+        fetchAuthors()
       })
-      .catch(error => console.error(`There was an error removing the ${title} book: ${error}`))
-  }
-
-  // Reset book list (remove all books)
-  const handleListReset = () => {
-    // Send PUT request to 'books/reset' endpoint
-    axios.put('http://localhost:4001/books/reset')
-    .then(() => {
-      // Fetch all books to refresh
-      // the books on the bookshelf list
-      fetchBooks()
-    })
-    .catch(error => console.error(`There was an error resetting the book list: ${error}`))
+      .catch(error => console.error(`There was an error removing the ${id} author: ${error}`))
   }
 
   return (
     <div className="book-list-wrapper">
       {/* Form for creating new book */}
       <div className="book-list-form">
-        <div className="form-wrapper" onSubmit={handleBookSubmit}>
+        <div className="form-wrapper" onSubmit={handleAuthorSubmit}>
           <div className="form-row">
             <fieldset>
-              <label className="form-label" htmlFor="title">Enter title:</label>
-              <input className="form-input" type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.currentTarget.value)} />
+              <label className="form-label" htmlFor="id">ID:</label>
+              <input className="form-input" type="text" id="id" name="id" value={id} onChange={(e) => setId(e.currentTarget.value)} />
             </fieldset>
 
             <fieldset>
-              <label className="form-label" htmlFor="author">Enter author:</label>
-              <input className="form-input" type="text" id="author" name="author" value={author} onChange={(e) => setAuthor(e.currentTarget.value)} />
+              <label className="form-label" htmlFor="url">url:</label>
+              <input className="form-input" type="text" id="url" name="url" value={url} onChange={(e) => setUrl(e.currentTarget.value)} />
             </fieldset>
           </div>
 
           <div className="form-row">
             <fieldset>
-              <label className="form-label" htmlFor="pubDate">Enter publication date:</label>
-              <input className="form-input" type="text" id="pubDate" name="pubDate" value={pubDate} onChange={(e) => setPubDate(e.currentTarget.value)} />
+              <label className="form-label" htmlFor="name">name (lastName, firstName):</label>
+              <input className="form-input" type="text" id="name" name="name" value={name} onChange={(e) => setName(e.currentTarget.value)} />
             </fieldset>
 
             <fieldset>
-              <label className="form-label" htmlFor="rating">Enter rating:</label>
-              <input className="form-input" type="text" id="rating" name="rating" value={rating} onChange={(e) => setRating(e.currentTarget.value)} />
+              <label className="form-label" htmlFor="plain">plain:</label>
+              <input className="form-input" type="text" id="plain" name="plain" value={plain} onChange={(e) => setPlain(e.currentTarget.value)} />
             </fieldset>
+          </div>
+
+          <div className="form-row">
+            <fieldset>
+              <label className="form-label" htmlFor="description">description:</label>
+              <input className="form-input" type="text" id="description" name="description" value={description} onChange={(e) => setDescription(e.currentTarget.value)} />
+            </fieldset>
+
           </div>
         </div>
 
-        <button onClick={handleBookSubmit} className="btn btn-add">Add the book</button>
+        <button onClick={handleAuthorSubmit} className="btn btn-add">Add the author</button>
       </div>
 
-      {/* Render bookshelf list component */}
-      <BookshelfList books={books} loading={loading} handleBookRemove={handleBookRemove} />
+      {/* Render authlist component */}
+      <AuthList authors={authors} loading={loading} handleAuthorRemove={handleAuthorRemove} />
 
-      {/* Show reset button if list contains at least one book */}
-      {books.length > 0 && (
-        <button className="btn btn-reset" onClick={handleListReset}>Reset books list.</button>
-      )}
     </div>
   )
 }
