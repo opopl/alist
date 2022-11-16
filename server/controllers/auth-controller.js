@@ -1,26 +1,26 @@
 // Import database
 const knex = require('./../db')
 
-// Retrieve all books
-exports.booksAll = async (req, res) => {
-  // Get all books from database
+// Retrieve all auth
+exports.authAll = async (req, res) => {
+  // Get all auth from database
   knex
     .select('*') // select all records
-    .from('books') // from 'books' table
+    .from('auth') // from 'auth' table
     .then(userData => {
-      // Send books extracted from database in response
+      // Send auth extracted from database in response
       res.json(userData)
     })
     .catch(err => {
       // Send a error message in response
-      res.json({ message: `There was an error retrieving books: ${err}` })
+      res.json({ message: `There was an error retrieving auth: ${err}` })
     })
 }
 
 // Create new book
-exports.booksCreate = async (req, res) => {
+exports.authCreate = async (req, res) => {
   // Add new book to database
-  knex('books')
+  knex('authors')
     .insert({ // insert new record, a book
       'author': req.body.author,
       'title': req.body.title,
@@ -38,14 +38,14 @@ exports.booksCreate = async (req, res) => {
 }
 
 // Remove specific book
-exports.booksDelete = async (req, res) => {
+exports.authDelete = async (req, res) => {
   // Find specific book in the database and remove it
-  knex('books')
+  knex('authors')
     .where('id', req.body.id) // find correct record based on id
     .del() // delete the record
     .then(() => {
       // Send a success message in response
-      res.json({ message: `Book ${req.body.id} deleted.` })
+      res.json({ message: `Author ${req.body.id} deleted.` })
     })
     .catch(err => {
       // Send a error message in response
@@ -53,12 +53,12 @@ exports.booksDelete = async (req, res) => {
     })
 }
 
-// Remove all books on the list
-exports.booksReset = async (req, res) => {
-  // Remove all books from database
+// Remove all auth on the list
+exports.authReset = async (req, res) => {
+  // Remove all auth from database
   knex
     .select('*') // select all records
-    .from('books') // from 'books' table
+    .from('auth') // from 'auth' table
     .truncate() // remove the selection
     .then(() => {
       // Send a success message in response
