@@ -18,7 +18,7 @@ exports.authAll = async (req, res) => {
     })
 }
 
-// Create new book
+// Create new author
 exports.authCreate = async (req, res) => {
   // Add new book to database
   knex('authors')
