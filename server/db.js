@@ -2,7 +2,8 @@
 const path = require('path')
 
 // Get the location of database.sqlite file
-const dbPath = path.resolve(__dirname, 'db/database.sqlite')
+//const dbPath = path.resolve(__dirname, 'db/database.sqlite')
+const dbPath = path.join(process.env.HTML_ROOT, 'h.db')
 
 // Create connection to SQLite database
 const knex = require('knex')({
@@ -13,32 +14,32 @@ const knex = require('knex')({
   useNullAsDefault: true
 })
 
-// Create a table in the database called "books"
+// Create a table in the database called "authors"
 knex.schema
-  // Make sure no "books" table exists
+  // Make sure no "authors" table exists
   // before trying to create new
-  .hasTable('books')
+  .hasTable('authors')
     .then((exists) => {
       if (!exists) {
-        // If no "books" table exists
-        // create new, with "id", "author", "title",
-        // "pubDate" and "rating" columns
-        // and use "id" as a primary identification
-        // and increment "id" with every new record (book)
-        return knex.schema.createTable('books', (table)  => {
-          table.increments('id').primary()
-          table.string('author')
-          table.string('title')
-          table.string('pubDate')
-          table.integer('rating')
+        return knex.schema.createTable('authors', (table)  => {
+          table.string('id').notNullable().unique()
+          table.string('url')
+          table.string('name')
+          table.string('plain')
+          table.string('description')
         })
         .then(() => {
           // Log success message
-          console.log('Table \'Books\' created')
+          console.log('Table \'Authors\' created')
         })
         .catch((error) => {
           console.error(`There was an error creating table: ${error}`)
         })
+      }else{
+          knex
+              .table('authors')
+              .innerJoin('auth_details', 'authors.id', '=', 'auth_details.id')
+              .then(data => console.log('data:', data))
       }
     })
     .then(() => {
@@ -50,10 +51,10 @@ knex.schema
     })
 
 // Just for debugging purposes:
-// Log all data in "books" table
-knex.select('*').from('books')
-  .then(data => console.log('data:', data))
-  .catch(err => console.log(err))
+// Log all data in "authors" table
+//knex.select('*').from('authors')
+  //.then(data => console.log('data:', data))
+  //.catch(err => console.log(err))
 
 // Export the database
 module.exports = knex
