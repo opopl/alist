@@ -3,7 +3,7 @@ import React from 'react'
 import { render } from 'react-dom'
 
 // Import components
-import { Bookshelf } from './components/bookshelf'
+import { Auth } from './components/auth'
 
 // Import styles
 import './styles/styles.css'
@@ -11,5 +11,5 @@ import './styles/styles.css'
 // Find div container
 const rootElement = document.getElementById('root')
 
-// Render Bookshelf component in the DOM
-render(<Bookshelf />, rootElement)
+// Render Auth component in the DOM
+render(<Auth />, rootElement)

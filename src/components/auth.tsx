@@ -71,11 +71,11 @@ export const Auth = () => {
       .catch(error => console.error(`There was an error creating the ${id} author: ${error}`))
   }
 
-  // Submit new book
+  // Submit new author
   const handleAuthorSubmit = () => {
     // Check if all fields are filled
     if (id.length > 0 && ( plain.length > 0 || name.length > 0 )) {
-      // Create new book
+      // Create new author
       handleAuthorCreate()
 
       console.info(`Author ${id} added.`)
@@ -85,7 +85,7 @@ export const Auth = () => {
     }
   }
 
-  // Remove book
+  // Remove author
   const handleAuthorRemove = (id: number) => {
     // Send PUT request to 'auth/delete' endpoint
     axios
