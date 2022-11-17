@@ -1,6 +1,6 @@
 
 // Import deps
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Import components
 import { AuthListRow } from './auth-list-row'
@@ -17,15 +17,19 @@ export const AuthList = (props: AuthListUI) => {
 
   const [ rowSel, setRowSel ] = useState(2)
 
+  useEffect(() => { 
+     if(rowSel){
+        console.log(`row => ${rowSel}`)
+     }
+  },[rowSel])
+
   // Show loading message
   if (props.loading) return <p>Leaderboard table is loading...</p>
 
   const changeRowSel = (position: number) => {
      setRowSel(position)
-     if(rowSel){
-       console.log(`row selected => ${rowSel}`)
-     }
   }
+
 
   return (
     <div>
