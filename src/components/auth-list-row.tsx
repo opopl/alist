@@ -6,24 +6,22 @@ import { cols } from './const'
 
 // Create AuthListRow component
 export const AuthListRow = (props: AuthListRowUI) => {
-  const [select, setSelect] = useState(props.select)
+  const [select, setSelect] = useState(false)
 
   const color = () => {
      return select ? 'gray' : 'white'
   }
 
   const trOnClick = () => {
-     setSelect(!select)
-     if(select){
+     if(!select){
         props.changeRowSel(props.position)
      }else{
         props.changeRowSel(0)
      }
+     setSelect((select) => !select)
   }
 
-  useEffect(() => {
-     setSelect(props.select)
-  },[])
+  useEffect(() => { setSelect(props.select) },[ props.select ])
 
   return (
      <tr className="table-row" style={{ background: color() }} onClick={trOnClick}> 

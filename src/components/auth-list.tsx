@@ -15,7 +15,7 @@ import { header } from './const'
 // Create AuthList component
 export const AuthList = (props: AuthListUI) => {
 
-  const [ rowSel, setRowSel ] = useState(0)
+  const [ rowSel, setRowSel ] = useState(2)
 
   // Show loading message
   if (props.loading) return <p>Leaderboard table is loading...</p>
@@ -28,6 +28,9 @@ export const AuthList = (props: AuthListUI) => {
   }
 
   return (
+    <div>
+        <span>{rowSel}</span>
+    
     <table className="table">
         <thead>
           <tr>
@@ -43,7 +46,7 @@ export const AuthList = (props: AuthListUI) => {
           {props.authors.length > 0 ? (
             props.authors.map((author: AuthorUI, idx) => (
               <AuthListRow
-                select={ (rowSel === idx + 1) ? true : false }
+                select={ (rowSel === (idx+1)) ? true : false }
                 changeRowSel={changeRowSel}
                 key={author.id}
                 author={author}
@@ -60,5 +63,6 @@ export const AuthList = (props: AuthListUI) => {
         }
         </tbody>
     </table>
+    </div>
   )
 }
