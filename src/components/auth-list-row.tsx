@@ -8,8 +8,13 @@ import { cols } from './const'
 export const AuthListRow = (props: AuthListRowUI) => {
   const [select, setSelect] = useState(false)
 
+  const color = () => {
+     return select ? 'gray' : 'white'
+  }
+
   return (
-      <tr className="table-row" onClick={() => { setSelect(!select); alert(select) }}>
+      <tr className="table-row" style={{ background: color() }} onClick={() => { setSelect(!select) }}>
+
         <td className="table-item" style={{ width: '5px' }}>
           {props.position}
         </td>
