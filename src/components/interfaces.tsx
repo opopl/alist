@@ -10,14 +10,13 @@ export interface AuthorUI {
 
 export interface AuthListRowUI {
   position: number;
-  select: boolean;
   author: AuthorUI;
   handleAuthorRemove: (id: number) => void;
+  changeRowSel: (position: number) => void;
 }
 
 export interface AuthEditUI {
   fetchAuthors: () => void;
-  // update: (author: AuthorUI) => void;
 }
 
 export interface AuthListUI {

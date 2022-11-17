@@ -1,6 +1,6 @@
 
 // Import deps
-import React from 'react'
+import React, { useState } from 'react'
 
 // Import components
 import { AuthListRow } from './auth-list-row'
@@ -14,8 +14,15 @@ import { header } from './const'
 
 // Create AuthList component
 export const AuthList = (props: AuthListUI) => {
+
+  const [ rowSel, setRowSel ] = useState(0)
+
   // Show loading message
   if (props.loading) return <p>Leaderboard table is loading...</p>
+
+  const changeRowSel = (position: number) => {
+     setRowSel(position)
+  }
 
   return (
     <table className="table">
@@ -33,6 +40,7 @@ export const AuthList = (props: AuthListUI) => {
           {props.authors.length > 0 ? (
             props.authors.map((author: AuthorUI, idx) => (
               <AuthListRow
+                changeRowSel={changeRowSel}
                 key={author.id}
                 author={author}
                 position={idx + 1}

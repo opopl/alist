@@ -1,5 +1,5 @@
 // Import deps
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { AuthListRowUI } from './interfaces'
 import { cols } from './const'
@@ -12,9 +12,17 @@ export const AuthListRow = (props: AuthListRowUI) => {
      return select ? 'gray' : 'white'
   }
 
-  return (
-      <tr className="table-row" style={{ background: color() }} onClick={() => { setSelect(!select) }}>
+  const trOnClick = () => {
+     setSelect(!select)
+     if(select){
+        props.changeRowSel(props.position)
+     }else{
+        props.changeRowSel(0)
+     }
+  }
 
+  return (
+     <tr className="table-row" style={{ background: color() }} onClick={trOnClick}> 
         <td className="table-item" style={{ width: '5px' }}>
           {props.position}
         </td>
