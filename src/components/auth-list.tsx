@@ -22,6 +22,7 @@ export const AuthList = (props: AuthListUI) => {
 
   const changeRowSel = (position: number) => {
      setRowSel(position)
+     console.log(rowSel)
   }
 
   return (
@@ -40,6 +41,7 @@ export const AuthList = (props: AuthListUI) => {
           {props.authors.length > 0 ? (
             props.authors.map((author: AuthorUI, idx) => (
               <AuthListRow
+                select={ (rowSel === idx + 1) ? true : false }
                 changeRowSel={changeRowSel}
                 key={author.id}
                 author={author}

@@ -10,6 +10,7 @@ export interface AuthorUI {
 
 export interface AuthListRowUI {
   position: number;
+  select: boolean;
   author: AuthorUI;
   handleAuthorRemove: (id: number) => void;
   changeRowSel: (position: number) => void;
