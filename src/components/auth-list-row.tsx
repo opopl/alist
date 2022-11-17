@@ -18,7 +18,6 @@ export const AuthListRow = (props: AuthListRowUI) => {
      }else{
         props.changeRowSel(0)
      }
-     // setSelect((select) => !select)
   }
 
   useEffect(() => { setSelect(props.select) },[ props.select ])

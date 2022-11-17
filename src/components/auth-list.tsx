@@ -18,9 +18,7 @@ export const AuthList = (props: AuthListUI) => {
   const [ rowSel, setRowSel ] = useState(2)
 
   useEffect(() => { 
-     if(rowSel){
-        console.log(`row => ${rowSel}`)
-     }
+     if(rowSel){ console.log(`row selected => ${rowSel}`) }
   },[rowSel])
 
   // Show loading message
@@ -29,7 +27,6 @@ export const AuthList = (props: AuthListUI) => {
   const changeRowSel = (position: number) => {
      setRowSel(position)
   }
-
 
   return (
     <div>
