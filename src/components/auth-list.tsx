@@ -8,36 +8,24 @@ import { AuthListRow } from './auth-list-row'
 // Import styles
 import './../styles/auth-list.css'
 
-// Create interfaces
-interface AuthorUI {
-  id: number;
-  url: string;
-  name: string;
-  plain: string;
-  description: string;
-}
+import { AuthorUI, AuthListUI } from './interfaces'
 
-interface AuthListUI {
-  authors: AuthorUI[];
-  loading: boolean;
-  handleAuthorRemove: (id: number) => void;
-}
+import { header } from './const'
 
 // Create AuthList component
 export const AuthList = (props: AuthListUI) => {
   // Show loading message
   if (props.loading) return <p>Leaderboard table is loading...</p>
 
-  const cols = ['Id','Url','Name','Plain','Description']
-
   return (
     <table className="table">
         <thead>
           <tr>
-            {
-              cols.map((col) => ( <th className="table-head-item">{col}</th> ))
-            }
             <th className="table-head-item" />
+            <th className="table-head-item" />
+            {
+              header.map((col) => ( <th className="table-head-item">{col}</th> ))
+            }
           </tr>
         </thead>
 

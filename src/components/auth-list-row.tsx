@@ -1,52 +1,32 @@
 // Import deps
 import React from 'react'
 
-// Create interfaces
-interface AuthListRowUI {
-  position: number;
-  author: {
-    id: number;
-    url: string;
-    name: string;
-    plain: string;
-    description: string;
-  }
-  handleAuthorRemove: (id: number) => void;
-}
+import { AuthListRowUI } from './interfaces'
+import { cols } from './const'
 
 // Create AuthListRow component
-export const AuthListRow = (props: AuthListRowUI) => (
-  <tr className="table-row">
-    <td className="table-item">
-      {props.position}
-    </td>
+export const AuthListRow = (props: AuthListRowUI) => {
 
-    <td className="table-item">
-      {props.author.id}
-    </td>
+  return (
+      <tr className="table-row">
+        <td className="table-item" style={{ width: '5px' }}>
+          {props.position}
+        </td>
 
-    <td className="table-item">
-      {props.author.url}
-    </td>
+        <td className="table-item" style={{ width: '5px' }}>
+          <button
+            className="btn btn-remove"
+            onClick={() => props.handleAuthorRemove(props.author.id)}>
+            Remove author
+          </button>
+        </td>
+    
+        {
+          cols.map((col) => {
+             return ( <td className="table-item"> {props.author[col]} </td>)
+          })
+        }
 
-    <td className="table-item">
-      {props.author.name}
-    </td>
-
-    <td className="table-item">
-      {props.author.plain}
-    </td>
-
-    <td className="table-item">
-      {props.author.description}
-    </td>
-
-    <td className="table-item">
-      <button
-        className="btn btn-remove"
-        onClick={() => props.handleAuthorRemove(props.author.id)}>
-        Remove author
-      </button>
-    </td>
-  </tr>
-)
+      </tr>
+  )
+}

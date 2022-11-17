@@ -1,8 +1,8 @@
 /* Bookshelf form */
 .book-list-wrapper {
   padding: 16px;
-  margin: 64px auto 0;
-  max-width: 768px;
+  margin: 30px auto 0;
+  /*max-width: 1000px;*/
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
@@ -45,7 +45,7 @@
 
 .form-input {
   padding: 8px;
-  width: 100%;
+  width: 50%;
   font-size: 14px;
   border: 1px solid #dedede;
   border-radius: 4px;
