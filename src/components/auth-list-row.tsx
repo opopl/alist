@@ -1,14 +1,15 @@
 // Import deps
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { AuthListRowUI } from './interfaces'
 import { cols } from './const'
 
 // Create AuthListRow component
 export const AuthListRow = (props: AuthListRowUI) => {
+  const [select, setSelect] = useState(false)
 
   return (
-      <tr className="table-row">
+      <tr className="table-row" onClick={() => { setSelect(!select); alert(select) }}>
         <td className="table-item" style={{ width: '5px' }}>
           {props.position}
         </td>
