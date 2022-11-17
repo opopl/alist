@@ -22,7 +22,9 @@ export const AuthList = (props: AuthListUI) => {
 
   const changeRowSel = (position: number) => {
      setRowSel(position)
-     console.log(rowSel)
+     if(rowSel){
+       console.log(`row selected => ${rowSel}`)
+     }
   }
 
   return (
