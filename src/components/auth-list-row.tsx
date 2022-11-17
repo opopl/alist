@@ -23,7 +23,7 @@ export const AuthListRow = (props: AuthListRowUI) => {
 
   useEffect(() => {
      setSelect(props.select)
-  }, [])
+  },[])
 
   return (
      <tr className="table-row" style={{ background: color() }} onClick={trOnClick}> 
