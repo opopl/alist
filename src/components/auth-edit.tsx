@@ -13,6 +13,7 @@ export const AuthEdit = (props: AuthEditUI) => {
     setAuthor(props.author)
   }, [ props.author ] )
 
+//@@ xOnChange
   const xOnChange = (col: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.currentTarget.value
@@ -28,6 +29,7 @@ export const AuthEdit = (props: AuthEditUI) => {
   }
 
 // Submit new author
+//@@ handleAuthorSubmit
   const handleAuthorSubmit = () => {
     // Check if all fields are filled
     if (author.id.length > 0 && ( author.plain || author.name )) {
@@ -41,6 +43,7 @@ export const AuthEdit = (props: AuthEditUI) => {
     }
   }
 
+//@@ handleAuthorCreate
  const handleAuthorCreate = () => {
     // Send POST request to 'auth/create' endpoint
     axios

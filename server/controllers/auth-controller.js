@@ -23,9 +23,16 @@ exports.authAll = async (req, res) => {
 //@@ authCreate
 exports.authCreate = async (req, res) => {
   // Add new author to database
+  const id = req.body.id
+
+  knex('authors')
+    .where({ 'id' : id })
+    .select('*')
+    .then(rows => {})
+
   knex('authors')
     .insert({ // insert new author record
-      'id'   : req.body.id,
+      'id'   : id,
       'url'  : req.body.url,
       'name' : req.body.name,
       'plain': req.body.plain,
