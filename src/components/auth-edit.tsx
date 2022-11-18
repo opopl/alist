@@ -22,18 +22,15 @@ export const AuthEdit = (props: AuthEditUI) => {
   const xOnChange = (col: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.currentTarget.value
-      updateAuthor({ col : value })
+      let dict = { ...props.author }
+      dict[col] = value
+      props.updateAuthor(dict)
     }
-  }
-
-  const updateAuthor = (obj: { [ key: string] : string }) => {
-  //const updateAuthor = (obj: any) => {
-    setAuthor({ ...author, ...obj })
   }
 
 // Reset all input fields
   const handleInputsReset = () => {
-    cols.map((col) => { updateAuthor({ col : '' }) })
+    cols.map((col) => { props.updateAuthor({ col : '' }) })
   
     //setId('')
     //setUrl('')
@@ -84,31 +81,31 @@ export const AuthEdit = (props: AuthEditUI) => {
           <div className="form-row">
             <fieldset>
               <label className="form-label" htmlFor="id">ID:</label>
-              <input className="form-input" type="text" id="id" name="id" value={id} onChange={(e) => setId(e.currentTarget.value)} />
+              <input className="form-input" type="text" id="id" name="id" value={author.id} onChange={xOnChange('id')} />
             </fieldset>
 
             <fieldset>
               <label className="form-label" htmlFor="url">url:</label>
-              <input className="form-input" type="text" id="url" name="url" value={url} onChange={(e) => setUrl(e.currentTarget.value)} />
+              <input className="form-input" type="text" id="url" name="url" value={author.url} onChange={xOnChange('url')} />
             </fieldset>
           </div>
 
           <div className="form-row">
             <fieldset>
               <label className="form-label" htmlFor="name">name (lastName, firstName):</label>
-              <input className="form-input" type="text" id="name" name="name" value={name} onChange={(e) => setName(e.currentTarget.value)} />
+              <input className="form-input" type="text" id="name" name="name" value={author.name} onChange={xOnChange('name')} />
             </fieldset>
 
             <fieldset>
               <label className="form-label" htmlFor="plain">plain:</label>
-              <input className="form-input" type="text" id="plain" name="plain" value={plain} onChange={(e) => setPlain(e.currentTarget.value)} />
+              <input className="form-input" type="text" id="plain" name="plain" value={author.plain} onChange={xOnChange('plain')} />
             </fieldset>
           </div>
 
           <div className="form-row">
             <fieldset>
               <label className="form-label" htmlFor="description">description:</label>
-              <input className="form-input" type="text" id="description" name="description" value={description} onChange={(e) => setDescription(e.currentTarget.value)} />
+              <input className="form-input" type="text" id="description" name="description" value={author.description} onChange={xOnChange('description')} />
             </fieldset>
 
           </div>

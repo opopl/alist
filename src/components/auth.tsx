@@ -15,18 +15,27 @@ export const Auth = () => {
   const [loading, setLoading] = useState(true)
 
   const authorNew = {
-    id: 'adsasdas',
-    url: '',
-    name: '',
-    plain: '',
-    description: '',
+    id: '',
+    url: 'asdasd',
+    name: 'ddd',
+    plain: 'ddd',
+    description: 'the description',
   }
+
   const [author, setAuthor] = useState(authorNew)
 
   // Fetch all authors on initial render
   useEffect(() => {
     fetchAuthors()
   }, [])
+
+  useEffect(() => {
+     console.log(`author => ${JSON.stringify(author)}`)
+  }, [ author ])
+
+  const updateAuthor = (obj: { [ key: string] : string }) => {
+    setAuthor({ ...author, ...obj })
+  }
 
   // Fetch all authors
   const fetchAuthors = async () => {
@@ -42,6 +51,7 @@ export const Auth = () => {
       })
       .catch(error => console.error(`There was an error retrieving the author list: ${error}`))
   }
+
 
   // Remove author
   const handleAuthorRemove = (id: string) => {
@@ -59,9 +69,19 @@ export const Auth = () => {
 
   return (
     <div className="book-list-wrapper">
-      <AuthEdit fetchAuthors={fetchAuthors} author={author} /> 
+      <span>{JSON.stringify(author)}</span>
+      <AuthEdit  
+           author={author} 
+           fetchAuthors={fetchAuthors} 
+           updateAuthor={updateAuthor} 
+       /> 
       {/* Render authlist component */}
-      <AuthList authors={authors} loading={loading} handleAuthorRemove={handleAuthorRemove} />
+      <AuthList 
+           authors={authors} 
+           loading={loading} 
+           updateAuthor={updateAuthor} 
+           handleAuthorRemove={handleAuthorRemove} 
+      />
 
     </div>
   )

@@ -53,6 +53,7 @@ export const AuthList = (props: AuthListUI) => {
                 author={author}
                 position={idx + 1}
                 handleAuthorRemove={props.handleAuthorRemove}
+                updateAuthor={props.updateAuthor}
               />
               )
             )

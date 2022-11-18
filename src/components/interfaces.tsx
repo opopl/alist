@@ -14,15 +14,18 @@ export interface AuthListRowUI {
   author: AuthorUI;
   handleAuthorRemove: (id: string) => void;
   changeRowSel: (position: number) => void;
+  updateAuthor: (obj: { [ key: string] : string }) => void;
 }
 
 export interface AuthEditUI {
   fetchAuthors: () => void;
   author: AuthorUI;
+  updateAuthor: (obj: { [ key: string] : string }) => void;
 }
 
 export interface AuthListUI {
   authors: AuthorUI[];
   loading: boolean;
   handleAuthorRemove: (id: string) => void;
+  updateAuthor: (obj: { [ key: string] : string }) => void;
 }
