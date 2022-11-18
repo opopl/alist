@@ -9,12 +9,6 @@ export const AuthEdit = (props: AuthEditUI) => {
 
   const [author, setAuthor] = useState({ ...props.author })
 
-  const [id, setId] = useState('')
-  const [name, setName] = useState('')
-  const [plain, setPlain] = useState('')
-  const [url, setUrl] = useState('')
-  const [description, setDescription] = useState('')
-
   useEffect(() => {
     setAuthor(props.author)
   }, [ props.author ] )
@@ -31,12 +25,6 @@ export const AuthEdit = (props: AuthEditUI) => {
 // Reset all input fields
   const handleInputsReset = () => {
     cols.map((col) => { props.updateAuthor({ col : '' }) })
-  
-    //setId('')
-    //setUrl('')
-    //setName('')
-    //setPlain('')
-    //setDescription('')
   }
 
 // Submit new author
@@ -46,7 +34,7 @@ export const AuthEdit = (props: AuthEditUI) => {
       // Create new author
       handleAuthorCreate()
 
-      console.info(`Author ${id} added.`)
+      console.info(`Author ${author.id} added.`)
 
       // Reset all input fields
       handleInputsReset()
@@ -56,13 +44,7 @@ export const AuthEdit = (props: AuthEditUI) => {
  const handleAuthorCreate = () => {
     // Send POST request to 'auth/create' endpoint
     axios
-      .post('http://localhost:4001/auth/create', {
-        id: id,
-        url: url,
-        name: name,
-        plain: plain,
-        description: description
-      })
+      .post('http://localhost:4001/auth/create', author )
       .then(res => {
         console.log(res.data)
 
@@ -70,7 +52,7 @@ export const AuthEdit = (props: AuthEditUI) => {
         // the authors on the author list
         props.fetchAuthors()
       })
-      .catch(error => console.error(`There was an error creating the ${id} author: ${error}`))
+      .catch(error => console.error(`There was an error creating the ${author.id} author: ${error}`))
   }
 
   // Form for creating new author 
@@ -111,7 +93,7 @@ export const AuthEdit = (props: AuthEditUI) => {
           </div>
         </div>
 
-        <button onClick={handleAuthorSubmit} className="btn btn-add">Add the author</button>
+        <button onClick={handleAuthorSubmit} className="btn btn-add">Update</button>
       </div>
     )
 }

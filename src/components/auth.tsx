@@ -6,6 +6,8 @@ import axios from 'axios'
 import { AuthList } from './auth-list'
 import { AuthEdit } from './auth-edit'
 
+import { AuthorUI } from './interfaces'
+
 // Import styles
 import './../styles/auth.css'
 
@@ -34,7 +36,13 @@ export const Auth = () => {
   }, [ author ])
 
   const updateAuthor = (obj: { [ key: string] : string }) => {
-    setAuthor({ ...author, ...obj })
+    let dict = { ...author, ...obj }
+    Object(author).keys.map((k : string) => { 
+      //if (author[k] === null) {
+        //author[k] = ''
+      //}
+    })
+    setAuthor(dict)
   }
 
   // Fetch all authors
