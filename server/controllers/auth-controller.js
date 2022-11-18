@@ -2,6 +2,7 @@
 const knex = require('./../db')
 
 // Retrieve all auth
+//@@ authAll
 exports.authAll = async (req, res) => {
   // Get all auth from database
   knex
@@ -19,6 +20,7 @@ exports.authAll = async (req, res) => {
 }
 
 // Create new author
+//@@ authCreate
 exports.authCreate = async (req, res) => {
   // Add new author to database
   knex('authors')
@@ -29,6 +31,8 @@ exports.authCreate = async (req, res) => {
       'plain': req.body.plain,
       'description': req.body.description
     })
+    .onConflict('id')
+    .merge()
     .then(() => {
       // Send a success message in response
       res.json({ message: `Author with id = \'${req.body.id}\' and name = ${req.body.name} created.` })
@@ -40,6 +44,7 @@ exports.authCreate = async (req, res) => {
 }
 
 // Remove specific author
+//@@ authDelete
 exports.authDelete = async (req, res) => {
   // Find specific book in the database and remove it
   knex('authors')

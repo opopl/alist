@@ -30,11 +30,11 @@ export const AuthEdit = (props: AuthEditUI) => {
 // Submit new author
   const handleAuthorSubmit = () => {
     // Check if all fields are filled
-    if (author.id.length > 0 && ( author.plain.length > 0 || author.name.length > 0 )) {
+    if (author.id.length > 0 && ( author.plain || author.name )) {
       // Create new author
       handleAuthorCreate()
 
-      console.info(`Author ${author.id} added.`)
+      //console.info(`Author ${author.id} added.`)
 
       // Reset all input fields
       handleInputsReset()

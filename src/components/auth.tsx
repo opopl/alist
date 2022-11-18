@@ -1,15 +1,19 @@
 // Import deps
 import React, { useEffect, useState } from 'react'
+
 import axios from 'axios'
 
 // Import components
 import { AuthList } from './auth-list'
 import { AuthEdit } from './auth-edit'
 
+//import { TabGroup } from './tabs'
+
 import { AuthorUI } from './interfaces'
 
 // Import styles
 import './../styles/auth.css'
+import './../styles/tabs.css'
 
 // Create Auth component
 export const Auth = () => {
@@ -31,10 +35,11 @@ export const Auth = () => {
     fetchAuthors()
   }, [])
 
-  useEffect(() => {
-    console.log(`author => ${JSON.stringify(author)}`)
-  }, [ author ])
+  //useEffect(() => {
+    //console.log(`author => ${JSON.stringify(author)}`)
+  //}, [ author ])
 
+//@@ updateAuthor
   const updateAuthor = (obj: { [ key: string] : string }) => {
     let dict = { ...author, ...obj }
     //Object(author).keys().map((k : string) => { 
@@ -46,6 +51,7 @@ export const Auth = () => {
   }
 
   // Fetch all authors
+//@@ fetchAuthors
   const fetchAuthors = async () => {
     // Send GET request to 'auth/all' endpoint
     axios
@@ -62,6 +68,7 @@ export const Auth = () => {
 
 
   // Remove author
+//@@ handleAuthorRemove
   const handleAuthorRemove = (id: string) => {
     // Send PUT request to 'auth/delete' endpoint
     axios
