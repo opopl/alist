@@ -1,7 +1,7 @@
 
 export interface AuthorUI {
   [key: string] : any;
-  id: number;
+  id: string;
   url: string;
   name: string;
   plain: string;
@@ -12,16 +12,17 @@ export interface AuthListRowUI {
   position: number;
   select: boolean;
   author: AuthorUI;
-  handleAuthorRemove: (id: number) => void;
+  handleAuthorRemove: (id: string) => void;
   changeRowSel: (position: number) => void;
 }
 
 export interface AuthEditUI {
   fetchAuthors: () => void;
+  author: AuthorUI;
 }
 
 export interface AuthListUI {
   authors: AuthorUI[];
   loading: boolean;
-  handleAuthorRemove: (id: number) => void;
+  handleAuthorRemove: (id: string) => void;
 }

@@ -14,6 +14,15 @@ export const Auth = () => {
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const authorNew = {
+    id: 'adsasdas',
+    url: '',
+    name: '',
+    plain: '',
+    description: '',
+  }
+  const [author, setAuthor] = useState(authorNew)
+
   // Fetch all authors on initial render
   useEffect(() => {
     fetchAuthors()
@@ -35,7 +44,7 @@ export const Auth = () => {
   }
 
   // Remove author
-  const handleAuthorRemove = (id: number) => {
+  const handleAuthorRemove = (id: string) => {
     // Send PUT request to 'auth/delete' endpoint
     axios
       .put('http://localhost:4001/auth/delete', { id: id })
@@ -50,7 +59,7 @@ export const Auth = () => {
 
   return (
     <div className="book-list-wrapper">
-      <AuthEdit fetchAuthors={fetchAuthors} /> 
+      <AuthEdit fetchAuthors={fetchAuthors} author={author} /> 
       {/* Render authlist component */}
       <AuthList authors={authors} loading={loading} handleAuthorRemove={handleAuthorRemove} />
 

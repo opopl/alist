@@ -3,8 +3,11 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { AuthEditUI } from './interfaces'
+import { cols, header } from './const'
 
 export const AuthEdit = (props: AuthEditUI) => {
+
+  const [author, setAuthor] = useState({ ...props.author })
 
   const [id, setId] = useState('')
   const [name, setName] = useState('')
@@ -12,19 +15,37 @@ export const AuthEdit = (props: AuthEditUI) => {
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
 
+  useEffect(() => {
+    setAuthor(props.author)
+  }, [ props.author ] )
+
+  const xOnChange = (col: string) => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.currentTarget.value
+      updateAuthor({ col : value })
+    }
+  }
+
+  const updateAuthor = (obj: { [ key: string] : string }) => {
+  //const updateAuthor = (obj: any) => {
+    setAuthor({ ...author, ...obj })
+  }
+
 // Reset all input fields
   const handleInputsReset = () => {
-    setId('')
-    setUrl('')
-    setName('')
-    setPlain('')
-    setDescription('')
+    cols.map((col) => { updateAuthor({ col : '' }) })
+  
+    //setId('')
+    //setUrl('')
+    //setName('')
+    //setPlain('')
+    //setDescription('')
   }
 
 // Submit new author
   const handleAuthorSubmit = () => {
     // Check if all fields are filled
-    if (id.length > 0 && ( plain.length > 0 || name.length > 0 )) {
+    if (author.id.length > 0 && ( author.plain.length > 0 || author.name.length > 0 )) {
       // Create new author
       handleAuthorCreate()
 
