@@ -18,7 +18,11 @@ export const AuthList = (props: AuthListUI) => {
   const [ rowSel, setRowSel ] = useState(2)
 
   useEffect(() => { 
-     if(rowSel){ console.log(`row selected => ${rowSel}`) }
+    if(rowSel){
+        console.log(`row selected => ${rowSel}`)
+        const rowAuthor = props.authors[rowSel-1]
+        props.updateAuthor(rowAuthor)
+    }
   },[rowSel])
 
   // Show loading message
