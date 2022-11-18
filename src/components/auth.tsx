@@ -32,16 +32,16 @@ export const Auth = () => {
   }, [])
 
   useEffect(() => {
-     console.log(`author => ${JSON.stringify(author)}`)
+    console.log(`author => ${JSON.stringify(author)}`)
   }, [ author ])
 
   const updateAuthor = (obj: { [ key: string] : string }) => {
     let dict = { ...author, ...obj }
-    Object(author).keys.map((k : string) => { 
+    //Object(author).keys().map((k : string) => { 
       //if (author[k] === null) {
         //author[k] = ''
       //}
-    })
+    //})
     setAuthor(dict)
   }
 
