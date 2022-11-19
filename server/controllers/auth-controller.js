@@ -6,7 +6,7 @@ const knex = require('./../db')
 exports.authAll = async (req, res) => {
   // Get all auth from database
   knex
-    .select('*') // select all records
+    .select('rowid', '*') // select all records
     .from('authors') // from 'authors' table
     .limit(10)
     .then(userData => {

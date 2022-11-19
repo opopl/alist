@@ -31,12 +31,21 @@ export const AuthEdit = (props: AuthEditUI) => {
   }
 
 // Submit new author
-//@@ handleAuthorSubmit
-  const handleAuthorSubmit = () => {
+//@@ handleAuthorUpdate
+  const handleAuthorUpdate = () => {
     // Check if all fields are filled
     if (author.id.length > 0 && ( author.plain || author.name )) {
       // Create new author
-      handleAuthorCreate()
+      axios
+        .post('http://localhost:4001/auth/create', author )
+        .then(res => {
+          console.log(res.data)
+  
+          // Fetch all authors to refresh
+          // the authors on the author list
+          props.fetchAuthors()
+        })
+        .catch(error => console.error(`There was an error creating the ${author.id} author: ${error}`))
 
       //console.info(`Author ${author.id} added.`)
 
@@ -45,26 +54,11 @@ export const AuthEdit = (props: AuthEditUI) => {
     }
   }
 
-//@@ handleAuthorCreate
- const handleAuthorCreate = () => {
-    // Send POST request to 'auth/create' endpoint
-    axios
-      .post('http://localhost:4001/auth/create', author )
-      .then(res => {
-        console.log(res.data)
-
-        // Fetch all authors to refresh
-        // the authors on the author list
-        props.fetchAuthors()
-      })
-      .catch(error => console.error(`There was an error creating the ${author.id} author: ${error}`))
-  }
-
   // Form for creating new author 
 
   return (
       <div className="book-list-form">
-        <div className="form-wrapper" onSubmit={handleAuthorSubmit}>
+        <div className="form-wrapper" onSubmit={handleAuthorUpdate}>
           <div className="form-row">
             <fieldset>
               <label className="form-label" htmlFor="id">ID:</label>
@@ -96,9 +90,13 @@ export const AuthEdit = (props: AuthEditUI) => {
             </fieldset>
 
           </div>
-        </div>
 
-        <button onClick={handleAuthorSubmit} className="btn btn-add">Update</button>
+          <div className="flex-container">
+            <button onClick={handleInputsReset} className="btn btn-add">Reset</button>
+            <button onClick={handleAuthorUpdate} className="btn btn-add">Update</button>
+          </div>
+
+        </div>
       </div>
     )
 }

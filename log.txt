@@ -5,3 +5,18 @@
 +    "react": "18.0.0",
 +    "react-dom": "18.0.0"
 
+	  <span>{JSON.stringify(author)}</span>
+	  <AuthEdit  
+		   author={author} 
+		   fetchAuthors={fetchAuthors} 
+		   updateAuthor={updateAuthor} 
+	   /> 
+	  {[> Render authlist component <]}
+	  <AuthList 
+		   authors={authors} 
+		   loading={loading} 
+		   updateAuthor={updateAuthor} 
+		   handleAuthorRemove={handleAuthorRemove} 
+	  />
+
+            <div className="book-list-wrapper">

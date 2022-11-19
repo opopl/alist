@@ -9,16 +9,22 @@ import { AuthEdit } from './auth-edit'
 
 //import { TabGroup } from './tabs'
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
 import { AuthorUI } from './interfaces'
 
 // Import styles
 import './../styles/auth.css'
 import './../styles/tabs.css'
+import './../styles/flex.css'
 
 // Create Auth component
 export const Auth = () => {
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
+
+  const [rowSel, setRowSel] = useState(0)
 
   const authorNew = {
     id: '',
@@ -39,6 +45,10 @@ export const Auth = () => {
     //console.log(`author => ${JSON.stringify(author)}`)
   //}, [ author ])
 
+  const changeRowSel = (position: number) => {
+     setRowSel(position)
+  }
+
 //@@ updateAuthor
   const updateAuthor = (obj: { [ key: string] : string }) => {
     let dict = { ...author, ...obj }
@@ -47,6 +57,7 @@ export const Auth = () => {
         //author[k] = ''
       //}
     //})
+    console.log(JSON.stringify(dict))
     setAuthor(dict)
   }
 
@@ -59,6 +70,7 @@ export const Auth = () => {
       .then(response => {
         // Update the authors state
         setAuthors(response.data)
+        console.log(JSON.stringify(response.data));
 
         // Update loading state
         setLoading(false)
@@ -83,21 +95,36 @@ export const Auth = () => {
   }
 
   return (
-    <div className="book-list-wrapper">
-      <span>{JSON.stringify(author)}</span>
-      <AuthEdit  
-           author={author} 
-           fetchAuthors={fetchAuthors} 
-           updateAuthor={updateAuthor} 
-       /> 
-      {/* Render authlist component */}
-      <AuthList 
-           authors={authors} 
-           loading={loading} 
-           updateAuthor={updateAuthor} 
-           handleAuthorRemove={handleAuthorRemove} 
-      />
-
-    </div>
+      <Tabs>
+        <TabList>
+          <Tab>Authors</Tab>
+          <Tab>Images</Tab>
+        </TabList>
+    
+        <TabPanel>
+            <div className="flex-container">
+              <div className="flex-item-left">
+                <AuthEdit  
+                     author={author}
+                     fetchAuthors={fetchAuthors}
+                     updateAuthor={updateAuthor}
+                 /> 
+              </div>
+              <div className="flex-item-right">
+                <AuthList
+                     changeRowSel={changeRowSel}
+                     rowSel={rowSel}
+                     authors={authors} 
+                     loading={loading} 
+                     updateAuthor={updateAuthor} 
+                     handleAuthorRemove={handleAuthorRemove} 
+                />
+              </div>
+            </div>
+        </TabPanel>
+        <TabPanel>
+          <h2>Any content 2</h2>
+        </TabPanel>
+      </Tabs>
   )
 }
