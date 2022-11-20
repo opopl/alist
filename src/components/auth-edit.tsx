@@ -44,17 +44,12 @@ export const AuthEdit = (props: AuthEditUI) => {
         .post('http://localhost:4001/auth/update', author )
         .then(res => {
           console.log(res.data)
-  
+
           // Fetch all authors to refresh
           // the authors on the author list
           props.fetchAuthors()
         })
         .catch(error => console.error(`There was an error updating the ${author.id} author: ${error}`))
-
-      //console.info(`Author ${author.id} updated.`)
-
-      // Reset all input fields
-      handleInputsReset()
     }
   }
 

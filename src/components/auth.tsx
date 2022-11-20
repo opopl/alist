@@ -66,7 +66,7 @@ export const Auth = () => {
   const fetchAuthors = async () => {
     // Send GET request to 'auth/all' endpoint
     axios
-      .get('http://localhost:4001/auth/all')
+      .get('http://localhost:4001/auth/all', { params : {} })
       .then(response => {
         // Update the authors state
         setAuthors(response.data)

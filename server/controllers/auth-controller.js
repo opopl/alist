@@ -22,23 +22,40 @@ exports.authAll = async (req, res) => {
 // Update author
 //@@ authUpdate
 exports.authUpdate = async (req, res) => {
-  const id = req.body.id
   const uid = req.body.uid
+  if (!uid) { 
+     console.log(`no uid!`);
+     return 
+  }
 
-  console.log(`request => ${req}`);
+  const idu  = req.body.id
+
+  const body = req.body
+  console.log(`request => ${JSON.stringify(body)}`);
 
   knex('authors')
-    .where({ 'id' : id })
-    .select('*')
-    .first()
-    .then(row => {
-        console.log(JSON.stringify(row))
-        res.json(row)
-    })
-    .catch(err => {
-      res.json({ message: `There was an error editing ${req.body.id} author: ${err}` })
-    })
+     .where({ 'id' : idu })
+     .select('uid')
+     .first()
+     .then((row) => {
+        if (row === undefined || row.uid == uid ) {
 
+           knex('authors')
+             .where({ 'uid' : uid })
+             .update(req.body)
+             .then(() => {
+                res.json({ message: `Author with uid = ${req.body.uid} and name = ${req.body.name} updated.` })
+             })
+             .catch(err => {
+                res.json({ message: `There was an error editing uid = ${req.body.uid} author: ${err}` })
+             })
+        // merge
+        }else{
+           console.log(JSON.stringify(`merge: uid => ${uid}, ${row.uid}`));
+        }
+     })
+}
+    
 /*  knex('authors')*/
     //.insert({ // insert new author record
       //'id'   : id,
@@ -57,7 +74,6 @@ exports.authUpdate = async (req, res) => {
       //// Send a error message in response
       //res.json({ message: `There was an error creating ${req.body.id} author: ${err}` })
     /*})*/
-}
 
 // Remove specific author
 //@@ authDelete
