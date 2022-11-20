@@ -26,6 +26,7 @@ export const AuthEdit = (props: AuthEditUI) => {
   }
 
 // Reset all input fields
+//@@ handleInputsReset
   const handleInputsReset = () => {
     cols.map((col) => { props.updateAuthor({ col : '' }) })
   }
@@ -59,42 +60,26 @@ export const AuthEdit = (props: AuthEditUI) => {
   return (
       <div className="book-list-form">
         <div className="form-wrapper" onSubmit={handleAuthorUpdate}>
-          <div className="form-row">
-            <fieldset>
-              <label className="form-label" htmlFor="id">ID:</label>
-              <input className="form-input" type="text" id="id" name="id" value={author.id || ''} onChange={xOnChange('id')} />
-            </fieldset>
+            { cols.map((col) => 
+                (
+                <fieldset>
+                  <div className="form-row">
+                    <label className="form-label" htmlFor="{col}">{col}:</label>
+                    <input className="form-input" 
+                            type="text" 
+                            id="{col}" name="{col}" 
+                            value={author[col] || ''} onChange={xOnChange(col)} 
+                    />
+                  </div>
+                </fieldset>
+                )
+              )
+            }
 
-            <fieldset>
-              <label className="form-label" htmlFor="url">url:</label>
-              <input className="form-input" type="text" id="url" name="url" value={author.url || ''} onChange={xOnChange('url')} />
-            </fieldset>
-          </div>
-
-          <div className="form-row">
-            <fieldset>
-              <label className="form-label" htmlFor="name">name (lastName, firstName):</label>
-              <input className="form-input" type="text" id="name" name="name" value={author.name || ''} onChange={xOnChange('name')} />
-            </fieldset>
-
-            <fieldset>
-              <label className="form-label" htmlFor="plain">plain:</label>
-              <input className="form-input" type="text" id="plain" name="plain" value={author.plain || ''} onChange={xOnChange('plain')} />
-            </fieldset>
-          </div>
-
-          <div className="form-row">
-            <fieldset>
-              <label className="form-label" htmlFor="description">description:</label>
-              <input className="form-input" type="text" id="description" name="description" value={author.description || ''} onChange={xOnChange('description')} />
-            </fieldset>
-
-          </div>
-
-          <div className="flex-container">
-            <button onClick={handleInputsReset} className="btn btn-add">Reset</button>
-            <button onClick={handleAuthorUpdate} className="btn btn-add">Update</button>
-          </div>
+            <div className="flex-container">
+              <button onClick={handleInputsReset} className="btn btn-add">Reset</button>
+              <button onClick={handleAuthorUpdate} className="btn btn-add">Update</button>
+            </div>
 
         </div>
       </div>

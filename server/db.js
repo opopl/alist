@@ -22,11 +22,14 @@ knex.schema
     .then((exists) => {
       if (!exists) {
         return knex.schema.createTable('authors', (table)  => {
+          table.string('uid').notNullable().defaultTo(1).unique()
           table.string('id').notNullable().unique()
           table.string('url')
           table.string('name')
           table.string('plain')
           table.string('description')
+
+          table.primary('uid')
         })
         .then(() => {
           // Log success message

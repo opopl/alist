@@ -12,10 +12,7 @@ const router = express.Router()
 // this means that '/all' translates to '/auth/all'
 router.get('/all', authRoutes.authAll)
 
-// Add route for POST request to create new author
-// In server.js, auth route is specified as '/auth'
-// this means that '/create' translates to '/auth/create'
-router.post('/create', authRoutes.authCreate)
+router.post('/update', authRoutes.authUpdate)
 
 // Add route for PUT request to delete specific author
 // In server.js, auth route is specified as '/auth'

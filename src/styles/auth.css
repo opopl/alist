@@ -24,7 +24,7 @@
 .form-wrapper fieldset {
   padding: 0;
   margin: 0;
-  width: 50%;
+  width: 100%;
   border: 0;
 }
 
@@ -45,7 +45,7 @@
 
 .form-input {
   padding: 8px;
-  width: 50%;
+  width: 100%;
   font-size: 14px;
   border: 1px solid #dedede;
   border-radius: 4px;
