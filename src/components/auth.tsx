@@ -57,7 +57,7 @@ export const Auth = () => {
         //author[k] = ''
       //}
     //})
-    console.log(JSON.stringify(dict))
+    console.log(`updateAuthor => ${JSON.stringify(dict)}`)
     setAuthor(dict)
   }
 
@@ -105,6 +105,7 @@ export const Auth = () => {
               <div className="flex-item-left">
                 <AuthEdit  
                      author={author}
+                     changeRowSel={changeRowSel}
                      fetchAuthors={fetchAuthors}
                      updateAuthor={updateAuthor}
                  /> 

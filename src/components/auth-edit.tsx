@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-import { AuthEditUI } from './interfaces'
+import { AuthEditUI, DictUI } from './interfaces'
 import { cols, header } from './const'
 
 //import TextField from '@mui/material/TextField';
@@ -28,7 +28,10 @@ export const AuthEdit = (props: AuthEditUI) => {
 // Reset all input fields
 //@@ handleInputsReset
   const handleInputsReset = () => {
-    cols.map((col) => { props.updateAuthor({ col : '' }) })
+    props.changeRowSel(0)
+    let dict: DictUI = {}
+    cols.map((col) => { dict[col] = '' })
+    props.updateAuthor(dict)
   }
 
 // Submit new author

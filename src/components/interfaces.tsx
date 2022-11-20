@@ -17,9 +17,14 @@ export interface AuthListRowUI {
   updateAuthor: (obj: { [ key: string] : string }) => void;
 }
 
+export interface DictUI {
+  [key: string] : any;
+}
+
 export interface AuthEditUI {
-  fetchAuthors: () => void;
   author: AuthorUI;
+  fetchAuthors: () => void;
+  changeRowSel: (position: number) => void;
   updateAuthor: (obj: { [ key: string] : string }) => void;
 }
 
