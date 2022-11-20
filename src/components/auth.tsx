@@ -94,7 +94,7 @@ export const Auth = () => {
   const handleAuthorRemove = (id: string) => {
     // Send PUT request to 'auth/delete' endpoint
     axios
-      .put('http://localhost:4001/auth/delete', { id: id })
+      .put(`${baseUrl}/delete`, { id: id })
       .then(() => {
         console.log(`Author ${id} removed.`)
 
