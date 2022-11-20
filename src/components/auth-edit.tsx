@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { AuthEditUI, DictUI } from './interfaces'
-import { cols, header } from './const'
+import { baseUrl, cols, header } from './const'
 
 //import TextField from '@mui/material/TextField';
 
@@ -41,13 +41,13 @@ export const AuthEdit = (props: AuthEditUI) => {
     if (author.id.length > 0 && ( author.plain || author.name )) {
       // update author
       axios
-        .post('http://localhost:4001/auth/update', author )
+        .post(`${baseUrl}/update`, author )
         .then(res => {
           console.log(res.data)
 
           // Fetch all authors to refresh
           // the authors on the author list
-          props.fetchAuthors()
+          props.fetchAuthors({})
         })
         .catch(error => console.error(`There was an error updating the ${author.id} author: ${error}`))
     }
@@ -60,7 +60,7 @@ export const AuthEdit = (props: AuthEditUI) => {
         <div className="form-wrapper" onSubmit={handleAuthorUpdate}>
             { cols.map((col) => 
                 (
-                <fieldset>
+                <fieldset key={col}>
                   <div className="form-row">
                     <label className="form-label" htmlFor="{col}">{col}:</label>
                     <input className="form-input" 

@@ -42,7 +42,7 @@ export const AuthList = (props: AuthListUI) => {
             <th className="table-head-item" />
             <th className="table-head-item" />
             {
-              header.map((col) => ( <th className="table-head-item">{col}</th> ))
+              header.map((col) => ( <th className="table-head-item" key={col}>{col}</th> ))
             }
           </tr>
         </thead>

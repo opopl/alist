@@ -1,10 +1,23 @@
 // Import database
 const knex = require('./../db')
 
+exports.authCount = async (req, res) => {
+
+  knex('authors')
+    .count('id',{ as: 'cnt' })
+    .first()
+    .then(rw => {
+       res.json(rw)
+    })
+}
+
 // Retrieve all auth
 //@@ authAll
 exports.authAll = async (req, res) => {
   // Get all auth from database
+  const size = req.size || 10
+  const page = req.page || 1
+
   knex
     .select('*') // select all records
     .from('authors') // from 'authors' table

@@ -7,12 +7,14 @@ import axios from 'axios'
 import { AuthList } from './auth-list'
 import { AuthEdit } from './auth-edit'
 
+import { baseUrl } from './const'
+
 //import { TabGroup } from './tabs'
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-import { AuthorUI } from './interfaces'
+import { DictUI, AuthorUI } from './interfaces'
 
 // Import styles
 import './../styles/auth.css'
@@ -23,6 +25,9 @@ import './../styles/flex.css'
 export const Auth = () => {
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
+
+  const [page, setPage] = useState(1)
+  const [numRec, setNumRec] = useState(10)
 
   const [rowSel, setRowSel] = useState(0)
 
@@ -38,7 +43,7 @@ export const Auth = () => {
 
   // Fetch all authors on initial render
   useEffect(() => {
-    fetchAuthors()
+    fetchAuthors({ page : page, size : numRec })
   }, [])
 
   //useEffect(() => {
@@ -63,10 +68,16 @@ export const Auth = () => {
 
   // Fetch all authors
 //@@ fetchAuthors
-  const fetchAuthors = async () => {
-    // Send GET request to 'auth/all' endpoint
+  const fetchAuthors = async (params: DictUI) => {
+    const res = await axios.get(`${baseUrl}/count`)
+    const cnt = res.data.cnt
+    console.log(`count => ${cnt}`);
+
+    const page = params.page
+    const size = params.size
+
     axios
-      .get('http://localhost:4001/auth/all', { params : {} })
+      .get(`${baseUrl}/all`, { params : params })
       .then(response => {
         // Update the authors state
         setAuthors(response.data)
@@ -88,7 +99,7 @@ export const Auth = () => {
         console.log(`Author ${id} removed.`)
 
         // Fetch all authors to refresh the list
-        fetchAuthors()
+        fetchAuthors({ page : 1, size : 10 })
       })
       .catch(error => console.error(`There was an error removing the ${id} author: ${error}`))
   }

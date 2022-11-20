@@ -38,7 +38,7 @@ export const AuthListRow = (props: AuthListRowUI) => {
     
         {
           cols.map((col) => {
-             return ( <td className="table-item"> {props.author[col]} </td>)
+             return ( <td className="table-item" key={col}> {props.author[col]} </td>)
           })
         }
 
