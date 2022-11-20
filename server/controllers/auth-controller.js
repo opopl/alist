@@ -6,7 +6,7 @@ const knex = require('./../db')
 exports.authAll = async (req, res) => {
   // Get all auth from database
   knex
-    .select('rowid', '*') // select all records
+    .select('*') // select all records
     .from('authors') // from 'authors' table
     .limit(10)
     .then(userData => {
@@ -25,10 +25,18 @@ exports.authUpdate = async (req, res) => {
   const id = req.body.id
   const uid = req.body.uid
 
+  console.log(`request => ${req}`);
+
   knex('authors')
-    .where({ 'uid' : uid })
+    .where({ 'id' : id })
+    .select('*')
     .first()
-    .then(rows => {
+    .then(row => {
+        console.log(JSON.stringify(row))
+        res.json(row)
+    })
+    .catch(err => {
+      res.json({ message: `There was an error editing ${req.body.id} author: ${err}` })
     })
 
 /*  knex('authors')*/

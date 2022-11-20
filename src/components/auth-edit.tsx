@@ -36,9 +36,9 @@ export const AuthEdit = (props: AuthEditUI) => {
   const handleAuthorUpdate = () => {
     // Check if all fields are filled
     if (author.id.length > 0 && ( author.plain || author.name )) {
-      // Create new author
+      // update author
       axios
-        .post('http://localhost:4001/auth/create', author )
+        .post('http://localhost:4001/auth/update', author )
         .then(res => {
           console.log(res.data)
   
@@ -46,16 +46,16 @@ export const AuthEdit = (props: AuthEditUI) => {
           // the authors on the author list
           props.fetchAuthors()
         })
-        .catch(error => console.error(`There was an error creating the ${author.id} author: ${error}`))
+        .catch(error => console.error(`There was an error updating the ${author.id} author: ${error}`))
 
-      //console.info(`Author ${author.id} added.`)
+      //console.info(`Author ${author.id} updated.`)
 
       // Reset all input fields
       handleInputsReset()
     }
   }
 
-  // Form for creating new author 
+  // Form for author create or update 
 
   return (
       <div className="book-list-form">

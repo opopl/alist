@@ -70,7 +70,6 @@ export const Auth = () => {
       .then(response => {
         // Update the authors state
         setAuthors(response.data)
-        console.log(JSON.stringify(response.data));
 
         // Update loading state
         setLoading(false)
