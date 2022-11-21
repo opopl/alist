@@ -50,6 +50,7 @@ export const AuthList = (props: AuthListUI) => {
 
         <div className="flex-container">
           <span>number of records: {props.cnt}</span>
+          <span>number of pages: {props.numPages}</span>
         </div>
     
     <table className="table">

@@ -148,6 +148,7 @@ export const Auth = () => {
                      handleAuthorRemove={handleAuthorRemove} 
 
                      page={page}
+                     numPages={numPages}
                      cnt={cnt}
                      numRec={numRec}
                      numRecSave={numRecSave}
