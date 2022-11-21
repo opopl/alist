@@ -39,22 +39,25 @@ knex.schema
           console.error(`There was an error creating table: ${error}`)
         })
       }else{
-          knex
-              .table('authors')
-              .innerJoin('auth_details', 'authors.id', '=', 'auth_details.id')
-              .limit(10)
-              .then(data => console.log('data:', data))
+      /*    knex*/
+              //.table('authors')
+              //.innerJoin('auth_details', 'authors.id', '=', 'auth_details.id')
+              //.limit(10)
+              /*.then(data => console.log('data:', data))*/
       }
     })
     .then(() => {
       // Log success message
       console.log('done')
+
+      knex.raw("PRAGMA foreign_keys = ON;").then(() => {
+          console.log("Foreign Key Check activated.");
+      });
     })
     .catch((error) => {
       console.error(`There was an error setting up the database: ${error}`)
     })
 
-knex.raw('PRAGMA foreign_keys="on"')
 
 // Just for debugging purposes:
 // Log all data in "authors" table
