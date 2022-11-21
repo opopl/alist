@@ -42,6 +42,7 @@ export interface AuthListUI {
   numRec: number;
   numRecSave: number;
   page: number;
+  cnt: number;
 
   updateNumRec: (size: number) => void;
   updateAuthor: (obj: { [ key: string] : string }) => void;

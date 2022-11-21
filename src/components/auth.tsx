@@ -28,8 +28,11 @@ export const Auth = () => {
 
   const [page, setPage] = useState(1)
   // number of records per page
-  const [numRec, setNumRec] = useState(10)
-  const [numRecSave, setNumRecSave] = useState(numRec)
+  const [ numRec, setNumRec ] = useState(10)
+  const [ numRecSave, setNumRecSave ] = useState(numRec)
+
+  const [ cnt, setCnt] = useState(numRec)
+  const [ numPages, setNumPages ] = useState(1)
 
   const [rowSel, setRowSel] = useState(0)
 
@@ -47,7 +50,12 @@ export const Auth = () => {
   useEffect(() => {
     const size = numRec || numRecSave
     fetchAuthors({ page : page, size : size })
+
   }, [ page, numRec, numRecSave ])
+
+  useEffect(() => {
+    setNumPages(Math.trunc(cnt/numRec + 1))
+  }, [ cnt, numRec ])
 
   //useEffect(() => {
     //console.log(`author => ${JSON.stringify(author)}`)
@@ -75,11 +83,15 @@ export const Auth = () => {
     setAuthor(dict)
   }
 
+  const fetchCnt = async () => {
+    const res = await axios.get(`${baseUrl}/count`)
+    setCnt(res.data.cnt)
+  }
+
   // Fetch all authors
 //@@ fetchAuthors
   const fetchAuthors = async (params: DictUI) => {
-    const res = await axios.get(`${baseUrl}/count`)
-    const cnt = res.data.cnt
+    fetchCnt()
 
     axios
       .get(`${baseUrl}/all`, { params : params })
@@ -136,6 +148,7 @@ export const Auth = () => {
                      handleAuthorRemove={handleAuthorRemove} 
 
                      page={page}
+                     cnt={cnt}
                      numRec={numRec}
                      numRecSave={numRecSave}
                      updateNumRec={updateNumRec}

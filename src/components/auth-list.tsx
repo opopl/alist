@@ -35,16 +35,22 @@ export const AuthList = (props: AuthListUI) => {
   return (
     <div>
         <span>{rowSel}</span>
-        <label htmlFor="numRec">Number of Records:</label>
-        <input 
-             type="number" 
-             id="numRec" name="numRec" value={(props.numRec == 0) ? '' : props.numRec}
-             onChange={(e) => {
-                const val = e.currentTarget.value
-                const size = parseInt(val || '0')
-                props.updateNumRec(size)
-             }}
-        />
+        <div className="flex-container">
+	        <label htmlFor="numRec">records per page:</label>
+	        <input 
+	             type="number" 
+	             id="numRec" name="numRec" value={(props.numRec == 0) ? '' : props.numRec}
+	             onChange={(e) => {
+	                const val = e.currentTarget.value
+	                const size = parseInt(val || '0')
+	                props.updateNumRec(size)
+	             }}
+	        />
+        </div>
+
+        <div className="flex-container">
+          <span>number of records: {props.cnt}</span>
+        </div>
     
     <table className="table">
         <thead>
