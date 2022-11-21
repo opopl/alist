@@ -42,10 +42,12 @@ export interface AuthListUI {
   numRec: number;
   numRecSave: number;
   page: number;
+  pageSave: number;
   numPages: number;
   cnt: number;
-
   updateNumRec: (size: number) => void;
+  updatePage: (pg: number) => void;
+
   updateAuthor: (obj: { [ key: string] : string }) => void;
 
   changeRowSel: (position: number) => void;

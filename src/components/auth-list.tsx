@@ -49,6 +49,19 @@ export const AuthList = (props: AuthListUI) => {
         </div>
 
         <div className="flex-container">
+	        <label htmlFor="page">page:</label>
+	        <input 
+	             type="number" 
+	             id="page" name="page" value={(props.page == 0) ? '' : props.page}
+	             onChange={(e) => {
+	                const val = e.currentTarget.value
+	                const page = parseInt(val || '0')
+	                props.updatePage(page)
+	             }}
+	        />
+        </div>
+
+        <div className="flex-container">
           <span>number of records: {props.cnt}</span>
           <span>number of pages: {props.numPages}</span>
         </div>

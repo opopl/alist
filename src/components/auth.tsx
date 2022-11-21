@@ -27,6 +27,7 @@ export const Auth = () => {
   const [loading, setLoading] = useState(true)
 
   const [page, setPage] = useState(1)
+  const [pageSave, setPageSave] = useState(1)
   // number of records per page
   const [ numRec, setNumRec ] = useState(10)
   const [ numRecSave, setNumRecSave ] = useState(numRec)
@@ -61,6 +62,7 @@ export const Auth = () => {
     //console.log(`author => ${JSON.stringify(author)}`)
   //}, [ author ])
 
+//@@ changeRowSel
   const changeRowSel = (position: number) => {
      setRowSel(position)
   }
@@ -69,6 +71,11 @@ export const Auth = () => {
   const updateNumRec = (size: number) => {
      setNumRecSave(numRec)
      setNumRec(size)
+  }
+
+  const updatePage = (pg: number) => {
+     setPageSave(page)
+     setPage(pg)
   }
 
 //@@ updateAuthor
@@ -148,11 +155,13 @@ export const Auth = () => {
                      handleAuthorRemove={handleAuthorRemove} 
 
                      page={page}
+                     pageSave={pageSave}
                      numPages={numPages}
                      cnt={cnt}
                      numRec={numRec}
                      numRecSave={numRecSave}
                      updateNumRec={updateNumRec}
+                     updatePage={updatePage}
                 />
               </div>
             </div>
