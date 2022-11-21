@@ -23,7 +23,7 @@ exports.authAll = async (req, res) => {
   const cnt = rw_cnt
 
   const nPages = Math.trunc(cnt/size + 1)
-  const offset = (page-1)*size 
+  const offset = ( page > 0 ) ? (page-1)*size : 0
 
   knex
     .select('*') // select all records

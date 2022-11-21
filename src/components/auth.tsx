@@ -71,6 +71,7 @@ export const Auth = () => {
   const updateNumRec = (size: number) => {
      setNumRecSave(numRec)
      setNumRec(size)
+     setPage(1)
   }
 
   const updatePage = (pg: number) => {
