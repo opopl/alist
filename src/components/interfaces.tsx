@@ -33,6 +33,7 @@ export interface AuthListUI {
   loading: boolean;
   rowSel: number;
   numRec: number;
+  numRecSave: number;
   page: number;
 
   updateNumRec: (size: number) => void;

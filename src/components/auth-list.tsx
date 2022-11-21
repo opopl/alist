@@ -38,8 +38,12 @@ export const AuthList = (props: AuthListUI) => {
         <label htmlFor="numRec">Number of Records:</label>
         <input 
              type="number" 
-             id="numRec" name="numRec" value={props.numRec}
-             onChange={(e) => {props.updateNumRec(e.currentTarget.value)}}
+             id="numRec" name="numRec" value={(props.numRec == 0) ? '' : props.numRec}
+             onChange={(e) => {
+                const val = e.currentTarget.value
+                const size = parseInt(val || '0')
+                props.updateNumRec(size)
+             }}
         />
     
     <table className="table">

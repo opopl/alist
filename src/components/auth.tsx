@@ -29,6 +29,7 @@ export const Auth = () => {
   const [page, setPage] = useState(1)
   // number of records per page
   const [numRec, setNumRec] = useState(10)
+  const [numRecSave, setNumRecSave] = useState(numRec)
 
   const [rowSel, setRowSel] = useState(0)
 
@@ -44,8 +45,9 @@ export const Auth = () => {
 
   // Fetch all authors on initial render
   useEffect(() => {
-    fetchAuthors({ page : page, size : numRec })
-  }, [ page, numRec ])
+    const size = numRec || numRecSave
+    fetchAuthors({ page : page, size : size })
+  }, [ page, numRec, numRecSave ])
 
   //useEffect(() => {
     //console.log(`author => ${JSON.stringify(author)}`)
@@ -57,6 +59,7 @@ export const Auth = () => {
 
 //@@ updateNumRec
   const updateNumRec = (size: number) => {
+     setNumRecSave(numRec)
      setNumRec(size)
   }
 
@@ -134,6 +137,7 @@ export const Auth = () => {
 
                      page={page}
                      numRec={numRec}
+                     numRecSave={numRecSave}
                      updateNumRec={updateNumRec}
                 />
               </div>
