@@ -5,9 +5,11 @@ import axios from 'axios'
 import { AuthEditUI, DictUI } from './interfaces'
 import { baseUrl, cols, header } from './const'
 
-import Autocomplete from './autocomplete'
-
+//import Autocomplete from './autocomplete'
 //import TextField from '@mui/material/TextField';
+//
+import TextInput from 'react-autocomplete-input';
+import 'react-autocomplete-input/dist/bundle.css';
 
 export const AuthEdit = (props: AuthEditUI) => {
 
@@ -60,6 +62,12 @@ export const AuthEdit = (props: AuthEditUI) => {
   return (
       <div className="book-list-form">
         <div className="form-wrapper" onSubmit={handleAuthorUpdate}>
+
+          <TextInput 
+              //options={props.authors} 
+              trigger={['']}
+              Component="input"
+          />
             { cols.map((col) => 
                 (
                 <fieldset key={col}>

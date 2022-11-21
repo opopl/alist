@@ -141,6 +141,7 @@ export const Auth = () => {
               <div className="flex-item-left">
                 <AuthEdit  
                      author={author}
+                     authors={authors}
                      changeRowSel={changeRowSel}
                      fetchAuthors={fetchAuthors}
                      updateAuthor={updateAuthor}

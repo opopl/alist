@@ -23,6 +23,8 @@ export interface DictUI {
 
 export interface AuthEditUI {
   author: AuthorUI;
+  authors: AuthorUI[];
+
   fetchAuthors: (params: DictUI) => void;
   changeRowSel: (position: number) => void;
   updateAuthor: (obj: { [ key: string] : string }) => void;
