@@ -55,6 +55,11 @@ export const Auth = () => {
      setRowSel(position)
   }
 
+//@@ updateNumRec
+  const updateNumRec = (size: number) => {
+     setNumRec(size)
+  }
+
 //@@ updateAuthor
   const updateAuthor = (obj: { [ key: string] : string }) => {
     let dict = { ...author, ...obj }
@@ -129,6 +134,7 @@ export const Auth = () => {
 
                      page={page}
                      numRec={numRec}
+                     updateNumRec={updateNumRec}
                 />
               </div>
             </div>

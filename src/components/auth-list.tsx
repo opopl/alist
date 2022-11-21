@@ -18,7 +18,7 @@ export const AuthList = (props: AuthListUI) => {
   const [ rowSel, setRowSel ] = useState(props.rowSel)
 
   useEffect(() => { 
-		setRowSel(props.rowSel)
+    setRowSel(props.rowSel)
   },[props.rowSel])
 
   useEffect(() => { 
@@ -35,6 +35,12 @@ export const AuthList = (props: AuthListUI) => {
   return (
     <div>
         <span>{rowSel}</span>
+        <label htmlFor="numRec">Number of Records:</label>
+        <input 
+             type="number" 
+             id="numRec" name="numRec" value={props.numRec}
+             onChange={(e) => {props.updateNumRec(e.currentTarget.value)}}
+        />
     
     <table className="table">
         <thead>
