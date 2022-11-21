@@ -54,6 +54,8 @@ knex.schema
       console.error(`There was an error setting up the database: ${error}`)
     })
 
+knex.raw('PRAGMA foreign_keys=on')
+
 // Just for debugging purposes:
 // Log all data in "authors" table
 //knex.select('*').from('authors')
