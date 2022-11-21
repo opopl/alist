@@ -36,29 +36,29 @@ export const AuthList = (props: AuthListUI) => {
     <div>
         <span>{rowSel}</span>
         <div className="flex-container">
-	        <label htmlFor="numRec">records per page:</label>
-	        <input 
-	             type="number" 
-	             id="numRec" name="numRec" value={(props.numRec == 0) ? '' : props.numRec}
-	             onChange={(e) => {
-	                const val = e.currentTarget.value
-	                const size = parseInt(val || '0')
-	                props.updateNumRec(size)
-	             }}
-	        />
+          <label htmlFor="numRec">records per page:</label>
+          <input 
+               type="number" 
+               id="numRec" name="numRec" value={(props.numRec == 0) ? '' : props.numRec}
+               onChange={(e) => {
+                  const val = e.currentTarget.value
+                  const size = parseInt(val || '0')
+                  props.updateNumRec(size)
+               }}
+          />
         </div>
 
         <div className="flex-container">
-	        <label htmlFor="page">page:</label>
-	        <input 
-	             type="number" 
-	             id="page" name="page" value={(props.page == 0) ? '' : props.page}
-	             onChange={(e) => {
-	                const val = e.currentTarget.value
-	                const page = parseInt(val || '0')
-	                props.updatePage(page)
-	             }}
-	        />
+          <label htmlFor="page">page:</label>
+          <input 
+               type="number" 
+               id="page" name="page" value={(props.page == 0) ? '' : props.page}
+               onChange={(e) => {
+                  const val = e.currentTarget.value
+                  const page = parseInt(val || '0')
+                  props.updatePage(page)
+               }}
+          />
         </div>
 
         <div className="flex-container">
