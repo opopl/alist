@@ -28,10 +28,17 @@ export interface AuthEditUI {
   updateAuthor: (obj: { [ key: string] : string }) => void;
 }
 
+export interface PagingUI {
+  numRec: number;
+  numRecSave: number;
+  page: number;
+}
+
 export interface AuthListUI {
   authors: AuthorUI[];
   loading: boolean;
   rowSel: number;
+
   numRec: number;
   numRecSave: number;
   page: number;
