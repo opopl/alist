@@ -134,6 +134,7 @@ export const Auth = () => {
         <TabList>
           <Tab>Authors</Tab>
           <Tab>Images</Tab>
+          <Tab>Documents</Tab>
         </TabList>
     
         <TabPanel>

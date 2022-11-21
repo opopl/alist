@@ -7,6 +7,7 @@ const helmet = require('helmet')
 
 // Import routes
 const authRouter = require('./routes/auth-route')
+const imgRouter = require('./routes/img-route')
 
 // Set default port for express app
 const PORT = process.env.PORT || 4001
@@ -24,6 +25,7 @@ app.use(bodyParser.json())
 
 // Implement auth route
 app.use('/auth', authRouter)
+app.use('/img', imgRouter)
 
 // Implement 500 error route
 app.use(function (err, req, res, next) {
