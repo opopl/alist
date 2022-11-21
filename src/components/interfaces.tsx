@@ -32,6 +32,8 @@ export interface AuthListUI {
   authors: AuthorUI[];
   loading: boolean;
   rowSel: number;
+  numRec: number;
+  page: number;
   changeRowSel: (position: number) => void;
   handleAuthorRemove: (id: string) => void;
   updateAuthor: (obj: { [ key: string] : string }) => void;

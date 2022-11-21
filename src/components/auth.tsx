@@ -27,6 +27,7 @@ export const Auth = () => {
   const [loading, setLoading] = useState(true)
 
   const [page, setPage] = useState(1)
+  // number of records per page
   const [numRec, setNumRec] = useState(10)
 
   const [rowSel, setRowSel] = useState(0)
@@ -44,7 +45,7 @@ export const Auth = () => {
   // Fetch all authors on initial render
   useEffect(() => {
     fetchAuthors({ page : page, size : numRec })
-  }, [])
+  }, [ page, numRec ])
 
   //useEffect(() => {
     //console.log(`author => ${JSON.stringify(author)}`)
@@ -71,10 +72,6 @@ export const Auth = () => {
   const fetchAuthors = async (params: DictUI) => {
     const res = await axios.get(`${baseUrl}/count`)
     const cnt = res.data.cnt
-    console.log(`count => ${cnt}`);
-
-    const page = params.page
-    const size = params.size
 
     axios
       .get(`${baseUrl}/all`, { params : params })
@@ -129,6 +126,9 @@ export const Auth = () => {
                      loading={loading} 
                      updateAuthor={updateAuthor} 
                      handleAuthorRemove={handleAuthorRemove} 
+
+                     page={page}
+                     numRec={numRec}
                 />
               </div>
             </div>

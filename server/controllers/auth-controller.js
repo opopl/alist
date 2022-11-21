@@ -15,13 +15,21 @@ exports.authCount = async (req, res) => {
 //@@ authAll
 exports.authAll = async (req, res) => {
   // Get all auth from database
-  const size = req.size || 10
-  const page = req.page || 1
+  const query = req.query
+  const size = query.size || 10
+  const page = query.page || 1
+
+  const rw_cnt = await knex('authors').count('id',{ as: 'cnt' }).first()
+  const cnt = rw_cnt
+
+  const nPages = Math.trunc(cnt/size + 1)
+  const offset = (page-1)*size 
 
   knex
     .select('*') // select all records
     .from('authors') // from 'authors' table
-    .limit(10)
+    .limit(size)
+    .offset(offset)
     .then(userData => {
       // Send auth extracted from database in response
       res.json(userData)
