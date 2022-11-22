@@ -15,6 +15,8 @@ export const AuthEdit = (props: AuthEditUI) => {
 
   const [author, setAuthor] = useState({ ...props.author })
 
+  const [suggestions, setSuggestions ] = useState([''])
+
   useEffect(() => {
     setAuthor(props.author)
   }, [ props.author ] )
@@ -57,6 +59,12 @@ export const AuthEdit = (props: AuthEditUI) => {
     }
   }
 
+//@@ completeAuthorId
+  const completeAuthorId = (part: string) => {
+      const str = `${part} aaa`
+      setSuggestions([ str ])
+  }
+
   // Form for author create or update 
 
   return (
@@ -65,6 +73,7 @@ export const AuthEdit = (props: AuthEditUI) => {
 
           <TextInput 
               //options={props.authors} 
+              onRequestOptions={completeAuthorId} options={suggestions}
               trigger={['']}
               Component="input"
           />
