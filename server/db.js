@@ -2,12 +2,12 @@
 const path = require('path')
 const knex = require('knex')
 
-knex.QueryBuilder.extend('someFn', function (arg) {
-  console.log('Do Smth', arg)
-  return this
-})
+/*knex.QueryBuilder.extend('someFn', function (arg) {*/
+  //console.log('Do Smth', arg)
+  //return this
+//})
 
-console.log(JSON.stringify(Object.keys(knex)))
+/*console.log(JSON.stringify(Object.keys(knex)))*/
 
 // Get the location of database.sqlite file
 //const dbPath = path.resolve(__dirname, 'db/database.sqlite')
@@ -66,18 +66,16 @@ knex_auth.schema
       console.error(`There was an error setting up the database: ${error}`)
     })
 
-console.log(JSON.stringify(Object.keys(knex_auth).sort()));
-
-
+//console.log(JSON.stringify(Object.keys(knex_auth).sort()));
 // Just for debugging purposes:
 // Log all data in "authors" table
 //knex_auth.select('someFn(*)').from('authors')
-knex_auth.select('id')
-  .from('authors')
-  .limit(2)
-  .someFn()
-  .then(data => console.log('data:', data))
-  .catch(err => console.log(err))
+/*knex_auth.select('id')*/
+  //.from('authors')
+  //.limit(2)
+  //.someFn()
+  //.then(data => console.log('data:', data))
+  /*.catch(err => console.log(err))*/
 
 // Export the database
 module.exports = knex_auth
