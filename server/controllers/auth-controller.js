@@ -19,6 +19,8 @@ exports.authAll = async (req, res) => {
   const size = query.size || 10
   const page = query.page || 1
 
+  const match = query.match || ''
+
   const rw_cnt = await knex('authors').count('id',{ as: 'cnt' }).first()
   const cnt = rw_cnt
 
