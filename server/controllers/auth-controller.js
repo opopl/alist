@@ -1,14 +1,12 @@
 // Import database
-const knex = require('./../db')
+const db = require('./../db')
 
 exports.authCount = async (req, res) => {
 
-  knex('authors')
-    .count('id',{ as: 'cnt' })
-    .first()
-    .then(rw => {
-       res.json(rw)
-    })
+  const q = 'SELECT COUNT(id) AS cnt FROM authors'
+  db.auth.get(q,(err,row) => {
+     res.json(row)
+  })
 }
 
 // Retrieve all auth

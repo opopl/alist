@@ -1,81 +1,28 @@
-// Import path module
+
 const path = require('path')
-const knex = require('knex')
+const sqlite3 = require('sqlite3')
 
-/*knex.QueryBuilder.extend('someFn', function (arg) {*/
-  //console.log('Do Smth', arg)
-  //return this
-//})
+const dbPathAuth = path.join(process.env.HTML_ROOT, 'h.db')
+const dbPathImg  = path.join(process.env.IMG_ROOT, 'img.db')
 
-/*console.log(JSON.stringify(Object.keys(knex)))*/
+const dbImg  = new sqlite3.Database(dbPathImg);
+const dbAuth = new sqlite3.Database(dbPathAuth);
 
-// Get the location of database.sqlite file
-//const dbPath = path.resolve(__dirname, 'db/database.sqlite')
-const dbPath = path.join(process.env.HTML_ROOT, 'h.db')
+dbImg.loadExtension('./sqlite3-extras')
+dbAuth.loadExtension('./sqlite3-extras')
 
-// Create connection to SQLite database
-const knex_auth = knex({
-  client: 'sqlite3',
-  connection: {
-    filename: dbPath,
-  },
-  useNullAsDefault: true
-})
+const dirSqlPages = path.join(process.env.PLG, 'projs', 'web_scraping', 'py3', 'bs', 'sql')
+const sqlAuth     = path.join(dirSqlPages, 'ct_authors.sql')
 
-// Create a table in the database called "authors"
-knex_auth.schema
-  // Make sure no "authors" table exists
-  // before trying to create new
-  .hasTable('authors')
-    .then((exists) => {
-      if (!exists) {
-        return knex_auth.schema.createTable('authors', (table)  => {
-          table.string('uid').notNullable().defaultTo(1).unique()
-          table.string('id').notNullable().unique()
-          table.string('url')
-          table.string('name')
-          table.string('plain')
-          table.string('description')
+dbImg.all('select * from imgs limit 10', (error, rows) => {
+  console.log(rows);
+});
 
-          table.primary('uid')
-        })
-        .then(() => {
-          // Log success message
-          console.log('Table \'Authors\' created')
-        })
-        .catch((error) => {
-          console.error(`There was an error creating table: ${error}`)
-        })
-      }else{
-      /*    knex*/
-              //.table('authors')
-              //.innerJoin('auth_details', 'authors.id', '=', 'auth_details.id')
-              //.limit(10)
-              /*.then(data => console.log('data:', data))*/
-      }
-    })
-    .then(() => {
-      // Log success message
-      console.log('done')
+dbAuth.all('select * from authors limit 10', (error, rows) => {
+  console.log(rows);
+});
 
-      knex_auth.raw("PRAGMA foreign_keys = ON;").then(() => {
-          console.log("Foreign Key Check activated.");
-      });
-    })
-    .catch((error) => {
-      console.error(`There was an error setting up the database: ${error}`)
-    })
-
-//console.log(JSON.stringify(Object.keys(knex_auth).sort()));
-// Just for debugging purposes:
-// Log all data in "authors" table
-//knex_auth.select('someFn(*)').from('authors')
-/*knex_auth.select('id')*/
-  //.from('authors')
-  //.limit(2)
-  //.someFn()
-  //.then(data => console.log('data:', data))
-  /*.catch(err => console.log(err))*/
-
-// Export the database
-module.exports = knex_auth
+module.exports = { 
+   auth : dbAuth,
+   img  : dbImg,
+}
