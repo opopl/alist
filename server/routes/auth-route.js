@@ -13,7 +13,7 @@ const router = express.Router()
 //
 router.get('/count', authRoutes.authCount)
 router.get('/all', authRoutes.authAll)
-//router.post('/update', authRoutes.authUpdate)
+router.post('/update', authRoutes.authUpdate)
 //router.put('/delete', authRoutes.authDelete)
 
 // Export router

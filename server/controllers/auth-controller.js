@@ -23,9 +23,9 @@ exports.authAll = async (req, res) => {
   var data = {}
 
   const q_cnt = db.sql.select('COUNT(id) AS cnt').from('authors').toString()
-  const q_sel = db.sql.select(`*, search('^${start_id}',id) as _search_id`)
+  const q_sel = db.sql.select(`*`)
                   .from('authors')
-                  .where({ _search_id : 1 } )
+                  .where(db.sql(`search('^${start_id}',id)`))
                   .limit(size)
                   .offset(offset).toString()
 
@@ -43,10 +43,7 @@ exports.authAll = async (req, res) => {
         res.json({ message: `There was an error retrieving auth: ${err}` })
       } else {
         res.json(rows)
-        console.log(rows);
       }
-
-      console.log(q_sel)
     })
   })
 
@@ -63,17 +60,20 @@ exports.authUpdate = async (req, res) => {
 
   const idu  = req.body.id
   const body = req.body
-  console.log(`request => ${JSON.stringify(body)}`);
 
   const q = db.sql.select('uid')
               .from('authors')
-              .where({ 'id' : uid }).toParams()
+              .where({ 'uid' : uid })
+              .toParams({placeholder: '?%d'})
 
   const qu = db.sql.update('authors',req.body)
-              .where({ uid : uid }).toParams()
+              .where({ uid : uid })
+              .toParams({placeholder: '?%d'})
 
   db.auth.get(q.text, q.values, (err,row) => {
-     console.log(row);
+     if (err) {
+       console.log(err);
+     }
 
      if (row === undefined || row.uid == uid ) {
         db.auth.run(qu.text, qu.values, (err) => {

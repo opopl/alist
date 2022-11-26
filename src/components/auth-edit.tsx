@@ -62,7 +62,19 @@ export const AuthEdit = (props: AuthEditUI) => {
 //@@ completeAuthorId
   const completeAuthorId = (part: string) => {
       const str = `${part} aaa`
-      setSuggestions([ str ])
+
+      axios
+        .get(`${baseUrl}/all`, { params : { start_id : part } })
+        .then(res => {
+            var list:any[] = []
+            res.data.map((row: any) => {
+               list.push(row.id)
+            })
+            setSuggestions(list)
+        })
+        .catch(err => {
+            console.log(`err => ${err}`);
+        })
   }
 
   // Form for author create or update 
