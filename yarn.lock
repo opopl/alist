@@ -12727,6 +12727,19 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
+sql-bricks-sqlite@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/sql-bricks-sqlite/-/sql-bricks-sqlite-1.0.0.tgz#e318b9d76bf0d18f4febd84244f758c2da16e740"
+  integrity sha512-+AqF7BrwJgmiCxuN+4r4ZdopZy3IYFfau9RGhVKqM70W4aTlGtks/lsDkO8r65PyGirdtRJzwkvwjXnghnc5OQ==
+  dependencies:
+    sql-bricks "^3.0.0"
+    underscore "^1.12.1"
+
+sql-bricks@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/sql-bricks/-/sql-bricks-3.0.0.tgz#4628bfc80579454529957c1ce9b941a42de95b4e"
+  integrity sha512-P9fXYWdPFOcU2uQr7hwzNa0m6qOjMSV6wmo3DPk1Nzxh9rZWyjgbFaRji41EMV1uHps4SCgwa+Cdv0tUJ+mySw==
+
 sqlite3@4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.1.1.tgz#539a42e476640796578e22d589b3283c28055242"
@@ -13582,6 +13595,11 @@ undefsafe@^2.0.2:
   integrity sha512-nrXZwwXrD/T/JXeygJqdCO6NZZ1L66HrxM/Z7mIq2oPanoN0F1nLx3lwJMu6AwJY69hdixaFQOuoYsMjE5/C2A==
   dependencies:
     debug "^2.2.0"
+
+underscore@^1.12.1:
+  version "1.13.6"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.6.tgz#04786a1f589dc6c09f761fc5f45b89e935136441"
+  integrity sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

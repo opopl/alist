@@ -59,7 +59,9 @@
     "react-autocomplete-input": "^1.0.19",
     "react-dom": "18.0.0",
     "react-pagination-table": "^2.0.2",
-    "react-tabs": "^5.1.0"
+    "react-tabs": "^5.1.0",
+    "sql-bricks": "^3.0.0",
+    "sql-bricks-sqlite": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "4.17.6",

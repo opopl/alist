@@ -3,7 +3,7 @@ const db = require('./../db')
 
 exports.authCount = async (req, res) => {
 
-  const q = 'SELECT COUNT(id) AS cnt FROM authors'
+  const q = db.sql.select('COUNT(id) AS cnt').from('authors').toString()
   db.auth.get(q,(err,row) => {
      res.json(row)
   })
@@ -17,76 +17,78 @@ exports.authAll = async (req, res) => {
   const size = query.size || 10
   const page = query.page || 1
 
-  const match = query.match || ''
+  const start_id = query.start_id || ''
+  const offset = ( page > 0 ) ? (page-1)*size : 0
 
   var data = {}
 
-  db.auth.serialize(() => {
+  const q_cnt = db.sql.select('COUNT(id) AS cnt').from('authors').toString()
+  const q_sel = db.sql.select(`*, search('^${start_id}',id) as _search_id`)
+                  .from('authors')
+                  .where({ _search_id : 1 } )
+                  .limit(size)
+                  .offset(offset).toString()
 
-    db.auth.get('SELECT COUNT(id) AS cnt FROM authors',(err,row) => {
-        data['cnt'] = row.cnt
+  db.auth.get(q_cnt,(err,row) => {
 
+    data['cnt'] = row.cnt
+    if (size) {
         data['nPages'] = Math.trunc(data.cnt/size + 1)
-        data['offset'] = ( page > 0 ) ? (page-1)*size : 0
+    }
 
-        console.log(JSON.stringify(data))
-    })
-
-    //db.auth.all(`SELECT * FROM authors LIMIT ${size} OFFSET ${data.offset}`, 
-    db.auth.all(`SELECT * FROM authors LIMIT ? OFFSET ?`, 
-      [ size, data.offset ], (err, rows) => {
+    db.auth.all(q_sel, (err, rows) => {
 
       if (err) {
         console.log(err)
         res.json({ message: `There was an error retrieving auth: ${err}` })
       } else {
-        console.log(rows)
         res.json(rows)
+        console.log(rows);
       }
 
-      console.log(`data => ${JSON.stringify(data)}`)
-      console.log(typeof(data.offset));
-    });
+      console.log(q_sel)
+    })
   })
 
 }
 
 // Update author
 //@@ authUpdate
-/*exports.authUpdate = async (req, res) => {*/
-  //const uid = req.body.uid
-  //if (!uid) { 
-     //console.log(`no uid!`);
-     //return 
-  //}
+exports.authUpdate = async (req, res) => {
+  const uid = req.body.uid
+  if (!uid) { 
+     console.log(`no uid!`);
+     return 
+  }
 
-  //const idu  = req.body.id
+  const idu  = req.body.id
+  const body = req.body
+  console.log(`request => ${JSON.stringify(body)}`);
 
-  //const body = req.body
-  //console.log(`request => ${JSON.stringify(body)}`);
+  const q = db.sql.select('uid')
+              .from('authors')
+              .where({ 'id' : uid }).toParams()
 
-  //knex('authors')
-     //.where({ 'id' : idu })
-     //.select('uid')
-     //.first()
-     //.then((row) => {
-        //if (row === undefined || row.uid == uid ) {
+  const qu = db.sql.update('authors',req.body)
+              .where({ uid : uid }).toParams()
 
-           //knex('authors')
-             //.where({ 'uid' : uid })
-             //.update(req.body)
-             //.then(() => {
-                //res.json({ message: `Author with uid = ${req.body.uid} and name = ${req.body.name} updated.` })
-             //})
-             //.catch(err => {
-                //res.json({ message: `There was an error editing uid = ${req.body.uid} author: ${err}` })
-             //})
-        //// merge
-        //}else{
-           //console.log(JSON.stringify(`merge: uid => ${uid}, ${row.uid}`));
-        //}
-     //})
-/*}*/
+  db.auth.get(q.text, q.values, (err,row) => {
+     console.log(row);
+
+     if (row === undefined || row.uid == uid ) {
+        db.auth.run(qu.text, qu.values, (err) => {
+           if (err) {
+              res.json({ message: `Author with uid = ${req.body.uid} and name = ${req.body.name} updated.` })
+           }else{
+              res.json({ message: `There was an error editing uid = ${req.body.uid} author: ${err}` })
+           }
+        })
+     }else{
+        console.log(JSON.stringify(`merge: uid => ${uid}, ${row.uid}`));
+     }
+
+  })
+}
     
 /*  knex('authors')*/
     //.insert({ // insert new author record

@@ -2,6 +2,8 @@
 const path = require('path')
 const sqlite3 = require('sqlite3')
 
+const sql = require('sql-bricks-sqlite');
+
 const dbPathAuth = path.join(process.env.HTML_ROOT, 'h.db')
 const dbPathImg  = path.join(process.env.IMG_ROOT, 'img.db')
 
@@ -37,4 +39,5 @@ const sqlAuth     = path.join(dirSqlPages, 'ct_authors.sql')
 module.exports = { 
    auth : dbAuth,
    img  : dbImg,
+   sql  : sql
 }
