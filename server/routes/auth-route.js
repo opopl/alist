@@ -11,11 +11,10 @@ const router = express.Router()
 // In server.js, auth route is specified as '/auth'
 // this means that '/all' translates to '/auth/all'
 //
-router.get('/all', authRoutes.authAll)
-router.post('/update', authRoutes.authUpdate)
-router.put('/delete', authRoutes.authDelete)
-
 router.get('/count', authRoutes.authCount)
+router.get('/all', authRoutes.authAll)
+//router.post('/update', authRoutes.authUpdate)
+//router.put('/delete', authRoutes.authDelete)
 
 // Export router
 module.exports = router
