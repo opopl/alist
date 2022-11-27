@@ -77,33 +77,40 @@ export const AuthEdit = (props: AuthEditUI) => {
         })
   }
 
-  // Form for author create or update 
+  // Form for author create or update
 
   return (
       <div className="book-list-form">
         <div className="form-wrapper" onSubmit={handleAuthorUpdate}>
 
-          <TextInput 
-              //options={props.authors} 
-              onRequestOptions={completeAuthorId} options={suggestions}
-              trigger={['']}
-              Component="input"
-          />
-            { cols.map((col) => 
-                (
-                <fieldset key={col}>
-                  <div className="form-row">
-                    <label className="form-label" htmlFor="{col}">{col}:</label>
-                    <input className="form-input" 
-                            type="text" 
-                            id="{col}" name="{col}" 
-                            value={author[col] || ''} onChange={xOnChange(col)} 
-                    />
-                  </div>
-                </fieldset>
+            { cols.map( (col) => {
+                return ( <fieldset key={col}>
+                    <div className="form-row">
+                      <label className="form-label" htmlFor="{col}">{col}:</label>
+                      { col == 'id' ? (
+                           <TextInput
+                               //options={props.authors}
+                               id="{col}" name="{col}"
+                               className="form-input"
+                               onRequestOptions={completeAuthorId} options={suggestions}
+                               trigger={['']}
+                               Component="input"
+                               /*value={author[col] || ''}*/
+                           />
+                          ) : (
+                           <input className="form-input"
+                                    type="text"
+                                    id="{col}" name="{col}"
+                                    value={author[col] || ''} onChange={xOnChange(col)}
+                           />
+                       )
+                      }
+                    </div>
+                  </fieldset>
                 )
-              )
-            }
+              }
+
+            )}
 
             <div className="flex-container">
               <button onClick={handleInputsReset} className="btn btn-add">Reset</button>

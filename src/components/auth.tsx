@@ -87,7 +87,7 @@ export const Auth = () => {
         //author[k] = ''
       //}
     //})
-    console.log(`updateAuthor => ${JSON.stringify(dict)}`)
+    //console.log(`updateAuthor => ${JSON.stringify(dict)}`)
     setAuthor(dict)
   }
 
