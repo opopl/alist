@@ -89,6 +89,23 @@ exports.authUpdate = async (req, res) => {
 
   })
 }
+
+// Remove specific author
+//@@ authDelete
+/*exports.authDelete = async (req, res) => {*/
+  //// Find specific book in the database and remove it
+  //knex('authors')
+    //.where('id', req.body.id) // find correct record based on id
+    //.del() // delete the record
+    //.then(() => {
+      //// Send a success message in response
+      //res.json({ message: `Author ${req.body.id} deleted.` })
+    //})
+    //.catch(err => {
+      //// Send a error message in response
+      //res.json({ message: `There was an error deleting ${req.body.id} author: ${err}` })
+    //})
+//}
     
 /*  knex('authors')*/
     //.insert({ // insert new author record
@@ -109,20 +126,5 @@ exports.authUpdate = async (req, res) => {
       //res.json({ message: `There was an error creating ${req.body.id} author: ${err}` })
     /*})*/
 
-// Remove specific author
-//@@ authDelete
-/*exports.authDelete = async (req, res) => {*/
-  //// Find specific book in the database and remove it
-  //knex('authors')
-    //.where('id', req.body.id) // find correct record based on id
-    //.del() // delete the record
-    //.then(() => {
-      //// Send a success message in response
-      //res.json({ message: `Author ${req.body.id} deleted.` })
-    //})
-    //.catch(err => {
-      //// Send a error message in response
-      //res.json({ message: `There was an error deleting ${req.body.id} author: ${err}` })
-    //})
-//}
+
 
