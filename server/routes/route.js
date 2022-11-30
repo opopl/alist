@@ -18,8 +18,9 @@ router.get('/auth/all', authRoutes.authAll)
 router.post('/auth/update', authRoutes.authUpdate)
 //router.put('/auth/delete', authRoutes.authDelete)
 //
-router.get('/prj/sec/count', prjRoutes.secCount)
-router.get('/prj/sec/data', prjRoutes.secData)
+router.get('/prj/sec/count', prjRoutes.jsonSecCount)
+router.get('/prj/sec/data', prjRoutes.jsonSecData)
+//router.get('/prj/sec/src', prjRoutes.secSrc)
 
 // Export router
 module.exports = router

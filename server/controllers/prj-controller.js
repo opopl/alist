@@ -1,7 +1,8 @@
 // Import database
 const db = require('./../db')
 
-exports.secCount = async (req, res) => {
+//@@ jsonSecCount
+const jsonSecCount = async (req, res) => {
 
   const q = db.sql.select('COUNT(*) AS cnt').from('projs').toString()
   db.prj.get(q,(err,row) => {
@@ -9,7 +10,8 @@ exports.secCount = async (req, res) => {
   })
 }
 
-exports.secData = async (req, res) => {
+//@@ jsonSecData
+const jsonSecData = async (req, res) => {
   const query = req.query
 
   const sec = query.sec || ''
@@ -50,8 +52,31 @@ exports.secData = async (req, res) => {
 
 }
 
-exports.secTex = async (req, res) => {
+//const jsonSecSrc = async (req, res) => {
+  //const query = req.query
+
+  //const sec = query.sec || ''
+
+  ////const q_file = db.sql.select('file').from('projs')
+
+  ////db.prj.get(q_file.text, q_file.values, (err,row) => {
+  ////})
+  ////var data = {}
+  ////console.log(Object.keys(res));
+  ////console.log(typeof res);
+  //var data = { ...res }
+  //await secData(req, data)
+  //console.log(data);
+  //res = data
+  ////res = data
+
+/*}*/
+
+//exports.secHtml = async (req, res) => {
+/*}*/
+
+module.exports = { 
+    jsonSecData, 
+    jsonSecCount 
 }
 
-exports.secHtml = async (req, res) => {
-}
