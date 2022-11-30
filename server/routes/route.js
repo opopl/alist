@@ -19,6 +19,7 @@ router.post('/auth/update', authRoutes.authUpdate)
 //router.put('/auth/delete', authRoutes.authDelete)
 //
 router.get('/prj/sec/count', prjRoutes.secCount)
+router.get('/prj/sec/data', prjRoutes.secData)
 
 // Export router
 module.exports = router
