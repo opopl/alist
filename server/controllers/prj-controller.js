@@ -10,21 +10,19 @@ const jsonSecCount = async (req, res) => {
   })
 }
 
-//@@ jsonSecData
-const jsonSecData = async (req, res) => {
-  const query = req.query
-
-  const sec = query.sec || ''
+const dbSecData = async (ref={}) => {
+  const sec = ref.sec || ''
 
   const q_sec = db.sql.select('*')
               .from('projs')
               .where({ 'sec' : sec })
               .toParams({placeholder: '?%d'})
 
-  db.prj.get(q_sec.text, q_sec.values, (err,row) => {
+  var data = {}
+
+  await db.prj.get(q_sec.text, q_sec.values, (err,row) => {
       if (err) {
         console.log(err)
-        res.json({ message: `There was an error retrieving section data: ${err}` })
         return
       }
 
@@ -46,9 +44,22 @@ const jsonSecData = async (req, res) => {
         rows.map((rw) => { children.push(rw.sec) })
 
         row['children'] = children
-        res.json(row)
+        console.log(row);
+        data = row
       })
   })
+
+  return data
+
+}
+
+//@@ jsonSecData
+const jsonSecData = async (req, res) => {
+  const query = req.query
+
+  console.log(query);
+  var data = await dbSecData(query)
+  res.json(data)
 
 }
 
