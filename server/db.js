@@ -20,7 +20,7 @@ dbPrj.loadExtension(ext)
 const dirSqlPages = path.join(process.env.PLG, 'projs', 'web_scraping', 'py3', 'bs', 'sql')
 const sqlAuth     = path.join(dirSqlPages, 'ct_authors.sql')
 
-module.exports = { 
+module.exports = {
    auth : dbAuth,
    img  : dbImg,
    prj  : dbPrj,
