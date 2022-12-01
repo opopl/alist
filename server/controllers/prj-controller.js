@@ -2,13 +2,24 @@
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 
+const _ = require('lodash')
+
 const util = require('./../util')
 
 const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
-const _ = require('lodash')
+const prjRoot  = path.join(process.env.P_SR)
+const htmlOut  = path.join(process.env.HTMLOUT)
+
+const defaults = {
+   rootid : 'p_sr',
+   proj : 'letopis'
+}
+
+const rootid = _.get(defaults, 'rootid')
+
 
 //@@ jsonSecCount
 const jsonSecCount = async (req, res) => {
@@ -25,6 +36,7 @@ const jsonSecCount = async (req, res) => {
 //@@ dbSecData
 const dbSecData = async (ref={}) => {
   const sec = ref.sec || ''
+  const proj = ref.proj || ''
 
   const q_sec = db.sql.select('*')
               .from('projs')
@@ -58,7 +70,6 @@ const secTxt = async (ref={}) => {
   const data = await dbSecData(ref)
   const file = data.file
 
-  const prjRoot  = path.join(process.env.P_SR)
   const file_path = path.join(prjRoot, file)
 
   var secTxt = await util.fsRead(file_path)
@@ -79,20 +90,41 @@ const jsonSecData = async (req, res) => {
 //@@ jsonSecSrc
 const jsonSecSrc = async (req, res) => {
   const query = req.query
-
   const sec = query.sec || ''
+
   var txt = await secTxt({ sec })
 
   res.send({ txt })
 
 }
 
-//exports.secHtml = async (req, res) => {
-/*}*/
+//@@ jsonSecHtml
+const jsonSecHtml = async (req, res) => {
+  const query = req.query
+
+  const sec = _.get(query, 'sec', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const target = '_buf.' + sec
+
+  const htmlDir = path.join(htmlOut, rootid, proj, target)
+  const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+
+  var html = ''
+  if (fs.existsSync(htmlFile)) {
+     res.sendFile(htmlFile)
+     //html = await util.fsRead(htmlFile)
+     //console.log({ proj, sec, htmlFile });
+     //console.log({ html });
+  }
+
+}
+
 
 module.exports = { 
     jsonSecCount,
     jsonSecData,
-    jsonSecSrc
+    jsonSecSrc,
+    jsonSecHtml
 }
 
