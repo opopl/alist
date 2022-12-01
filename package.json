@@ -55,6 +55,7 @@
     "express": "4.17.1",
     "helmet": "3.22.0",
     "knex": "0.95",
+    "lodash": "^4.17.21",
     "promised-sqlite3": "^1.2.0",
     "react": "18.0.0",
     "react-autocomplete-input": "^1.0.19",

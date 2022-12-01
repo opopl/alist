@@ -8,6 +8,8 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
+const _ = require('lodash')
+
 //@@ jsonSecCount
 const jsonSecCount = async (req, res) => {
 
@@ -49,16 +51,18 @@ const dbSecData = async (ref={}) => {
 
 }
 
+//@@ secTxt
+const secTxt = async (ref={}) => {
+  //const sec = _.get(ref, 'sec', '')
 
-//@@ secLines
-const secLines = async (ref={}) => {
-  const sec = ref.sec || ''
-
-  const data = await dbSecData(query)
+  const data = await dbSecData(ref)
   const file = data.file
 
   const prjRoot  = path.join(process.env.P_SR)
   const file_path = path.join(prjRoot, file)
+
+  var secTxt = await util.fsRead(file_path)
+  return secTxt
 
 }
 
@@ -77,18 +81,9 @@ const jsonSecSrc = async (req, res) => {
   const query = req.query
 
   const sec = query.sec || ''
+  var txt = await secTxt({ sec })
 
-  const data = await dbSecData(query)
-  const file = data.file
-
-  const prjRoot  = path.join(process.env.P_SR)
-  const file_path = path.join(prjRoot, file)
-
-  console.log(file_path);
-  var lines = await util.fsRead(file_path)
-  console.log(JSON.stringify(lines));
-
-  res.send({ lines })
+  res.send({ txt })
 
 }
 
