@@ -2,6 +2,12 @@
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 
+const util = require('./../util')
+
+const path = require('path')
+const fs = require('fs')
+const fse = require('fs-extra')
+
 //@@ jsonSecCount
 const jsonSecCount = async (req, res) => {
 
@@ -43,6 +49,19 @@ const dbSecData = async (ref={}) => {
 
 }
 
+
+//@@ secLines
+const secLines = async (ref={}) => {
+  const sec = ref.sec || ''
+
+  const data = await dbSecData(query)
+  const file = data.file
+
+  const prjRoot  = path.join(process.env.P_SR)
+  const file_path = path.join(prjRoot, file)
+
+}
+
 //@@ jsonSecData
 const jsonSecData = async (req, res) => {
   const query = req.query
@@ -53,31 +72,32 @@ const jsonSecData = async (req, res) => {
 
 }
 
-//const jsonSecSrc = async (req, res) => {
-  //const query = req.query
+//@@ jsonSecSrc
+const jsonSecSrc = async (req, res) => {
+  const query = req.query
 
-  //const sec = query.sec || ''
+  const sec = query.sec || ''
 
-  ////const q_file = db.sql.select('file').from('projs')
+  const data = await dbSecData(query)
+  const file = data.file
 
-  ////db.prj.get(q_file.text, q_file.values, (err,row) => {
-  ////})
-  ////var data = {}
-  ////console.log(Object.keys(res));
-  ////console.log(typeof res);
-  //var data = { ...res }
-  //await secData(req, data)
-  //console.log(data);
-  //res = data
-  ////res = data
+  const prjRoot  = path.join(process.env.P_SR)
+  const file_path = path.join(prjRoot, file)
 
-/*}*/
+  console.log(file_path);
+  var lines = await util.fsRead(file_path)
+  console.log(JSON.stringify(lines));
+
+  res.send({ lines })
+
+}
 
 //exports.secHtml = async (req, res) => {
 /*}*/
 
 module.exports = { 
-    jsonSecData, 
-    jsonSecCount 
+    jsonSecCount,
+    jsonSecData,
+    jsonSecSrc
 }
 
