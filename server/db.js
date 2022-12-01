@@ -10,7 +10,7 @@ const dbPathPrj  = path.join(process.env.P_SR, 'projs.sqlite')
 
 const dbImg  = new sqlite3.Database(dbPathImg);
 const dbAuth = new sqlite3.Database(dbPathAuth);
-const dbPrj = new sqlite3.Database(dbPathPrj);
+const dbPrj  = new sqlite3.Database(dbPathPrj);
 
 const ext = path.join(__dirname,'./sqlite3-extras')
 dbImg.loadExtension(ext)

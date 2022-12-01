@@ -5,9 +5,11 @@
 //var db
 //
 
-// first row read
+//@@ get
 exports.get = function(db, query, params) {
     return new Promise(function(resolve, reject) {
+        if(params == undefined) params=[]
+
         db.get(query, params, function(err, row)  {
             if(err) reject("Read error: " + err.message)
             else { resolve(row) }
@@ -15,8 +17,11 @@ exports.get = function(db, query, params) {
     })
 }
 
+//@@ run
 exports.run = function(db, query, params) {
     return new Promise(function(resolve, reject) {
+        if(params == undefined) params=[]
+
         db.run(query, params, function(err)  {
                 if(err) reject(err.message)
                 else    resolve(true)
@@ -24,6 +29,7 @@ exports.run = function(db, query, params) {
     })
 }
 
+//@@ all
 exports.all = function(db, query, params) {
     return new Promise(function(resolve, reject) {
         if(params == undefined) params=[]

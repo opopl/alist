@@ -1602,6 +1602,13 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
+"@types/sqlite3@^3.1.6":
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/@types/sqlite3/-/sqlite3-3.1.8.tgz#e64310c5841fc01c1a8795d960d951e4cf940296"
+  integrity sha512-sQMt/qnyUWnqiTcJXm5ZfNPIBeJ/DVvJDwxw+0tAxPJvadzfiP1QhryO1JOR6t1yfb8NpzQb/Rud06mob5laIA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -11061,6 +11068,14 @@ promise@^8.0.3:
   dependencies:
     asap "~2.0.6"
 
+promised-sqlite3@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/promised-sqlite3/-/promised-sqlite3-1.2.0.tgz#09b7a5ca70eb38050d21794729df1b91e1503f6d"
+  integrity sha512-qQS4ySe2r6PsQ1WhULEPUf19XEpvcYZ0r26GHP9/gecygEQn51NrlQQzmdFZ6iGzLwaqHYxKJpJcESq4bCxdCA==
+  dependencies:
+    "@types/sqlite3" "^3.1.6"
+    sqlite3 "^4.1.1"
+
 prompts@^2.0.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.3.2.tgz#480572d89ecf39566d2bd3fe2c9fccb7c4c0b068"
@@ -12748,6 +12763,14 @@ sqlite3@4.1.1:
     nan "^2.12.1"
     node-pre-gyp "^0.11.0"
     request "^2.87.0"
+
+sqlite3@^4.1.1:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.2.0.tgz#49026d665e9fc4f922e56fb9711ba5b4c85c4901"
+  integrity sha512-roEOz41hxui2Q7uYnWsjMOTry6TcNUNmp8audCx18gF10P2NknwdpF+E+HKvz/F2NvPKGGBF4NGc+ZPQ+AABwg==
+  dependencies:
+    nan "^2.12.1"
+    node-pre-gyp "^0.11.0"
 
 sshpk@^1.7.0:
   version "1.16.1"
