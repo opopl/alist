@@ -14,6 +14,19 @@ const fsRead = function(path, encoding) {
 
 }
 
+const fsWrite = function(path, data) {
+    return new Promise(function(resolve, reject) {
+        //if(encoding == undefined) encoding='utf8'
+
+        fs.writeFile(path, data, function(err)  {
+            if(err) reject("Write error: " + err.message)
+            else { resolve(data) }
+        })
+    })
+
+}
+
 module.exports = {
-  fsRead
+  fsRead,
+  fsWrite
 }

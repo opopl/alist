@@ -5,6 +5,7 @@ const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
 const util = require('./../util')
+const cheerio = require("cheerio");
 
 const path = require('path')
 const fs = require('fs')
@@ -112,6 +113,27 @@ const jsonSecHtml = async (req, res) => {
 
   var html = ''
   if (fs.existsSync(htmlFile)) {
+     html = await util.fsRead(htmlFile)
+     const $ = cheerio.load(html)
+
+     //console.log(html)
+
+     const imgs = $('img')
+     imgs.each((i, elem) => {
+       var src = $(elem).attr('src')
+       if (src) {
+          var bn = path.basename(src)
+          var inum = bn.replace( /^(\d+).png$/g,'$1')
+          $(elem).attr('src',`/imgs/raw/${inum}`)
+       }
+       console.log($(elem).wrap($('<div></div>')).html())
+       //console.log($(elem).wrap('<div></div>').html())
+       //console.log($(elem).tagName)
+     })
+
+     console.log($('<div><a></a></div>').html())
+     await util.fsWrite(htmlFile, $.html() )
+
      res.sendFile(htmlFile)
      //html = await util.fsRead(htmlFile)
      //console.log({ proj, sec, htmlFile });
