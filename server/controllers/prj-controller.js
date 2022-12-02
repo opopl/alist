@@ -131,18 +131,19 @@ const jsonSecHtml = async (req, res) => {
        var src = $(elem).attr('src')
        if (src) {
           var bn = path.basename(src)
-          var inum = bn.replace( /^(\d+).png$/g,'$1')
+          var inum = bn.replace( /^(\d+)\.\w+$/g,'$1')
           $(elem).attr('src',`/img/raw/${inum}`)
+          console.log(inum);
        }
-       console.log($(elem).wrap($('<div></div>')).html())
+       //console.log($(elem).wrap($('<div></div>')).html())
        //console.log($(elem).wrap('<div></div>').html())
        //console.log($(elem).tagName)
      })
 
      console.log($('<div><a></a></div>').html())
-     await util.fsWrite(htmlFile, $.html() )
+     //await util.fsWrite(htmlFile, $.html() )
 
-     res.sendFile(htmlFile)
+     res.send($.html())
      //html = await util.fsRead(htmlFile)
      //console.log({ proj, sec, htmlFile });
      //console.log({ html });
