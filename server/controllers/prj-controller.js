@@ -4,6 +4,8 @@ const dbProc = require('./../dbproc')
 const _ = require('lodash')
 const util = require('./../util')
 
+const childProcess = require('child_process')
+
 const cheerio = require("cheerio");
 
 const path = require('path')
@@ -11,7 +13,9 @@ const fs = require('fs')
 const fse = require('fs-extra')
 
 const prjRoot  = path.join(process.env.P_SR)
+
 const htmlOut  = path.join(process.env.HTMLOUT)
+const pdfOut   = path.join(process.env.PDFOUT)
 
 const defaults = {
    rootid : 'p_sr',
@@ -104,6 +108,8 @@ const jsonSecHtml = async (req, res) => {
   const sec = _.get(query, 'sec', '')
   const proj = _.get(query, 'proj', defaults.proj)
 
+  const action = _.get(query, 'action', 'render')
+
   const target = '_buf.' + sec
 
   const htmlDir = path.join(htmlOut, rootid, proj, target)
@@ -114,11 +120,13 @@ const jsonSecHtml = async (req, res) => {
      process.chdir(prjRoot)
 
      var act = 'compile'
-     var cnf = 'htx'
+     var cnf = 'htx,srv'
      var trg = `_buf.${sec}`
      var bldFile = `${proj}.bld.pl`
 
-     var cmd = `${bldFile} ${act} -c ${cnf} -t ${trg}`
+     var cmd = `perl ${bldFile} ${act} -c ${cnf} -t ${trg}`
+
+     childProcess.execSync(cmd, { stdio: 'inherit' })
 
   }else{
      html = await util.fsRead(htmlFile)
