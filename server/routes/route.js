@@ -23,5 +23,8 @@ router.get('/prj/sec/data', prjRoutes.jsonSecData)
 router.get('/prj/sec/src', prjRoutes.jsonSecSrc)
 router.get('/prj/sec/html', prjRoutes.jsonSecHtml)
 
+router.get('/img/count', imgRoutes.jsonImgCount)
+router.get('/img/raw/:inum', imgRoutes.rawImg)
+
 // Export router
 module.exports = router

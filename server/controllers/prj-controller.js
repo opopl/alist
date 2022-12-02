@@ -1,10 +1,9 @@
 // Import database
 const db = require('./../db')
 const dbProc = require('./../dbproc')
-
 const _ = require('lodash')
-
 const util = require('./../util')
+
 const cheerio = require("cheerio");
 
 const path = require('path')
@@ -20,7 +19,6 @@ const defaults = {
 }
 
 const rootid = _.get(defaults, 'rootid')
-
 
 //@@ jsonSecCount
 const jsonSecCount = async (req, res) => {
@@ -112,7 +110,17 @@ const jsonSecHtml = async (req, res) => {
   const htmlFile = path.join(htmlDir, 'jnd_ht.html')
 
   var html = ''
-  if (fs.existsSync(htmlFile)) {
+  if (!fs.existsSync(htmlFile)) {
+     process.chdir(prjRoot)
+
+     var act = 'compile'
+     var cnf = 'htx'
+     var trg = `_buf.${sec}`
+     var bldFile = `${proj}.bld.pl`
+
+     var cmd = `${bldFile} ${act} -c ${cnf} -t ${trg}`
+
+  }else{
      html = await util.fsRead(htmlFile)
      const $ = cheerio.load(html)
 
@@ -124,7 +132,7 @@ const jsonSecHtml = async (req, res) => {
        if (src) {
           var bn = path.basename(src)
           var inum = bn.replace( /^(\d+).png$/g,'$1')
-          $(elem).attr('src',`/imgs/raw/${inum}`)
+          $(elem).attr('src',`/img/raw/${inum}`)
        }
        console.log($(elem).wrap($('<div></div>')).html())
        //console.log($(elem).wrap('<div></div>').html())
