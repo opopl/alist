@@ -102,16 +102,14 @@ const jsonSecSrc = async (req, res) => {
 
 }
 
-//@@ jsonSecHtml
-const jsonSecHtml = async (req, res) => {
+//@@ jsonTargetHtml
+const jsonTargetHtml = async (req, res) => {
   const query = req.query
 
-  const sec = _.get(query, 'sec', '')
-  const proj = _.get(query, 'proj', defaults.proj)
+  const target = _.get(query, 'target', '')
+  const proj   = _.get(query, 'proj', defaults.proj)
 
   const action = _.get(query, 'action', 'render')
-
-  const target = '_buf.' + sec
 
   const htmlDir = path.join(htmlOut, rootid, proj, target)
   const htmlFile = path.join(htmlDir, 'jnd_ht.html')
@@ -120,15 +118,15 @@ const jsonSecHtml = async (req, res) => {
   if (!fs.existsSync(htmlFile)) {
      process.chdir(prjRoot)
 
-     var act = 'compile'
-     var cnf = 'htx,srv'
-     var trg = `_buf.${sec}`
-     var bldFile = `${proj}.bld.pl`
+     var args = {
+       act : 'compile',
+       cnf : 'htx',
+       bldFile : `${proj}.bld.pl`
+     }
 
-     var cmd = `perl ${bldFile} ${act} -c ${cnf} -t ${trg}`
+     var cmd = `perl ${args.bldFile} ${args.act} -c ${args.cnf} -t ${target}`
 
      childProcess.execSync(cmd, { stdio: 'inherit' })
-
   }else{
      html = await util.fsRead(htmlFile)
      const $ = cheerio.load(html)
@@ -174,22 +172,27 @@ const jsonSecHtml = async (req, res) => {
 
      })
 
-     console.log($('<div><a></a></div>').html())
-
-     var $aa = $('<a></a>')
-     $('body').append($aa)
-     $aa.wrap($('<div/>'))
-
-     console.log($('body').html())
-     //console.log($aa.html())
-     //await util.fsWrite(htmlFile, $.html() )
-
      res.send($.html())
-     //html = await util.fsRead(htmlFile)
-     //console.log({ proj, sec, htmlFile });
-     //console.log({ html });
+
   }
 
+}
+
+//@@ jsonSecHtml
+const jsonSecHtml = async (req, res) => {
+  const query = req.query
+
+  const sec = _.get(query, 'sec', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const action = _.get(query, 'action', 'render')
+
+  const target = '_buf.' + sec
+
+  const htmlDir = path.join(htmlOut, rootid, proj, target)
+  const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+
+  res.redirect(`/prj/target/html?target=${target}`)
 }
 
 
@@ -197,6 +200,7 @@ module.exports = {
     jsonSecCount,
     jsonSecData,
     jsonSecSrc,
-    jsonSecHtml
+    jsonSecHtml,
+    jsonTargetHtml
 }
 

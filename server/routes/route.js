@@ -21,7 +21,9 @@ router.post('/auth/update', authRoutes.authUpdate)
 router.get('/prj/sec/count', prjRoutes.jsonSecCount)
 router.get('/prj/sec/data', prjRoutes.jsonSecData)
 router.get('/prj/sec/src', prjRoutes.jsonSecSrc)
+
 router.get('/prj/sec/html', prjRoutes.jsonSecHtml)
+router.get('/prj/target/html', prjRoutes.jsonTargetHtml)
 
 router.get('/img/count', imgRoutes.jsonImgCount)
 router.get('/img/raw/:inum', imgRoutes.rawImg)
