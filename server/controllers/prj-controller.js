@@ -148,18 +148,32 @@ const jsonSecHtml = async (req, res) => {
        //console.log($(elem).wrap('<div></div>').html())
        //console.log($(elem).tagName)
      })
-     const $a = $('a').each((i, elem) => {
+
+     const $a = $('a')
+     $a.each((i, elem) => {
        var href = $(elem).attr('href')
        if (href) {
           //const re = new RegExp( /([\S^\\\/]+)\/jnd_ht\.html$/, 'g')
           //const target = re.test(href) ? RegExp.$1 : ''
 
           //const re = xregexp(`\/(?<target>[\S^\\\/]+)\/jnd_ht.html$`, 'g')
-          const re = xregexp( /(?<target>[\S^/]+)\/jnd_ht\.html$/g )
-          let m = xregexp.exec(href, re)
-          if (m) {
-            console.log(m);
+          //const re = xregexp( /(?<target>[\S^/]+)\/jnd_ht\.html$/g )
+          const re = /(?<target>[^/]+)\/jnd_ht\.html$/g
+          const m = re.exec(href)
+          const target = m ? m.groups.target : ''
+
+          if (target) {
+            const re_buf = /^\_buf\.(?<sec>\S+)$/g
+
+            const m_buf = re_buf.exec(target)
+            const sec = m_buf ? m_buf.groups.sec : ''
+
+            if (sec) {
+               $(elem).attr('href',`/prj/sec/html?sec=${sec}`)
+               console.log(sec);
+            }
           }
+
        }
      })
 
