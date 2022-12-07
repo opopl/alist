@@ -44,7 +44,7 @@ const rawImg = async (req, res) => {
      }else{
         res.status(500)
      }
-     console.log(rw);
+     //console.log(rw);
   }
 }
 

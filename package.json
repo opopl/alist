@@ -55,6 +55,7 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "helmet": "3.22.0",
+    "jquery": "^3.6.1",
     "knex": "0.95",
     "lodash": "^4.17.21",
     "promised-sqlite3": "^1.2.0",

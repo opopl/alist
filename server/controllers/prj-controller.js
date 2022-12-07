@@ -140,53 +140,48 @@ const jsonSecHtml = async (req, res) => {
        var src = $(elem).attr('src')
        if (src) {
           var bn = path.basename(src)
-          var inum = bn.replace( /^(\d+)\.\w+$/g,'$1')
-          $(elem).attr('src',`/img/raw/${inum}`)
-          console.log(inum);
+          var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
+          $(elem).attr({ 'src' : `/img/raw/${inum}` })
        }
-       //console.log($(elem).wrap($('<div></div>')).html())
-       //console.log($(elem).wrap('<div></div>').html())
-       //console.log($(elem).tagName)
      })
 
      const $a = $('a')
      $a.each((i, elem) => {
        var href = $(elem).attr('href')
-       if (href) {
-          //const re = new RegExp( /([\S^\\\/]+)\/jnd_ht\.html$/, 'g')
-          //const target = re.test(href) ? RegExp.$1 : ''
+       if (!href) { return }
 
-          //const re = xregexp(`\/(?<target>[\S^\\\/]+)\/jnd_ht.html$`, 'g')
-          //const re = xregexp( /(?<target>[\S^/]+)\/jnd_ht\.html$/g )
-          const re = /(?<target>[^/]+)\/jnd_ht\.html$/g
-          const m = re.exec(href)
-          const target = m ? m.groups.target : ''
+       const re = /(?<target>[^/\s\t]+)\/jnd_ht\.html$/g
+       const m = re.exec(href)
+       const target = m ? m.groups.target : ''
 
-          if (target) {
-            const re_buf = /^\_buf\.(?<sec>\S+)$/g
+       if (!target) { return }
 
-            const m_buf = re_buf.exec(target)
-            const sec = m_buf ? m_buf.groups.sec : ''
+       const re_buf = /^\_buf\.(?<sec>\S+)$/g
+       const re_auth = /^\_auth\.(?<auth>\S+)$/g
 
-            if (sec) {
-               $(elem).attr('href',`/prj/sec/html?sec=${sec}`)
-               console.log(sec);
-            }
-          }
+       const m_buf  = re_buf.exec(target)
+       const m_auth = re_auth.exec(target)
 
+       const sec = m_buf ? m_buf.groups.sec : ''
+       const author_id = m_auth ? m_auth.groups.auth : ''
+
+       if (sec) {
+          $(elem).attr({ 'href' : `/prj/sec/html?sec=${sec}` })
+
+       } else if (author_id){
+          $(elem).attr({ 'href' : `/prj/auth/html?id=${author_id}` })
        }
+
      })
 
-      //const re_date = xregexp(
-          //`(?<year>  [0-9]{4} ) -?  # year
-           //(?<month> [0-9]{2} ) -?  # month
-           //(?<day>   [0-9]{2} )     # day`, 'x');
-      
-      // XRegExp.exec provides named backreferences on the result's groups property
-      //let match = xregexp.exec('2021-02-22', re_date);
-      //console.log(match.groups.year); // -> '2021'
-
      console.log($('<div><a></a></div>').html())
+
+     var $aa = $('<a></a>')
+     $('body').append($aa)
+     $aa.wrap($('<div/>'))
+
+     console.log($('body').html())
+     //console.log($aa.html())
      //await util.fsWrite(htmlFile, $.html() )
 
      res.send($.html())
