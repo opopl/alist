@@ -18,6 +18,9 @@ const prjRoot  = path.join(process.env.P_SR)
 const htmlOut  = path.join(process.env.HTMLOUT)
 const pdfOut   = path.join(process.env.PDFOUT)
 
+// root directory for js files
+const jsRoot = path.join(htmlOut,'ctl','js')
+
 const defaults = {
    rootid : 'p_sr',
    proj : 'letopis'
@@ -102,13 +105,32 @@ const reqJsonSecSrc = async (req, res) => {
 
 }
 
-// @@ htmlTargetOutput
+//@@ reqCssFile
+const reqCssFile = async (req, res) => {
+  const file = req.params[0]
+}
+
+//@@ reqJsFile
+// /prj/assets/js/(.*)
+const reqJsFile = async (req, res) => {
+  const file = req.params[0]
+
+  const jsFile = path.join(jsRoot, file)
+
+  if (fs.existsSync(jsFile)) {
+    res.sendFile(jsFile)
+  }
+
+}
+
+//@@ htmlTargetOutput
 const htmlTargetOutput = async (ref = {}) => {
   const target = _.get(ref, 'target', '')
   const proj   = _.get(ref, 'proj', defaults.proj)
 
   const htmlDir  = path.join(htmlOut, rootid, proj, target)
   const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+  const htmlFileDir = path.dirname(htmlFile)
 
   var html = ''
   if (!fs.existsSync(htmlFile)) {
@@ -117,10 +139,10 @@ const htmlTargetOutput = async (ref = {}) => {
      var args = {
        act : 'compile',
        cnf : 'htx',
-       bldFile : `${proj}.bld.pl`
+       bldCmd : `prj-bld ${proj}`
      }
 
-     var cmd = `perl ${args.bldFile} ${args.act} -c ${args.cnf} -t ${target}`
+     var cmd = `${args.bldCmd} ${args.act} -c ${args.cnf} -t ${target}`
 
      childProcess.execSync(cmd, { stdio: 'inherit' })
   }
@@ -129,6 +151,17 @@ const htmlTargetOutput = async (ref = {}) => {
   const $ = cheerio.load(html)
 
   //console.log(html)
+        //
+  const $script = $('script')
+  $script.each((i, elem) => {
+    var src = $(elem).attr('src')
+    if (!src) { return }
+
+    var fpath = path.resolve(htmlFileDir,src)
+    var rel = path.relative(jsRoot, fpath)
+    var jsUrl = `/prj/assets/js/${rel}`
+    $(elem).attr({ src : jsUrl })
+  })
 
   const $imgs = $('img')
   $imgs.each((i, elem) => {
@@ -218,13 +251,26 @@ const reqHtmlAuthView = async (req, res) => {
   //res.redirect(`/prj/target/html?target=${target}`)
 }
 
-module.exports = {
+const jsonHandlers = {
     reqJsonSecCount,
     reqJsonSecData,
-    reqJsonSecSrc,
+    reqJsonSecSrc
+}
 
+const fsHandlers = {
+    reqJsFile,
+    reqCssFile
+}
+
+const htmlHandlers = {
     reqHtmlSecView,
     reqHtmlAuthView,
     reqHtmlTargetView
+}
+
+module.exports = {
+    ...jsonHandlers,
+    ...fsHandlers,
+    ...htmlHandlers
 }
 
