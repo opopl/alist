@@ -25,8 +25,8 @@ const defaults = {
 
 const rootid = _.get(defaults, 'rootid')
 
-//@@ jsonSecCount
-const jsonSecCount = async (req, res) => {
+//@@ reqJsonSecCount
+const reqJsonSecCount = async (req, res) => {
 
   const q_count = db.sql.select('COUNT(*) AS cnt').from('projs').toString()
   //var row = await db.prj.get(q,(err,row) => {} )
@@ -81,8 +81,8 @@ const secTxt = async (ref={}) => {
 
 }
 
-//@@ jsonSecData
-const jsonSecData = async (req, res) => {
+//@@ reqJsonSecData
+const reqJsonSecData = async (req, res) => {
   const query = req.query
 
   console.log(query);
@@ -91,8 +91,8 @@ const jsonSecData = async (req, res) => {
 
 }
 
-//@@ jsonSecSrc
-const jsonSecSrc = async (req, res) => {
+//@@ reqJsonSecSrc
+const reqJsonSecSrc = async (req, res) => {
   const query = req.query
   const sec = query.sec || ''
 
@@ -102,16 +102,12 @@ const jsonSecSrc = async (req, res) => {
 
 }
 
-//@@ jsonTargetHtml
-const jsonTargetHtml = async (req, res) => {
-  const query = req.query
+// @@ htmlTargetOutput
+const htmlTargetOutput = async (ref = {}) => {
+  const target = _.get(ref, 'target', '')
+  const proj   = _.get(ref, 'proj', defaults.proj)
 
-  const target = _.get(query, 'target', '')
-  const proj   = _.get(query, 'proj', defaults.proj)
-
-  const action = _.get(query, 'action', 'render')
-
-  const htmlDir = path.join(htmlOut, rootid, proj, target)
+  const htmlDir  = path.join(htmlOut, rootid, proj, target)
   const htmlFile = path.join(htmlDir, 'jnd_ht.html')
 
   var html = ''
@@ -127,80 +123,108 @@ const jsonTargetHtml = async (req, res) => {
      var cmd = `perl ${args.bldFile} ${args.act} -c ${args.cnf} -t ${target}`
 
      childProcess.execSync(cmd, { stdio: 'inherit' })
-  }else{
-     html = await util.fsRead(htmlFile)
-     const $ = cheerio.load(html)
-
-     //console.log(html)
-
-     const $imgs = $('img')
-     $imgs.each((i, elem) => {
-       var src = $(elem).attr('src')
-       if (src) {
-          var bn = path.basename(src)
-          var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
-          $(elem).attr({ 'src' : `/img/raw/${inum}` })
-       }
-     })
-
-     const $a = $('a')
-     $a.each((i, elem) => {
-       var href = $(elem).attr('href')
-       if (!href) { return }
-
-       const re = /(?<target>[^/\s\t]+)\/jnd_ht\.html$/g
-       const m = re.exec(href)
-       const target = m ? m.groups.target : ''
-
-       if (!target) { return }
-
-       const re_buf = /^\_buf\.(?<sec>\S+)$/g
-       const re_auth = /^\_auth\.(?<auth>\S+)$/g
-
-       const m_buf  = re_buf.exec(target)
-       const m_auth = re_auth.exec(target)
-
-       const sec = m_buf ? m_buf.groups.sec : ''
-       const author_id = m_auth ? m_auth.groups.auth : ''
-
-       if (sec) {
-          $(elem).attr({ 'href' : `/prj/sec/html?sec=${sec}` })
-
-       } else if (author_id){
-          $(elem).attr({ 'href' : `/prj/auth/html?id=${author_id}` })
-       }
-
-     })
-
-     res.send($.html())
-
   }
+
+  html = await util.fsRead(htmlFile)
+  const $ = cheerio.load(html)
+
+  //console.log(html)
+
+  const $imgs = $('img')
+  $imgs.each((i, elem) => {
+    var src = $(elem).attr('src')
+    if (src) {
+       var bn = path.basename(src)
+       var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
+       $(elem).attr({ 'src' : `/img/raw/${inum}` })
+    }
+  })
+
+  const $a = $('a')
+  $a.each((i, elem) => {
+    var href = $(elem).attr('href')
+    if (!href) { return }
+
+    const re = /(?<target>[^/\s\t]+)\/jnd_ht\.html$/g
+    const m = re.exec(href)
+    const target = m ? m.groups.target : ''
+
+    if (!target) { return }
+
+    const re_buf = /^\_buf\.(?<sec>\S+)$/g
+    const re_auth = /^\_auth\.(?<auth>\S+)$/g
+
+    const m_buf  = re_buf.exec(target)
+    const m_auth = re_auth.exec(target)
+
+    const sec = m_buf ? m_buf.groups.sec : ''
+    const author_id = m_auth ? m_auth.groups.auth : ''
+
+    if (sec) {
+       $(elem).attr({ 'href' : `/prj/sec/html?sec=${sec}` })
+
+    } else if (author_id){
+       $(elem).attr({ 'href' : `/prj/auth/html?id=${author_id}` })
+    }
+
+  })
+
+  html = $.html()
+  return html
 
 }
 
-//@@ jsonSecHtml
-const jsonSecHtml = async (req, res) => {
+//@@ reqHtmlTargetView
+const reqHtmlTargetView = async (req, res) => {
+  const query = req.query
+
+  const target = _.get(query, 'target', '')
+  const proj   = _.get(query, 'proj', defaults.proj)
+
+  const action = _.get(query, 'action', 'render')
+
+  const html = await htmlTargetOutput({ proj, target })
+  res.send(html)
+
+}
+
+//@@ reqHtmlSecView
+const reqHtmlSecView = async (req, res) => {
   const query = req.query
 
   const sec = _.get(query, 'sec', '')
   const proj = _.get(query, 'proj', defaults.proj)
 
-  const action = _.get(query, 'action', 'render')
-
   const target = '_buf.' + sec
 
-  const htmlDir = path.join(htmlOut, rootid, proj, target)
-  const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+  const html = await htmlTargetOutput({ proj, target })
+  res.send(html)
 
-  res.redirect(`/prj/target/html?target=${target}`)
+  //res.redirect(`/prj/target/html?target=${target}`)
 }
 
+//@@ reqHtmlAuthView
+const reqHtmlAuthView = async (req, res) => {
+  const query = req.query
 
-module.exports = { 
-    jsonSecCount,
-    jsonSecData,
-    jsonSecSrc,
-    jsonSecHtml,
-    jsonTargetHtml
+  const author_id = _.get(query, 'id', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const target = '_auth.' + author_id
+
+  const html = await htmlTargetOutput({ proj, target })
+  res.send(html)
+
+  //res.redirect(`/prj/target/html?target=${target}`)
+}
+
+module.exports = {
+    reqJsonSecCount,
+    reqJsonSecData,
+    reqJsonSecSrc,
+
+    reqHtmlSecView,
+    reqHtmlAuthView,
+    reqHtmlTargetView
 }
 
