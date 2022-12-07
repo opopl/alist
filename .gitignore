@@ -1,6 +1,7 @@
 
 
 *.tags
+server/sqlite3-extras.*
 
 # Dependencies #
 ################

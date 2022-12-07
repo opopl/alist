@@ -7,6 +7,7 @@ const util = require('./../util')
 const childProcess = require('child_process')
 
 const cheerio = require("cheerio");
+const xregexp = require("xregexp");
 
 const path = require('path')
 const fs = require('fs')
@@ -134,8 +135,8 @@ const jsonSecHtml = async (req, res) => {
 
      //console.log(html)
 
-     const imgs = $('img')
-     imgs.each((i, elem) => {
+     const $imgs = $('img')
+     $imgs.each((i, elem) => {
        var src = $(elem).attr('src')
        if (src) {
           var bn = path.basename(src)
@@ -147,6 +148,29 @@ const jsonSecHtml = async (req, res) => {
        //console.log($(elem).wrap('<div></div>').html())
        //console.log($(elem).tagName)
      })
+     const $a = $('a').each((i, elem) => {
+       var href = $(elem).attr('href')
+		   if (href) {
+					//const re = new RegExp( /([\S^\\\/]+)\/jnd_ht\.html$/, 'g')
+					//const target = re.test(href) ? RegExp.$1 : ''
+
+					//const re = xregexp(`\/(?<target>[\S^\\\/]+)\/jnd_ht.html$`, 'g')
+					const re = xregexp( /(?<target>[\S^/]+)\/jnd_ht\.html$/g )
+					let m = xregexp.exec(href, re)
+					if (m) {
+       			console.log(m);
+					}
+			 }
+		 })
+
+      //const re_date = xregexp(
+          //`(?<year>  [0-9]{4} ) -?  # year
+           //(?<month> [0-9]{2} ) -?  # month
+           //(?<day>   [0-9]{2} )     # day`, 'x');
+  		
+  		// XRegExp.exec provides named backreferences on the result's groups property
+      //let match = xregexp.exec('2021-02-22', re_date);
+      //console.log(match.groups.year); // -> '2021'
 
      console.log($('<div><a></a></div>').html())
      //await util.fsWrite(htmlFile, $.html() )
