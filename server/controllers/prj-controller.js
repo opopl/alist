@@ -150,25 +150,25 @@ const jsonSecHtml = async (req, res) => {
      })
      const $a = $('a').each((i, elem) => {
        var href = $(elem).attr('href')
-		   if (href) {
-					//const re = new RegExp( /([\S^\\\/]+)\/jnd_ht\.html$/, 'g')
-					//const target = re.test(href) ? RegExp.$1 : ''
+       if (href) {
+          //const re = new RegExp( /([\S^\\\/]+)\/jnd_ht\.html$/, 'g')
+          //const target = re.test(href) ? RegExp.$1 : ''
 
-					//const re = xregexp(`\/(?<target>[\S^\\\/]+)\/jnd_ht.html$`, 'g')
-					const re = xregexp( /(?<target>[\S^/]+)\/jnd_ht\.html$/g )
-					let m = xregexp.exec(href, re)
-					if (m) {
-       			console.log(m);
-					}
-			 }
-		 })
+          //const re = xregexp(`\/(?<target>[\S^\\\/]+)\/jnd_ht.html$`, 'g')
+          const re = xregexp( /(?<target>[\S^/]+)\/jnd_ht\.html$/g )
+          let m = xregexp.exec(href, re)
+          if (m) {
+            console.log(m);
+          }
+       }
+     })
 
       //const re_date = xregexp(
           //`(?<year>  [0-9]{4} ) -?  # year
            //(?<month> [0-9]{2} ) -?  # month
            //(?<day>   [0-9]{2} )     # day`, 'x');
-  		
-  		// XRegExp.exec provides named backreferences on the result's groups property
+      
+      // XRegExp.exec provides named backreferences on the result's groups property
       //let match = xregexp.exec('2021-02-22', re_date);
       //console.log(match.groups.year); // -> '2021'
 
