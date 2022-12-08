@@ -272,7 +272,8 @@ const htmlTargetOutput = async (ref = {}) => {
      const act = 'compile'
      const cnf = 'htx'
 
-     await prjAct({ act, proj, cnf, target })
+     const { code, msg } = await prjAct({ act, proj, cnf, target })
+     if (code) { return '' }
   }
 
   html = await util.fsRead(htmlFile)
