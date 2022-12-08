@@ -66,6 +66,16 @@ const dbSecData = async (ref={}) => {
 
   secData['children'] = children
 
+  const target = `_buf.${sec}`
+
+  const htmlFile = htmlFileTarget({ proj, target })
+  const html_ex  = fs.existsSync(htmlFile) ? 1 : 0
+
+  var output = {
+      html : html_ex
+  }
+  secData = { ...secData, output }
+
   return secData
 
 }
@@ -90,6 +100,8 @@ const reqJsonSecData = async (req, res) => {
 
   console.log(query);
   var data = await dbSecData(query)
+
+
   res.json(data)
 
 }
@@ -123,13 +135,25 @@ const reqJsFile = async (req, res) => {
 
 }
 
+//@@ htmlFileTarget
+const htmlFileTarget = async (ref = {}) => {
+  const target = _.get(ref, 'target', '')
+  const proj   = _.get(ref, 'proj', defaults.proj)
+
+  const htmlDir  = path.join(htmlOut, rootid, proj, target)
+  const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+
+  return htmlFile
+}
+
 //@@ htmlTargetOutput
 const htmlTargetOutput = async (ref = {}) => {
   const target = _.get(ref, 'target', '')
   const proj   = _.get(ref, 'proj', defaults.proj)
 
   const htmlDir  = path.join(htmlOut, rootid, proj, target)
-  const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+
+  const htmlFile = await htmlFileTarget({ target, proj })
   const htmlFileDir = path.dirname(htmlFile)
 
   var html = ''
