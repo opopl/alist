@@ -136,7 +136,8 @@ const reqJsonAct = async (req, res) => {
 
   const stat = await prjAct({ act, proj, cnf, target })
 
-  res.status(200)
+  res.json({ code })
+
 }
 
 //@@ reqJsonSecSrc
@@ -206,9 +207,9 @@ const prjAct = async (ref = {}) => {
    const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
 
    process.chdir(prjRoot)
-   childProcess.execSync(cmd, { stdio: 'inherit' })
+   const code = childProcess.execSync(cmd, { stdio: 'inherit' })
 
-   const stat = {}
+   const stat = { code }
 
    return stat
 }
