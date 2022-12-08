@@ -26,6 +26,8 @@ router.get('/prj/sec/html', prjRoutes.reqHtmlSecView)
 router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
 router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
 
+router.post('/prj/act', prjRoutes.reqJsonAct)
+
 router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
 
 router.get('/img/count', imgRoutes.jsonImgCount)

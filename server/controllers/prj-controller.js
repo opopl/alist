@@ -108,6 +108,20 @@ const reqJsonSecData = async (req, res) => {
 
 }
 
+//@@ reqJsonAct
+// POST /prj/act
+const reqJsonAct = async (req, res) => {
+  const act = _.get(req, 'body.act', 'compile')
+  const cnf = _.get(req, 'body.cnf', '')
+  const target = _.get(req, 'body.target', '')
+
+  const proj = _.get(req, 'body.proj', defaults.proj)
+
+  const stat = await prjAct({ act, proj, cnf, target })
+
+  res.send({ txt })
+}
+
 //@@ reqJsonSecSrc
 const reqJsonSecSrc = async (req, res) => {
   const query = req.query
@@ -159,6 +173,29 @@ const htmlFileTarget = async (ref = {}) => {
   return htmlFile
 }
 
+//@@ prjAct
+const prjAct = async (ref = {}) => {
+   const act = _.get(ref,'act')
+   const cnf = _.get(ref,'cnf','')
+   const target = _.get(ref,'target','')
+
+   const proj = _.get(ref,'proj',defaults.proj)
+
+   const sCnf = cnf ? `-c ${cnf}` : ''
+   const sTarget = target ? `-t ${target}` : ''
+
+   const bldCmd = `prj-bld ${proj}`
+
+   const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
+
+   childProcess.execSync(cmd, { stdio: 'inherit' })
+
+   const stat = {}
+
+   return stat
+}
+
+
 //@@ htmlTargetOutput
 const htmlTargetOutput = async (ref = {}) => {
   const target = _.get(ref, 'target', '')
@@ -173,15 +210,11 @@ const htmlTargetOutput = async (ref = {}) => {
   if (!fs.existsSync(htmlFile)) {
      process.chdir(prjRoot)
 
-     var args = {
-       act : 'compile',
-       cnf : 'htx',
-       bldCmd : `prj-bld ${proj}`
-     }
+     const act = 'compile'
+     const cnf = 'htx'
 
-     var cmd = `${args.bldCmd} ${args.act} -c ${args.cnf} -t ${target}`
+     await prjAct({ act, proj, cnf, target })
 
-     childProcess.execSync(cmd, { stdio: 'inherit' })
   }
 
   html = await util.fsRead(htmlFile)
@@ -291,7 +324,8 @@ const reqHtmlAuthView = async (req, res) => {
 const jsonHandlers = {
     reqJsonSecCount,
     reqJsonSecData,
-    reqJsonSecSrc
+    reqJsonSecSrc,
+    reqJsonAct
 }
 
 const fsHandlers = {
