@@ -333,7 +333,7 @@ const htmlTargetOutput = async (ref = {}) => {
       const children = sd.children
       const $ = cheerio.load(htmlBare)
 
-      await children.map(async (child) => {
+      const promises = children.map(async (child) => {
         const q_sec = db.sql.select('sec, title')
              .from('projs')
              .where({ sec : child, proj })
@@ -343,16 +343,15 @@ const htmlTargetOutput = async (ref = {}) => {
         const title = cData.title
         const href = `/prj/sec/html?sec=${child}`
 
-        console.log({ title, href });
-
         $('body').append($(`<p><a href="${href}">${title}</a>`))
         return true;
       })
 
+      await Promise.all(promises)
+
       $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
 
       html = $.html()
-             console.log(html);
      }
   }
 
