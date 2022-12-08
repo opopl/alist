@@ -43,6 +43,10 @@ const reqJsonSecCount = async (req, res) => {
   res.json(data)
 }
 
+const dbSecSelect = async (ref={}) => {
+  const sec = ref.sec || ''
+}
+
 //@@ dbSecData
 const dbSecData = async (ref={}) => {
   const sec = ref.sec || ''
@@ -269,7 +273,6 @@ const htmlTargetOutput = async (ref = {}) => {
      const cnf = 'htx'
 
      await prjAct({ act, proj, cnf, target })
-
   }
 
   html = await util.fsRead(htmlFile)
