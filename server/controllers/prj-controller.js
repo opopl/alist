@@ -275,9 +275,6 @@ const htmlTargetOutput = async (ref = {}) => {
   html = await util.fsRead(htmlFile)
   const $ = cheerio.load(html)
 
-  //console.log(html)
-        //
-        //
   const $css = $('link[type="text/css"]')
   $css.each((i, elem) => {
     var urlCssFs = $(elem).attr('href')
@@ -288,7 +285,6 @@ const htmlTargetOutput = async (ref = {}) => {
       var urlCss = `/prj/assets/css/main/${urlCssFs}?${query}`
       $(elem).attr({ href : urlCss })
     }
-    //var rel = path.relative(cssRoot, fpath)
   })
 
   const $script = $('script')
