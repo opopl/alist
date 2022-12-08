@@ -282,11 +282,13 @@ const htmlTargetOutput = async (ref = {}) => {
   $css.each((i, elem) => {
     var urlCssFs = $(elem).attr('href')
 
-    //var fpath = path.resolve(htmlFileDir, urlCssFs)
+    var fpath = path.resolve(htmlFileDir, urlCssFs)
+    if (fs.existsSync(fpath)) {
+      var query = `target=${target}&proj=${proj}`
+      var urlCss = `/prj/assets/css/main/${urlCssFs}?${query}`
+      $(elem).attr({ href : urlCss })
+    }
     //var rel = path.relative(cssRoot, fpath)
-    var urlCss = `/prj/assets/css/main/${urlCssFs}`
-    console.log(urlCss);
-    $(elem).attr({ href : urlCss })
   })
 
   const $script = $('script')
