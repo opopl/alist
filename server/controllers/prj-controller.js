@@ -20,6 +20,8 @@ const pdfOut   = path.join(process.env.PDFOUT)
 
 // root directory for js files
 const jsRoot = path.join(htmlOut,'ctl','js')
+// root directory for css files
+const cssRoot = path.join(htmlOut,'ctl','css')
 
 const defaults = {
    rootid : 'p_sr',
@@ -135,8 +137,9 @@ const reqJsonAct = async (req, res) => {
   const proj = _.get(req, 'body.proj', defaults.proj)
 
   const stat = await prjAct({ act, proj, cnf, target })
+  console.log(stat);
 
-  res.json({ code })
+  res.json(stat)
 
 }
 
@@ -151,13 +154,39 @@ const reqJsonSecSrc = async (req, res) => {
 
 }
 
-//@@ reqCssFile
-const reqCssFile = async (req, res) => {
+//@@ reqCssFileCtl
+// get
+const reqCssFileCtl = async (req, res) => {
   const file = req.params[0]
+
+  const cssFile = path.join(cssRoot, file)
+
+  if (fs.existsSync(cssFile)) {
+    res.sendFile(cssFile)
+  }
 }
 
+//@@ reqCssFile
+// get
+const reqCssFile = async (req, res) => {
+  const file = req.params[0]
+
+  const target = _.get(req,'query.target',defaults.target)
+  const proj   = _.get(req,'query.proj',defaults.proj)
+
+  const htmlFile = await htmlFileTarget({ target, proj })
+  const htmlFileDir = path.dirname(htmlFile)
+
+  const cssFile = path.join(htmlFileDir, file)
+
+  if (fs.existsSync(cssFile)) {
+    res.sendFile(cssFile)
+  }
+}
+
+
 //@@ reqJsFile
-// /prj/assets/js/(.*)
+// GET /prj/assets/js/(.*)
 const reqJsFile = async (req, res) => {
   const file = req.params[0]
 
@@ -182,7 +211,7 @@ const pdfFileTarget = async (ref = {}) => {
 
 //@@ htmlFileTarget
 const htmlFileTarget = async (ref = {}) => {
-  const target = _.get(ref, 'target', '')
+  const target = _.get(ref, 'target', defaults.target)
   const proj   = _.get(ref, 'proj', defaults.proj)
 
   const htmlDir  = path.join(htmlOut, rootid, proj, target)
@@ -207,9 +236,17 @@ const prjAct = async (ref = {}) => {
    const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
 
    process.chdir(prjRoot)
-   const code = childProcess.execSync(cmd, { stdio: 'inherit' })
+   var code = 0, msg
 
-   const stat = { code }
+   try { 
+     childProcess.execSync(cmd, { stdio: 'inherit' })
+   } catch(e) {
+     console.error(e)
+     code = e.status
+     msg  = e.message
+   }
+
+   const stat = { code, msg }
 
    return stat
 }
@@ -240,6 +277,18 @@ const htmlTargetOutput = async (ref = {}) => {
 
   //console.log(html)
         //
+        //
+  const $css = $('link[type="text/css"]')
+  $css.each((i, elem) => {
+    var urlCssFs = $(elem).attr('href')
+
+    //var fpath = path.resolve(htmlFileDir, urlCssFs)
+    //var rel = path.relative(cssRoot, fpath)
+    var urlCss = `/prj/assets/css/main/${urlCssFs}`
+    console.log(urlCss);
+    $(elem).attr({ href : urlCss })
+  })
+
   const $script = $('script')
   $script.each((i, elem) => {
     var src = $(elem).attr('src')
@@ -350,6 +399,8 @@ const jsonHandlers = {
 
 const fsHandlers = {
     reqJsFile,
+
+    reqCssFileCtl,
     reqCssFile
 }
 

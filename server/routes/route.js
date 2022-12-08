@@ -32,6 +32,9 @@ router.post('/prj/act', prjRoutes.reqJsonAct)
 
 router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
 
+router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, prjRoutes.reqCssFileCtl)
+router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
+
 router.get('/img/count', imgRoutes.jsonImgCount)
 router.get('/img/raw/:inum', imgRoutes.rawImg)
 
