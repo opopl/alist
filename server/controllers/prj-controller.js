@@ -321,18 +321,38 @@ const htmlTargetOutput = async (ref = {}) => {
        $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
 
        html = $.html()
-     }
-     else if (key == 'date') {
+
+     } else if (key == 'date') {
       const m_sec = reMap.sec.exec(target)
       if (!m_sec) { continue }
 
       const sec = m_sec.groups.sec
-      console.log({ proj, sec });
       const sd = await dbSecData({ proj, sec })
-      console.log(sd);
+      if (!sd) { continue }
 
-      return
+      const children = sd.children
+      const $ = cheerio.load(htmlBare)
 
+      await children.map(async (child) => {
+        const q_sec = db.sql.select('sec, title')
+             .from('projs')
+             .where({ sec : child, proj })
+             .toParams({placeholder: '?%d'})
+
+        const cData = await dbProc.get(db.prj, q_sec.text, q_sec.values)
+        const title = cData.title
+        const href = `/prj/sec/html?sec=${child}`
+
+        console.log({ title, href });
+
+        $('body').append($(`<p><a href="${href}">${title}</a>`))
+        return true;
+      })
+
+      $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
+
+      html = $.html()
+             console.log(html);
      }
   }
 
