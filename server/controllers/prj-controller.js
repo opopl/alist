@@ -43,7 +43,7 @@ const reqJsonSecCount = async (req, res) => {
 //@@ dbSecData
 const dbSecData = async (ref={}) => {
   const sec = ref.sec || ''
-  const proj = ref.proj || ''
+  const proj = ref.proj || defaults.proj
 
   const q_sec = db.sql.select('*')
               .from('projs')
@@ -68,12 +68,14 @@ const dbSecData = async (ref={}) => {
 
   const target = `_buf.${sec}`
 
-  const htmlFile = htmlFileTarget({ proj, target })
+  const htmlFile = await htmlFileTarget({ proj, target })
   const html_ex  = fs.existsSync(htmlFile) ? 1 : 0
 
-  var output = {
-      html : html_ex
-  }
+  const pdfFile = await pdfFileTarget({ proj, target })
+  const pdf_ex  = fs.existsSync(pdfFile) ? 1 : 0
+
+  //var output = { html_ex, pdf_ex, htmlFile, pdfFile }
+  var output = { html_ex, pdf_ex }
   secData = { ...secData, output }
 
   return secData
@@ -133,6 +135,17 @@ const reqJsFile = async (req, res) => {
     res.sendFile(jsFile)
   }
 
+}
+
+//@@ pdfFileTarget
+const pdfFileTarget = async (ref = {}) => {
+  const target = _.get(ref, 'target', '')
+  const proj   = _.get(ref, 'proj', defaults.proj)
+
+  const pdfDir  = path.join(pdfOut, rootid, proj )
+  const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
+
+  return pdfFile
 }
 
 //@@ htmlFileTarget
