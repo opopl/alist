@@ -242,7 +242,7 @@ const prjAct = async (ref = {}) => {
    process.chdir(prjRoot)
    var code = 0, msg
 
-   try { 
+   try {
      childProcess.execSync(cmd, { stdio: 'inherit' })
    } catch(e) {
      console.error(e)
@@ -267,17 +267,64 @@ const htmlTargetOutput = async (ref = {}) => {
   const htmlFileDir = path.dirname(htmlFile)
 
   var html = ''
-  if (!fs.existsSync(htmlFile)) {
 
-     const act = 'compile'
-     const cnf = 'htx'
+  while (1) {
+     const m = /^_auth\.(?<author_id>\S+)$/.exec(target)
+     if(m){
+        const author_id = m.groups.author_id
+        const q_sec = db.sql.select('sec, title')
+            .from('projs')
+            .innerJoin('_info_projs_author_id')
+            .on({ 'projs.file' : '_info_projs_author_id.file' })
+            .where({ '_info_projs_author_id.author_id' : author_id })
+            .toParams({placeholder: '?%d'})
 
-     const { code, msg } = await prjAct({ act, proj, cnf, target })
-     if (code) { return '' }
+        const secData = await dbProc.all(db.prj, q_sec.text, q_sec.values)
+        const secs = secData.map((x,i) => { return x.sec })
+        console.log(secData);
+
+        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
+
+        const html = `<!DOCTYPE html>
+            <html>
+              <head> <title></title>
+                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+              </head>
+              <body></body>
+            </html>`
+
+        const $ = cheerio.load(html)
+
+        secData.map((sd) => {
+           const sec = sd.sec
+           const title = sd.title
+           const href = `/prj/sec/html?sec=${sec}`
+           $('body').append($(`<p><a href="${href}">${title}</a>`))
+        })
+
+        $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
+     }
+
+     break
   }
 
-  html = await util.fsRead(htmlFile)
+  if (!html) {
+     if (!fs.existsSync(htmlFile)) {
+	     const act = 'compile'
+	     const cnf = 'htx'
+
+	     const { code, msg } = await prjAct({ act, proj, cnf, target })
+	     if (code) { return '' }
+     }else{
+       html = await util.fsRead(htmlFile)
+     }
+  }
+
   const $ = cheerio.load(html)
+
+  const $pane = $('<div></div>')
+  $pane.append($('<input type="text" />'))
+  $('body').prepend($pane)
 
   const $css = $('link[type="text/css"]')
   $css.each((i, elem) => {
