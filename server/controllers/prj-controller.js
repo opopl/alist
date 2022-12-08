@@ -23,7 +23,8 @@ const jsRoot = path.join(htmlOut,'ctl','js')
 
 const defaults = {
    rootid : 'p_sr',
-   proj : 'letopis'
+   proj : 'letopis',
+   target : ''
 }
 
 const rootid = _.get(defaults, 'rootid')
@@ -96,6 +97,22 @@ const secTxt = async (ref={}) => {
 
 }
 
+//@@ reqJsonTargetData
+const reqJsonTargetData = async (req, res) => {
+  const target = _.get(req, 'query.target', defaults.target)
+  const proj = _.get(req, 'query.proj', defaults.proj)
+
+  const htmlFile = await htmlFileTarget({ proj, target })
+  const html_ex  = fs.existsSync(htmlFile) ? 1 : 0
+
+  const pdfFile = await pdfFileTarget({ proj, target })
+  const pdf_ex  = fs.existsSync(pdfFile) ? 1 : 0
+
+  var data = { html_ex, pdf_ex }
+  res.json(data)
+
+}
+
 //@@ reqJsonSecData
 const reqJsonSecData = async (req, res) => {
   const query = req.query
@@ -113,8 +130,8 @@ const reqJsonSecData = async (req, res) => {
 const reqJsonAct = async (req, res) => {
   const act = _.get(req, 'body.act', 'compile')
   const cnf = _.get(req, 'body.cnf', '')
-  const target = _.get(req, 'body.target', '')
 
+  const target = _.get(req, 'body.target', '')
   const proj = _.get(req, 'body.proj', defaults.proj)
 
   const stat = await prjAct({ act, proj, cnf, target })
@@ -325,7 +342,9 @@ const jsonHandlers = {
     reqJsonSecCount,
     reqJsonSecData,
     reqJsonSecSrc,
-    reqJsonAct
+    reqJsonAct,
+
+    reqJsonTargetData
 }
 
 const fsHandlers = {

@@ -22,6 +22,8 @@ router.get('/prj/sec/count', prjRoutes.reqJsonSecCount)
 router.get('/prj/sec/data', prjRoutes.reqJsonSecData)
 router.get('/prj/sec/src', prjRoutes.reqJsonSecSrc)
 
+router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
+
 router.get('/prj/sec/html', prjRoutes.reqHtmlSecView)
 router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
 router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
