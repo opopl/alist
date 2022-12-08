@@ -268,53 +268,68 @@ const htmlTargetOutput = async (ref = {}) => {
 
   var html = ''
 
+  const reMap = {
+     auth : /^_auth\.(?<author_id>\S+)$/,
+     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/
+  }
+  const reKeys = ['auth','date']
+
   while (1) {
-     const m = /^_auth\.(?<author_id>\S+)$/.exec(target)
-     if(m){
-        const author_id = m.groups.author_id
-        const q_sec = db.sql.select('sec, title')
-            .from('projs')
-            .innerJoin('_info_projs_author_id')
-            .on({ 'projs.file' : '_info_projs_author_id.file' })
-            .where({ '_info_projs_author_id.author_id' : author_id })
-            .toParams({placeholder: '?%d'})
+     if (!reKeys.length) { break }
 
-        const secData = await dbProc.all(db.prj, q_sec.text, q_sec.values)
-        const secs = secData.map((x,i) => { return x.sec })
-        console.log(secData);
+     const key = reKeys.shift()
+     const re = reMap[key]
 
-        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
+     //const m = /^_auth\.(?<author_id>\S+)$/.exec(target)
+     const m = re.exec(target)
+     if(!m){ continue }
 
-        const html = `<!DOCTYPE html>
-            <html>
-              <head> <title></title>
-                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-              </head>
-              <body></body>
-            </html>`
+     console.log(m);
 
-        const $ = cheerio.load(html)
+     if (key == 'auth') {
+       const author_id = m.groups.author_id
+       const q_sec = db.sql.select('sec, title')
+           .from('projs')
+           .innerJoin('_info_projs_author_id')
+           .on({ 'projs.file' : '_info_projs_author_id.file' })
+           .where({ '_info_projs_author_id.author_id' : author_id })
+           .toParams({placeholder: '?%d'})
 
-        secData.map((sd) => {
-           const sec = sd.sec
-           const title = sd.title
-           const href = `/prj/sec/html?sec=${sec}`
-           $('body').append($(`<p><a href="${href}">${title}</a>`))
-        })
+       const secData = await dbProc.all(db.prj, q_sec.text, q_sec.values)
+       const secs = secData.map((x,i) => { return x.sec })
 
-        $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
+       //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
+
+       const htmlBare = `<!DOCTYPE html>
+           <html>
+             <head> <title></title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+             </head>
+             <body></body>
+           </html>`
+
+       const $ = cheerio.load(htmlBare)
+
+       secData.map((sd) => {
+          const sec = sd.sec
+          const title = sd.title
+          const href = `/prj/sec/html?sec=${sec}`
+          $('body').append($(`<p><a href="${href}">${title}</a>`))
+       })
+
+       $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
+
+       html = $.html()
      }
-
-     break
   }
 
-  if (!html) {
+  if (!html.length) {
      if (!fs.existsSync(htmlFile)) {
-	     const act = 'compile'
-	     const cnf = 'htx'
+       const act = 'compile'
+       const cnf = 'htx'
 
-	     const { code, msg } = await prjAct({ act, proj, cnf, target })
-	     if (code) { return '' }
+       const { code, msg } = await prjAct({ act, proj, cnf, target })
+       if (code) { return '' }
      }else{
        html = await util.fsRead(htmlFile)
      }
