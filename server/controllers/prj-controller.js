@@ -136,7 +136,7 @@ const reqJsonAct = async (req, res) => {
 
   const stat = await prjAct({ act, proj, cnf, target })
 
-  res.send({ stat })
+  res.status(200)
 }
 
 //@@ reqJsonSecSrc
