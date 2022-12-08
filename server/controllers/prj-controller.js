@@ -98,6 +98,7 @@ const secTxt = async (ref={}) => {
 }
 
 //@@ reqJsonTargetData
+// GET /prj/target/data
 const reqJsonTargetData = async (req, res) => {
   const target = _.get(req, 'query.target', defaults.target)
   const proj = _.get(req, 'query.proj', defaults.proj)
@@ -120,7 +121,6 @@ const reqJsonSecData = async (req, res) => {
   console.log(query);
   var data = await dbSecData(query)
 
-
   res.json(data)
 
 }
@@ -136,7 +136,7 @@ const reqJsonAct = async (req, res) => {
 
   const stat = await prjAct({ act, proj, cnf, target })
 
-  res.send({ txt })
+  res.send({ stat })
 }
 
 //@@ reqJsonSecSrc
@@ -205,6 +205,7 @@ const prjAct = async (ref = {}) => {
 
    const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
 
+   process.chdir(prjRoot)
    childProcess.execSync(cmd, { stdio: 'inherit' })
 
    const stat = {}
@@ -225,7 +226,6 @@ const htmlTargetOutput = async (ref = {}) => {
 
   var html = ''
   if (!fs.existsSync(htmlFile)) {
-     process.chdir(prjRoot)
 
      const act = 'compile'
      const cnf = 'htx'
