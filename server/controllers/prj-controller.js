@@ -23,6 +23,14 @@ const jsRoot = path.join(htmlOut,'ctl','js')
 // root directory for css files
 const cssRoot = path.join(htmlOut,'ctl','css')
 
+const htmlBare = `<!DOCTYPE html>
+    <html>
+      <head> <title></title>
+         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      </head>
+      <body></body>
+    </html>`
+
 const defaults = {
    rootid : 'p_sr',
    proj : 'letopis',
@@ -58,6 +66,8 @@ const dbSecData = async (ref={}) => {
               .toParams({placeholder: '?%d'})
 
   var secData = await dbProc.get(db.prj, q_sec.text, q_sec.values)
+  if (!secData) { return }
+
   var sec_file = secData.file
 
   const q_ch = db.sql.select('sec')
@@ -266,13 +276,14 @@ const htmlTargetOutput = async (ref = {}) => {
   const htmlFile = await htmlFileTarget({ target, proj })
   const htmlFileDir = path.dirname(htmlFile)
 
-  var html = ''
-
   const reMap = {
-     auth : /^_auth\.(?<author_id>\S+)$/,
-     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/
+     auth : /^_auth\.(?<author_id>\S+)$/g,
+     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+     sec : /^_buf\.(?<sec>\S+)$/g
   }
   const reKeys = ['auth','date']
+
+  var html = ''
 
   while (1) {
      if (!reKeys.length) { break }
@@ -283,8 +294,6 @@ const htmlTargetOutput = async (ref = {}) => {
      //const m = /^_auth\.(?<author_id>\S+)$/.exec(target)
      const m = re.exec(target)
      if(!m){ continue }
-
-     console.log(m);
 
      if (key == 'auth') {
        const author_id = m.groups.author_id
@@ -300,14 +309,6 @@ const htmlTargetOutput = async (ref = {}) => {
 
        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
-       const htmlBare = `<!DOCTYPE html>
-           <html>
-             <head> <title></title>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-             </head>
-             <body></body>
-           </html>`
-
        const $ = cheerio.load(htmlBare)
 
        secData.map((sd) => {
@@ -321,6 +322,18 @@ const htmlTargetOutput = async (ref = {}) => {
 
        html = $.html()
      }
+     else if (key == 'date') {
+      const m_sec = reMap.sec.exec(target)
+      if (!m_sec) { continue }
+
+      const sec = m_sec.groups.sec
+      console.log({ proj, sec });
+      const sd = await dbSecData({ proj, sec })
+      console.log(sd);
+
+      return
+
+     }
   }
 
   if (!html.length) {
@@ -328,12 +341,17 @@ const htmlTargetOutput = async (ref = {}) => {
        const act = 'compile'
        const cnf = 'htx'
 
+       console.log('shell');
        const { code, msg } = await prjAct({ act, proj, cnf, target })
        if (code) { return '' }
-     }else{
+     }
+
+     if (fs.existsSync(htmlFile)) {
        html = await util.fsRead(htmlFile)
      }
   }
+
+  if (!html.length) { return }
 
   const $ = cheerio.load(html)
 
