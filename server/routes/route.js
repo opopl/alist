@@ -13,6 +13,11 @@ const router = express.Router()
 // In server.js, auth route is specified as '/auth'
 // this means that '/all' translates to '/auth/all'
 //
+//
+router.get('/', async (req, res) => {
+   res.redirect('/prj/sec/html?sec=24_11_2022')
+})
+
 router.get('/auth/count', authRoutes.authCount)
 router.get('/auth/all', authRoutes.authAll)
 router.post('/auth/update', authRoutes.authUpdate)

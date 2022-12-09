@@ -23,13 +23,6 @@ const jsRoot = path.join(htmlOut,'ctl','js')
 // root directory for css files
 const cssRoot = path.join(htmlOut,'ctl','css')
 
-const reMap = {
-   auth : /^_auth\.(?<author_id>\S+)$/g,
-   date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
-   sec : /^_buf\.(?<sec>\S+)$/g
-}
-
-
 const htmlBare = `<!DOCTYPE html>
     <html>
       <head> <title></title>
@@ -110,8 +103,10 @@ const dbSecData = async (ref={}) => {
 const secTxt = async (ref={}) => {
   //const sec = _.get(ref, 'sec', '')
 
-  const data = await dbSecData(ref)
-  const file = data.file
+  const sd = await dbSecData(ref)
+  if (!sd) { return }
+
+  const file = sd.file
 
   const file_path = path.join(prjRoot, file)
 
@@ -285,8 +280,13 @@ const htmlTargetOutput = async (ref = {}) => {
   const htmlFileDir = path.dirname(htmlFile)
 
   const reKeys = ['auth','date']
+	const reMap = {
+	   auth : /^_auth\.(?<author_id>\S+)$/g,
+	   date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+	   sec : /^_buf\.(?<sec>\S+)$/g
+	}
 
-  var html = ''
+  var html, sec
 
   while (1) {
      if (!reKeys.length) { break }
@@ -328,50 +328,50 @@ const htmlTargetOutput = async (ref = {}) => {
 
      } else if (key == 'date') {
 // html_date
-      const day = m.groups.day
-      const month = m.groups.month
-      const year = m.groups.year
+       const day = m.groups.day
+       const month = m.groups.month
+       const year = m.groups.year
 
-      const m_sec = reMap.sec.exec(target)
-      if (!m_sec) { continue }
+       const m_sec = reMap.sec.exec(target)
+       if (!m_sec) { continue }
 
-      const sec = m_sec.groups.sec
-      const sd = await dbSecData({ proj, sec })
-      if (!sd) { continue }
+       sec = m_sec.groups.sec
+       const sd = await dbSecData({ proj, sec })
 
-      const children = sd.children
-      const $ = cheerio.load(htmlBare)
+       const $ = cheerio.load(htmlBare)
+       $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
 
-      $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
+       if (sd) {
+         const children = sd.children
 
-      const promises = children.map(async (child) => {
-        const q_sec = db.sql.select('sec, title')
-             .from('projs')
-             .where({ sec : child, proj })
-             .toParams({placeholder: '?%d'})
+         const promises = children.map(async (child) => {
+           const q_sec = db.sql.select('sec, title')
+                .from('projs')
+                .where({ sec : child, proj })
+                .toParams({placeholder: '?%d'})
 
-        const cData = await dbProc.get(db.prj, q_sec.text, q_sec.values)
-        const title = cData.title
-        const href = `/prj/sec/html?sec=${child}`
+           const cData = await dbProc.get(db.prj, q_sec.text, q_sec.values)
+           const title = cData.title
+           const href = `/prj/sec/html?sec=${child}`
 
-        $('body').append($(`<p><a href="${href}">${title}</a>`))
-        return true;
-      })
+           $('body').append($(`<p><a href="${href}">${title}</a>`))
+           return true;
+         })
 
-      await Promise.all(promises)
+         await Promise.all(promises)
 
-      $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
+       }
 
-      html = $.html()
+       $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
+       html = $.html()
      }
   }
 
-  if (!html.length) {
+  if (!html || !html.length) {
      if (!fs.existsSync(htmlFile)) {
        const act = 'compile'
        const cnf = 'htx'
 
-       console.log('shell');
        const { code, msg } = await prjAct({ act, proj, cnf, target })
        if (code) { return '' }
      }
@@ -381,7 +381,7 @@ const htmlTargetOutput = async (ref = {}) => {
      }
   }
 
-  if (!html.length) { return }
+  if (!html || !html.length) { return }
 
   const $ = cheerio.load(html)
 
