@@ -220,6 +220,7 @@ const pdfFileTarget = async (ref = {}) => {
   const pdfDir  = path.join(pdfOut, rootid, proj )
   const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
 
+
   return pdfFile
 }
 
@@ -374,9 +375,9 @@ const htmlTargetOutput = async (ref = {}) => {
 
   const $ = cheerio.load(html)
 
-  const $pane = $('<div></div>')
-  $pane.append($('<input type="text" />'))
-  $('body').prepend($pane)
+  //const $pane = $('<div></div>')
+  //$pane.append($('<input type="text" />'))
+  //$('body').prepend($pane)
 
   const $css = $('link[type="text/css"]')
   $css.each((i, elem) => {
@@ -459,6 +460,29 @@ const reqHtmlTargetView = async (req, res) => {
 
 }
 
+//@@ reqPdfSecView
+const reqPdfSecView = async (req, res) => {
+  const query = req.query
+
+  const sec = _.get(query, 'sec', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const target = '_buf.' + sec
+
+  const pdfFile = await pdfFileTarget({ proj, target })
+
+  if (!fs.existsSync(pdfFile)) {
+    const act = 'compile'
+    const cnf = ''
+
+    const { code, msg } = await prjAct({ act, proj, cnf, target })
+    if (code) { return res.status(404).send({ msg }) }
+  }
+
+  res.sendFile(pdfFile)
+
+}
+
 //@@ reqHtmlSecView
 const reqHtmlSecView = async (req, res) => {
   const query = req.query
@@ -505,6 +529,10 @@ const fsHandlers = {
     reqCssFile
 }
 
+const pdfHandlers = {
+    reqPdfSecView
+}
+
 const htmlHandlers = {
     reqHtmlSecView,
     reqHtmlAuthView,
@@ -514,6 +542,7 @@ const htmlHandlers = {
 module.exports = {
     ...jsonHandlers,
     ...fsHandlers,
-    ...htmlHandlers
+    ...htmlHandlers,
+    ...pdfHandlers
 }
 
