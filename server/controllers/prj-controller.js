@@ -23,6 +23,13 @@ const jsRoot = path.join(htmlOut,'ctl','js')
 // root directory for css files
 const cssRoot = path.join(htmlOut,'ctl','css')
 
+const reMap = {
+   auth : /^_auth\.(?<author_id>\S+)$/g,
+   date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+   sec : /^_buf\.(?<sec>\S+)$/g
+}
+
+
 const htmlBare = `<!DOCTYPE html>
     <html>
       <head> <title></title>
@@ -277,11 +284,6 @@ const htmlTargetOutput = async (ref = {}) => {
   const htmlFile = await htmlFileTarget({ target, proj })
   const htmlFileDir = path.dirname(htmlFile)
 
-  const reMap = {
-     auth : /^_auth\.(?<author_id>\S+)$/g,
-     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
-     sec : /^_buf\.(?<sec>\S+)$/g
-  }
   const reKeys = ['auth','date']
 
   var html = ''
@@ -297,6 +299,7 @@ const htmlTargetOutput = async (ref = {}) => {
      if(!m){ continue }
 
      if (key == 'auth') {
+// html_auth
        const author_id = m.groups.author_id
        const q_sec = db.sql.select('sec, title')
            .from('projs')
@@ -324,6 +327,10 @@ const htmlTargetOutput = async (ref = {}) => {
        html = $.html()
 
      } else if (key == 'date') {
+        const day = m.groups.day
+        const month = m.groups.month
+        const year = m.groups.year
+// html_date
       const m_sec = reMap.sec.exec(target)
       if (!m_sec) { continue }
 
@@ -333,6 +340,8 @@ const htmlTargetOutput = async (ref = {}) => {
 
       const children = sd.children
       const $ = cheerio.load(htmlBare)
+
+      $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
 
       const promises = children.map(async (child) => {
         const q_sec = db.sql.select('sec, title')
