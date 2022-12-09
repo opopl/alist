@@ -280,13 +280,15 @@ const htmlTargetOutput = async (ref = {}) => {
   const htmlFileDir = path.dirname(htmlFile)
 
   const reKeys = ['auth','date']
-	const reMap = {
-	   auth : /^_auth\.(?<author_id>\S+)$/g,
-	   date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
-	   sec : /^_buf\.(?<sec>\S+)$/g
-	}
+  const reMap = {
+     auth : /^_auth\.(?<author_id>\S+)$/g,
+     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+     sec : /^_buf\.(?<sec>\S+)$/g
+  }
 
   var html, sec
+
+  let $ = cheerio.load(htmlBare)
 
   while (1) {
      if (!reKeys.length) { break }
@@ -313,8 +315,6 @@ const htmlTargetOutput = async (ref = {}) => {
 
        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
-       const $ = cheerio.load(htmlBare)
-
        secData.map((sd) => {
           const sec = sd.sec
           const title = sd.title
@@ -338,7 +338,6 @@ const htmlTargetOutput = async (ref = {}) => {
        sec = m_sec.groups.sec
        const sd = await dbSecData({ proj, sec })
 
-       const $ = cheerio.load(htmlBare)
        $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
 
        if (sd) {
@@ -383,7 +382,7 @@ const htmlTargetOutput = async (ref = {}) => {
 
   if (!html || !html.length) { return }
 
-  const $ = cheerio.load(html)
+  $ = cheerio.load(html)
 
   //const $pane = $('<div></div>')
   //$pane.append($('<input type="text" />'))
