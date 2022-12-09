@@ -327,10 +327,11 @@ const htmlTargetOutput = async (ref = {}) => {
        html = $.html()
 
      } else if (key == 'date') {
-        const day = m.groups.day
-        const month = m.groups.month
-        const year = m.groups.year
 // html_date
+      const day = m.groups.day
+      const month = m.groups.month
+      const year = m.groups.year
+
       const m_sec = reMap.sec.exec(target)
       if (!m_sec) { continue }
 
