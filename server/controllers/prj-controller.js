@@ -171,7 +171,6 @@ const reqJsonAct = async (req, res) => {
   const proj = _.get(req, 'body.proj', defaults.proj)
 
   const stat = await prjAct({ act, proj, cnf, target })
-  console.log(stat);
 
   res.json(stat)
 
@@ -269,12 +268,12 @@ const prjAct = async (ref = {}) => {
    const bldCmd = `prj-bld ${proj}`
 
    const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
+
    const cmda = cmd.split(/\s+/)
    const exe =  cmda.shift()
    const args = cmda
 
    process.chdir(prjRoot)
-   var msg
 
    //try {
      ////childProcess.execSync(cmd, { stdio: 'inherit' })
@@ -287,8 +286,8 @@ const prjAct = async (ref = {}) => {
         const spawned = spawn(exe, args, opts)
         var stdout = []
 
-        spawned.on('exit', (x) => {
-          resolve({ code : x, stdout })
+        spawned.on('exit', (code) => {
+          resolve({ code, stdout })
         })
 
         for await (const data of spawned.stdout) {
@@ -301,7 +300,6 @@ const prjAct = async (ref = {}) => {
      }
 
    const { code, stdout } = await ff()
-   console.log({ code, msg });
 
    //} catch(e) {
      //console.error(e)
@@ -309,7 +307,9 @@ const prjAct = async (ref = {}) => {
      //msg  = e.message
    //}
 
-   const stat = { code, stdout, msg }
+   const stat = { cmd, code, stdout }
+
+   console.log({ cmd, code });
 
    return stat
 }
