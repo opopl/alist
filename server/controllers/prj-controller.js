@@ -106,13 +106,12 @@ const dbSecData = async (ref={}) => {
   const target = `_buf.${sec}`
 
   const htmlFile = await htmlFileTarget({ proj, target })
-  const html_ex  = fs.existsSync(htmlFile) ? 1 : 0
+  const html  = fs.existsSync(htmlFile) ? 1 : 0
 
   const pdfFile = await pdfFileTarget({ proj, target })
-  const pdf_ex  = fs.existsSync(pdfFile) ? 1 : 0
+  const pdf  = fs.existsSync(pdfFile) ? 1 : 0
 
-  //var output = { html_ex, pdf_ex, htmlFile, pdfFile }
-  var output = { html_ex, pdf_ex }
+  var output = { pdf, html }
   secData = { ...secData, output }
 
   return secData
@@ -142,13 +141,13 @@ const reqJsonTargetData = async (req, res) => {
   const proj = _.get(req, 'query.proj', defaults.proj)
 
   const htmlFile = await htmlFileTarget({ proj, target })
-  const html_ex  = fs.existsSync(htmlFile) ? 1 : 0
+  const html  = fs.existsSync(htmlFile) ? 1 : 0
 
   const pdfFile = await pdfFileTarget({ proj, target })
-  const pdf_ex  = fs.existsSync(pdfFile) ? 1 : 0
+  const pdf  = fs.existsSync(pdfFile) ? 1 : 0
 
-  var data = { html_ex, pdf_ex }
-  res.json(data)
+  var output = { html, pdf }
+  res.json({ output })
 
 }
 
@@ -373,11 +372,13 @@ const htmlTargetOutput = async (ref = {}) => {
 
          const promises = children.map(async (child) => {
            const chData = await dbSecData({ sec : child, proj })
+
            const title = chData.title
+           const author_ids = _.get(chData,'author_id',[])
+
            const href = `/prj/sec/html?sec=${child}`
            const hrefPdf = `/prj/sec/pdf?sec=${child}`
 
-           const author_ids = _.get(chData,'author_id',[])
            const q_auth = db.sql.select(`*`)
                   .from('authors')
                   .where(db.sql.in('id', ...author_ids))
@@ -386,7 +387,10 @@ const htmlTargetOutput = async (ref = {}) => {
            const authors = await dbProc.all(db.auth, q_auth.text, q_auth.values)
            //const authors = rAuth.map((x) => { return x.plain })
 
-           const row = { authors, title, href, hrefPdf }
+           const pdfEx = chData.output.pdf
+           const htmlEx = chData.output.html
+
+           const row = { authors, title, href, hrefPdf, htmlEx, pdfEx }
            tableData.push(row)
 
            return true;
@@ -395,12 +399,17 @@ const htmlTargetOutput = async (ref = {}) => {
          await Promise.all(promises)
 //@a html_date_table
          tableData.map((row,i) => {
-           const { href, hrefPdf, title, authors } = srvUtil.dictGet(row,'href hrefPdf title authors')
+           const {
+               href, hrefPdf,
+               title, authors,
+               htmlEx, pdfEx
+           } = srvUtil.dictGet(row,'href hrefPdf title authors htmlEx pdfEx')
 
            const $row = $('<tr/>')
+
            $row.append($(`<td>${i}</td>`))
-           $row.append($(`<td><button class="prj-link" href="${href}">HTML</button></td>`))
-           $row.append($(`<td><button class="prj-link" href="${hrefPdf}">PDF</button></td>`))
+           //$row.append($(`<td><button class="prj-link" output_ex="${htmlEx}" href="${href}">HTML</button></td>`))
+           //$row.append($(`<td><button class="prj-link" output_ex="${pdfEx}" href="${hrefPdf}">PDF</button></td>`))
 
            const $cellAuth = $('<td/>')
            if(! authors.length){
