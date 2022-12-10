@@ -408,8 +408,8 @@ const htmlTargetOutput = async (ref = {}) => {
            const $row = $('<tr/>')
 
            $row.append($(`<td>${i}</td>`))
-           //$row.append($(`<td><button class="prj-link" output_ex="${htmlEx}" href="${href}">HTML</button></td>`))
-           //$row.append($(`<td><button class="prj-link" output_ex="${pdfEx}" href="${hrefPdf}">PDF</button></td>`))
+           $row.append($(`<td><button class="prj-link" output_ex="${htmlEx}" href="${href}">HTML</button></td>`))
+           $row.append($(`<td><button class="prj-link" output_ex="${pdfEx}" href="${hrefPdf}">PDF</button></td>`))
 
            const $cellAuth = $('<td/>')
            if(! authors.length){
