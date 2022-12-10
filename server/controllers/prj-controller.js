@@ -371,6 +371,10 @@ const htmlTargetOutput = async (ref = {}) => {
 
      const tableData = []
      const $table = $('<table class="prj-link-table" />')
+     const $thead = $('<thead />')
+     const $tbody = $('<tbody />')
+     $table.append($thead)
+     $table.append($tbody)
 
      if (key == 'auth') {
 
@@ -407,6 +411,13 @@ const htmlTargetOutput = async (ref = {}) => {
 
      } else if (key == 'date') {
        const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
+
+//@a html_date_table_header
+       $thead.append($(`<th>Num</th>`))
+       $thead.append($(`<th>Html</th>`))
+       $thead.append($(`<th>Pdf</th>`))
+       $thead.append($(`<th>Author</th>`))
+       $thead.append($(`<th>Title</th>`))
 
 //@a html_date
        //const day = m.groups.day
@@ -488,7 +499,7 @@ const htmlTargetOutput = async (ref = {}) => {
            //const $cell = $('<td/>')
            //$row.append($cell)
 
-           $table.append($row)
+           $tbody.append($row)
          })
 
          $('body').append($table)
