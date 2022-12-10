@@ -56,6 +56,29 @@ const dbSecSelect = async (ref={}) => {
   const sec = ref.sec || ''
 }
 
+//@@ dbAuth
+const dbAuth = async ({ author_id, author_ids }) => {
+
+   if (author_ids) {
+     const q_auth = db.sql.select(`*`)
+            .from('authors')
+            .where(db.sql.in('id', ...author_ids))
+            .toParams({placeholder: '?%d'})
+
+     const authors = await dbProc.all(db.auth, q_auth.text, q_auth.values)
+     return { authors }
+
+   }else if(author_id){
+     const q_auth = db.sql.select(`*`)
+            .from('authors')
+            .where({ id : author_id })
+            .toParams({placeholder: '?%d'})
+
+     const author = await dbProc.get(db.auth, q_auth.text, q_auth.values)
+     return { author }
+   }
+}
+
 //@@ dbSecData
 const dbSecData = async (ref={}) => {
   const sec = ref.sec || ''
@@ -363,6 +386,9 @@ const htmlTargetOutput = async (ref = {}) => {
        const secData = await dbProc.all(db.prj, q_sec.text, q_sec.values)
        const secs = secData.map((x,i) => { return x.sec })
 
+       const { author } = await dbAuth({ author_id })
+       $('body').append($(`<h1>${author.plain}</h1>`))
+
        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
        secData.map((sd) => {
@@ -380,11 +406,12 @@ const htmlTargetOutput = async (ref = {}) => {
        html = $.html()
 
      } else if (key == 'date') {
+       const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
 
 //@a html_date
-       const day = m.groups.day
-       const month = m.groups.month
-       const year = m.groups.year
+       //const day = m.groups.day
+       //const month = m.groups.month
+       //const year = m.groups.year
 
        const m_sec = reMap.sec.exec(target)
        if (!m_sec) { continue }
@@ -407,12 +434,7 @@ const htmlTargetOutput = async (ref = {}) => {
            const href = `/prj/sec/html?sec=${child}`
            const hrefPdf = `/prj/sec/pdf?sec=${child}`
 
-           const q_auth = db.sql.select(`*`)
-                  .from('authors')
-                  .where(db.sql.in('id', ...author_ids))
-                  .toParams({placeholder: '?%d'})
-
-           const authors = await dbProc.all(db.auth, q_auth.text, q_auth.values)
+           const { authors } = await dbAuth({ author_ids })
            //const authors = rAuth.map((x) => { return x.plain })
 
            const pdfEx = chData.output.pdf
