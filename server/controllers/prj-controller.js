@@ -2,7 +2,8 @@
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
-const util = require('./../util')
+
+const srvUtil = require('./../srv-util')
 
 const childProcess = require('child_process')
 
@@ -129,7 +130,7 @@ const secTxt = async (ref={}) => {
 
   const file_path = path.join(prjRoot, file)
 
-  var secTxt = await util.fsRead(file_path)
+  var secTxt = await srvUtil.fsRead(file_path)
   return secTxt
 
 }
@@ -374,6 +375,7 @@ const htmlTargetOutput = async (ref = {}) => {
            const chData = await dbSecData({ sec : child, proj })
            const title = chData.title
            const href = `/prj/sec/html?sec=${child}`
+           const hrefPdf = `/prj/sec/pdf?sec=${child}`
 
            const author_ids = _.get(chData,'author_id',[])
            const q_auth = db.sql.select(`*`)
@@ -384,7 +386,7 @@ const htmlTargetOutput = async (ref = {}) => {
            const authors = await dbProc.all(db.auth, q_auth.text, q_auth.values)
            //const authors = rAuth.map((x) => { return x.plain })
 
-           const row = { authors, title, href }
+           const row = { authors, title, href, hrefPdf }
            tableData.push(row)
 
            return true;
@@ -393,14 +395,17 @@ const htmlTargetOutput = async (ref = {}) => {
          await Promise.all(promises)
 //@a html_date_table
          tableData.map((row,i) => {
+           //let { href, hrefPdf, title } = srvUtil.dictGet(row,'href hrefPdf title authors')
+           let { hrefPdf } = srvUtil.dictGet(row,'hrefPdf')
+
            const href = row.href
            const title = row.title
            const authors = row.authors
 
            const $row = $('<tr/>')
            $row.append($(`<td>${i}</td>`))
-           $row.append($(`<td><button>HTML<button></td>`))
-           $row.append($(`<td><button>PDF<button></td>`))
+           $row.append($(`<td><button class="prj-link" href="${href}">HTML</button></td>`))
+           $row.append($(`<td><button class="prj-link" href="">PDF</button></td>`))
 
            const $cellAuth = $('<td/>')
            if(! authors.length){
@@ -451,7 +456,7 @@ const htmlTargetOutput = async (ref = {}) => {
      }
 
      if (fs.existsSync(htmlFile)) {
-       html = await util.fsRead(htmlFile)
+       html = await srvUtil.fsRead(htmlFile)
      }
   }
 
