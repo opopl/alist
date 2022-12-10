@@ -83,14 +83,25 @@ const dbSecData = async (ref={}) => {
 
   secData['children'] = children
 
-  const vcol = 'tags'
-  const info = `_info_projs_${vcol}`
-  const q_tags = db.sql.select(`${info}.tag`)
+  const b2info = { tags : 'tag' }
+  const bcols = ['author_id','tags']
+
+  const p_info = bcols.map(async (bcol) => {
+     const icol = _.get(b2info,bcol,bcol)
+     const t_info = `_info_projs_${bcol}`
+
+     const q_info = db.sql.select(`${t_info}.${icol}`)
               .from('projs')
-              .innerJoin(`${info}`)
-              .on({ 'projs.file' : `${info}.file` })
+              .innerJoin(`${t_info}`)
+              .on({ 'projs.file' : `${t_info}.file` })
               .where({ 'projs.sec' : sec })
               .toParams({placeholder: '?%d'})
+
+     const rows_info =  await dbProc.all(db.prj, q_info.text, q_info.values)
+     secData[bcol] = rows_info.map((x) => { return x[bcol] })
+     console.log(rows_info);
+  })
+  await Promise.all(p_info)
 
   const target = `_buf.${sec}`
 
