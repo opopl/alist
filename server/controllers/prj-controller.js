@@ -5,7 +5,7 @@ const _ = require('lodash')
 
 const srvUtil = require('./../srv-util')
 
-const childProcess = require('child_process')
+const { spawn, childProcess } = require('child_process')
 
 const cheerio = require("cheerio");
 const xregexp = require("xregexp");
@@ -269,19 +269,47 @@ const prjAct = async (ref = {}) => {
    const bldCmd = `prj-bld ${proj}`
 
    const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
+   const cmda = cmd.split(/\s+/)
+   const exe =  cmda.shift()
+   const args = cmda
 
    process.chdir(prjRoot)
-   var code = 0, msg
+   var msg
 
-   try {
-     childProcess.execSync(cmd, { stdio: 'inherit' })
-   } catch(e) {
-     console.error(e)
-     code = e.status
-     msg  = e.message
+   //try {
+     ////childProcess.execSync(cmd, { stdio: 'inherit' })
+   const opts = {
+        //detached : true
    }
 
-   const stat = { code, msg }
+   const ff = () =>  {
+      return new Promise(async (resolve, reject) => {
+        const spawned = spawn(exe, args, opts)
+        var stdout = []
+
+        spawned.on('exit', (x) => {
+          resolve({ code : x, stdout })
+        })
+
+        for await (const data of spawned.stdout) {
+          console.log(`${data}`);
+          const a = `${data}`.split('\n')
+          a.map((x) => { stdout.push(x) })
+        }
+      })
+
+     }
+
+   const { code, stdout } = await ff()
+   console.log({ code, msg });
+
+   //} catch(e) {
+     //console.error(e)
+     //code = e.status
+     //msg  = e.message
+   //}
+
+   const stat = { code, stdout, msg }
 
    return stat
 }
@@ -455,7 +483,7 @@ const htmlTargetOutput = async (ref = {}) => {
        const act = 'compile'
        const cnf = 'htx'
 
-       const { code, msg } = await prjAct({ act, proj, cnf, target })
+       const { code, msg, stdout } = await prjAct({ act, proj, cnf, target })
        if (code) { return '' }
      }
 
@@ -568,7 +596,7 @@ const reqPdfSecView = async (req, res) => {
     const act = 'compile'
     const cnf = ''
 
-    const { code, msg } = await prjAct({ act, proj, cnf, target })
+    const { code, msg, stdout } = await prjAct({ act, proj, cnf, target })
     if (code) { return res.status(404).send({ msg }) }
   }
 
