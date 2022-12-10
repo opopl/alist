@@ -395,17 +395,12 @@ const htmlTargetOutput = async (ref = {}) => {
          await Promise.all(promises)
 //@a html_date_table
          tableData.map((row,i) => {
-           //let { href, hrefPdf, title } = srvUtil.dictGet(row,'href hrefPdf title authors')
-           let { hrefPdf } = srvUtil.dictGet(row,'hrefPdf')
-
-           const href = row.href
-           const title = row.title
-           const authors = row.authors
+           const { href, hrefPdf, title, authors } = srvUtil.dictGet(row,'href hrefPdf title authors')
 
            const $row = $('<tr/>')
            $row.append($(`<td>${i}</td>`))
            $row.append($(`<td><button class="prj-link" href="${href}">HTML</button></td>`))
-           $row.append($(`<td><button class="prj-link" href="">PDF</button></td>`))
+           $row.append($(`<td><button class="prj-link" href="${hrefPdf}">PDF</button></td>`))
 
            const $cellAuth = $('<td/>')
            if(! authors.length){

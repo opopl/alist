@@ -18,19 +18,21 @@ const fsRead = function(path, encoding) {
 
 //@@ dictGet
 const dictGet = function(obj, keys=[]) {
-	 var keyList = [], dict = {}
-	 if (typeof(keys) == 'string') {
-			keyList.push(keys.split(' '))
-	 }
-	 else if (Array.isArray(keys)) {
-			keyList.push(...keys)
-	 }
+   var keyList = [], dict = {}
+   if (typeof(keys) == 'string') {
+      keys.split(/\s+/).map((x) => {
+        keyList.push(x)
+      })
+   }
+   else if (Array.isArray(keys)) {
+      keyList.push(...keys)
+   }
 
-	 keyList.forEach((x) => {
-			dict[x] = _.get(obj, x)
-	 })
+   keyList.forEach((x) => {
+      dict[x] = _.get(obj, x)
+   })
 
-	 return dict
+   return dict
 }
 
 //@@ fsWrite

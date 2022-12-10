@@ -3,7 +3,7 @@
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
-const util = require('./../util')
+const util = require('./../srv-util')
 
 const cheerio = require("cheerio");
 
