@@ -155,7 +155,6 @@ const reqJsonTargetData = async (req, res) => {
 const reqJsonSecData = async (req, res) => {
   const query = req.query
 
-  //console.log(query);
   var data = await dbSecData(query)
 
   res.json(data)
@@ -319,8 +318,12 @@ const htmlTargetOutput = async (ref = {}) => {
      const m = re.exec(target)
      if(!m){ continue }
 
+     const tableData = []
+     const $table = $('<table class="prj-link-table" />')
+
      if (key == 'auth') {
-// html_auth
+
+//@a html_auth
        const author_id = m.groups.author_id
        const q_sec = db.sql.select('sec, title')
            .from('projs')
@@ -339,6 +342,9 @@ const htmlTargetOutput = async (ref = {}) => {
           const title = sd.title
           const href = `/prj/sec/html?sec=${sec}`
           $('body').append($(`<p><a href="${href}">${title}</a>`))
+
+          const row = { sec, title, href }
+          tableData.push(row)
        })
 
        $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
@@ -346,7 +352,8 @@ const htmlTargetOutput = async (ref = {}) => {
        html = $.html()
 
      } else if (key == 'date') {
-// html_date
+
+//@a html_date
        const day = m.groups.day
        const month = m.groups.month
        const year = m.groups.year
@@ -359,10 +366,10 @@ const htmlTargetOutput = async (ref = {}) => {
 
        $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
 
+//@a html_date_children
        if (sd) {
          const children = sd.children
 
-         const tableData = []
          const promises = children.map(async (child) => {
            const chData = await dbSecData({ sec : child, proj })
            const title = chData.title
@@ -374,20 +381,17 @@ const htmlTargetOutput = async (ref = {}) => {
                   .where(db.sql.in('id', ...author_ids))
                   .toParams({placeholder: '?%d'})
 
-           const rAuth = await dbProc.all(db.auth, q_auth.text, q_auth.values)
-           const authors = rAuth.map((x) => { return x.plain })
+           const authors = await dbProc.all(db.auth, q_auth.text, q_auth.values)
+           //const authors = rAuth.map((x) => { return x.plain })
 
            const row = { authors, title, href }
            tableData.push(row)
-
-           console.log({ row });
 
            return true;
          })
 
          await Promise.all(promises)
-
-         const $table = $('<table class="prj-link-table" />')
+//@a html_date_table
          tableData.map((row,i) => {
            const href = row.href
            const title = row.title
@@ -395,6 +399,31 @@ const htmlTargetOutput = async (ref = {}) => {
 
            const $row = $('<tr/>')
            $row.append($(`<td>${i}</td>`))
+           $row.append($(`<td><button>HTML<button></td>`))
+           $row.append($(`<td><button>PDF<button></td>`))
+
+           const $cellAuth = $('<td/>')
+           if(! authors.length){
+           }else if (authors.length == 1) {
+              const author = authors.shift()
+              const hrefAuthor = `/prj/auth/html?id=${author.id}`
+              $cellAuth.append($(`<a href="${hrefAuthor}">${author.plain}</a>`))
+           }else{
+              const $select = $('<select/>').addClass('prj-link-select')
+              while(authors.length){
+                const author = authors.shift()
+                const hrefAuthor = `/prj/auth/html?id=${author.id}`
+                //$select.append($(`<option value="${author.id}">${author.plain}</option>`))
+                $select.append($(`
+                      <option class="prj-link" full="${author.plain}" value="${author.id}" href=${hrefAuthor}>
+                          ${author.plain}
+                      </option>`))
+              }
+
+              $cellAuth.append($select)
+           }
+
+           $row.append($cellAuth)
            $row.append($(`<td><a href="${href}">${title}</a></td>`))
 
            //const $cell = $('<td/>')
