@@ -83,6 +83,15 @@ const dbSecData = async (ref={}) => {
 
   secData['children'] = children
 
+  const vcol = 'tags'
+  const info = `_info_projs_${vcol}`
+  const q_tags = db.sql.select(`${info}.tag`)
+              .from('projs')
+              .innerJoin(`${info}`)
+              .on({ 'projs.file' : `${info}.file` })
+              .where({ 'projs.sec' : sec })
+              .toParams({placeholder: '?%d'})
+
   const target = `_buf.${sec}`
 
   const htmlFile = await htmlFileTarget({ proj, target })
@@ -343,6 +352,7 @@ const htmlTargetOutput = async (ref = {}) => {
        if (sd) {
          const children = sd.children
 
+         const tableData = []
          const promises = children.map(async (child) => {
            const q_sec = db.sql.select('sec, title')
                 .from('projs')
@@ -353,11 +363,30 @@ const htmlTargetOutput = async (ref = {}) => {
            const title = cData.title
            const href = `/prj/sec/html?sec=${child}`
 
-           $('body').append($(`<p><a href="${href}">${title}</a>`))
+           const row = { title, href }
+           tableData.push(row)
+
            return true;
          })
 
          await Promise.all(promises)
+
+         const $table = $('<table class="prj-link-table" />')
+         tableData.map((row,i) => {
+           const href = row.href
+           const title = row.title
+
+           const $row = $('<tr/>')
+           $row.append($(`<td>${i}</td>`))
+           $row.append($(`<td><a href="${href}">${title}</a></td>`))
+
+           //const $cell = $('<td/>')
+           //$row.append($cell)
+
+           $table.append($row)
+         })
+
+         $('body').append($table)
 
        }
 
