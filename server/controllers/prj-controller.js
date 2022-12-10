@@ -87,7 +87,7 @@ const dbSecData = async (ref={}) => {
   const bcols = ['author_id','tags']
 
   const p_info = bcols.map(async (bcol) => {
-     const icol = _.get(b2info,bcol,bcol)
+     const icol = _.get(b2info, bcol, bcol)
      const t_info = `_info_projs_${bcol}`
 
      const q_info = db.sql.select(`${t_info}.${icol}`)
@@ -99,7 +99,6 @@ const dbSecData = async (ref={}) => {
 
      const rows_info =  await dbProc.all(db.prj, q_info.text, q_info.values)
      secData[bcol] = rows_info.map((x) => { return x[bcol] })
-     console.log(rows_info);
   })
   await Promise.all(p_info)
 
@@ -156,7 +155,7 @@ const reqJsonTargetData = async (req, res) => {
 const reqJsonSecData = async (req, res) => {
   const query = req.query
 
-  console.log(query);
+  //console.log(query);
   var data = await dbSecData(query)
 
   res.json(data)
@@ -365,17 +364,23 @@ const htmlTargetOutput = async (ref = {}) => {
 
          const tableData = []
          const promises = children.map(async (child) => {
-           const q_sec = db.sql.select('sec, title')
-                .from('projs')
-                .where({ sec : child, proj })
-                .toParams({placeholder: '?%d'})
-
-           const cData = await dbProc.get(db.prj, q_sec.text, q_sec.values)
-           const title = cData.title
+           const chData = await dbSecData({ sec : child, proj })
+           const title = chData.title
            const href = `/prj/sec/html?sec=${child}`
 
-           const row = { title, href }
+           const author_ids = _.get(chData,'author_id',[])
+           const q_auth = db.sql.select(`*`)
+                  .from('authors')
+                  .where(db.sql.in('id', ...author_ids))
+                  .toParams({placeholder: '?%d'})
+
+           const rAuth = await dbProc.all(db.auth, q_auth.text, q_auth.values)
+           const authors = rAuth.map((x) => { return x.plain })
+
+           const row = { authors, title, href }
            tableData.push(row)
+
+           console.log({ row });
 
            return true;
          })
@@ -386,6 +391,7 @@ const htmlTargetOutput = async (ref = {}) => {
          tableData.map((row,i) => {
            const href = row.href
            const title = row.title
+           const authors = row.authors
 
            const $row = $('<tr/>')
            $row.append($(`<td>${i}</td>`))
