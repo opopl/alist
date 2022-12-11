@@ -19,6 +19,9 @@ const prjRoot  = path.join(process.env.P_SR)
 const htmlOut  = path.join(process.env.HTMLOUT)
 const pdfOut   = path.join(process.env.PDFOUT)
 
+const picDataDir   = path.join(process.env.PIC_DATA)
+
+
 // root directory for js files
 const jsRoot = path.join(htmlOut,'ctl','js')
 // root directory for css files
@@ -672,6 +675,19 @@ const reqPdfSecView = async (req, res) => {
 
 }
 
+//@@ reqHtmlSecSaved
+const reqHtmlSecSaved = async (req, res) => {
+
+  const sec = _.get(query, 'sec', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const dirNew = path.join(picDataDir, rootid, proj, 'new')
+  const dirNone = path.join(picDataDir, rootid, proj, 'done')
+
+  const secDirNew = path.join(dirNew, sec)
+
+}
+
 //@@ reqHtmlSecView
 const reqHtmlSecView = async (req, res) => {
   const query = req.query
@@ -726,6 +742,7 @@ const pdfHandlers = {
 
 const htmlHandlers = {
     reqHtmlSecView,
+    reqHtmlSecSaved,
     reqHtmlAuthView,
     reqHtmlTargetView
 }
