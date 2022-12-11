@@ -184,6 +184,21 @@ const reqJsonSecData = async (req, res) => {
 
 }
 
+//@@ reqJsonBuildData
+const reqJsonBuildData = async (req, res) => {
+  const query = req.query
+
+  const q_bld = db.sql.select('*')
+              .from('builds')
+              //.where({ 'sec' : sec })
+              .toParams({placeholder: '?%d'})
+
+  var bldData = await dbProc.all(db.bld, q_bld.text, q_bld.values)
+
+  res.json({ data: bldData })
+
+}
+
 //@@ reqJsonAct
 // POST /prj/act
 const reqJsonAct = async (req, res) => {
@@ -673,7 +688,8 @@ const jsonHandlers = {
     reqJsonSecSrc,
     reqJsonAct,
 
-    reqJsonTargetData
+    reqJsonTargetData,
+    reqJsonBuildData
 }
 
 const fsHandlers = {
