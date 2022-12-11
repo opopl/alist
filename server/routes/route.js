@@ -26,6 +26,7 @@ router.post('/auth/update', authRoutes.authUpdate)
 router.get('/prj/sec/count', prjRoutes.reqJsonSecCount)
 router.get('/prj/sec/data', prjRoutes.reqJsonSecData)
 router.get('/prj/sec/src', prjRoutes.reqJsonSecSrc)
+router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
 
 router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
 router.get('/prj/build/data', prjRoutes.reqJsonBuildData)

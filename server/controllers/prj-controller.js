@@ -79,6 +79,15 @@ const dbAuth = async ({ author_id, author_ids }) => {
    }
 }
 
+//@@ dbSecList
+const dbSecList = async (ref={}) => {
+  const proj = _.get(ref, 'proj', defaults.proj)
+
+  var list = []
+
+  return list
+}
+
 //@@ dbSecData
 const dbSecData = async (ref={}) => {
   const sec = ref.sec || ''
@@ -181,6 +190,17 @@ const reqJsonSecData = async (req, res) => {
   var data = await dbSecData(query)
 
   res.json(data)
+
+}
+
+//@@ reqJsonSecList
+// post /prj/sec/list
+const reqJsonSecList = async (req, res) => {
+  const ref = req.body
+
+  var data = await dbSecList(ref)
+
+  res.json({ data })
 
 }
 
@@ -402,15 +422,15 @@ const htmlTargetOutput = async (ref = {}) => {
            .where({ '_info_projs_author_id.author_id' : author_id })
            .toParams({placeholder: '?%d'})
 
-       const secData = await dbProc.all(db.prj, q_sec.text, q_sec.values)
-       const secs = secData.map((x,i) => { return x.sec })
+       const secList = await dbProc.all(db.prj, q_sec.text, q_sec.values)
+       const secs = secList.map((x,i) => { return x.sec })
 
        const { author } = await dbAuth({ author_id })
        $('body').append($(`<h1>${author.plain}</h1>`))
 
        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
-       secData.map((sd) => {
+       secList.map((sd) => {
           const sec = sd.sec
           const title = sd.title
           const href = `/prj/sec/html?sec=${sec}`
@@ -685,6 +705,7 @@ const reqHtmlAuthView = async (req, res) => {
 const jsonHandlers = {
     reqJsonSecCount,
     reqJsonSecData,
+    reqJsonSecList,
     reqJsonSecSrc,
     reqJsonAct,
 
