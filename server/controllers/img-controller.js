@@ -15,10 +15,12 @@ const prjRoot  = path.join(process.env.P_SR)
 const imgRoot  = path.join(process.env.IMG_ROOT)
 const htmlOut  = path.join(process.env.HTMLOUT)
 
+const select = db.sql.select
+
 //@@ jsonImgCount
 const jsonImgCount = async (req, res) => {
 
-  const q_count = db.sql.select('COUNT(*) AS cnt').from('imgs').toString()
+  const q_count = select('count(*) as cnt').from('imgs').toString()
 
   var data = await dbProc.get(db.img, q_count, [])
   res.json(data)

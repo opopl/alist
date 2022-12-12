@@ -3,7 +3,12 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
+const select = db.sql.select
+
 const srvUtil = require('./../srv-util')
+
+const htmlparser2 = require("htmlparser2");
+const parse5 = require("parse5");
 
 const { spawn, childProcess } = require('child_process')
 const crass = require('crass')
@@ -47,6 +52,49 @@ const defaults = {
 }
 
 const rootid = _.get(defaults, 'rootid')
+
+//@@ dbImgStore
+const dbImgStore = async ({ url }) => {
+  const rw = await dbImgData({ url })
+  if (rw) { return }
+
+  const inum = await dbImgInumFree()
+  console.log({ inum });
+
+}
+
+//@@ dbImgInum
+const dbImgInum = async ({ url }) => {
+  const rw = await dbImgData({ url })
+  var inum
+  if (rw) {
+    inum = rw.inum
+  }else{
+    inum = await dbImgInumFree()
+  }
+  return inum
+}
+
+//@@ dbImgInumFree
+const dbImgInumFree = async () => {
+
+  const q_inum = select('max(inum) as max').from('imgs').toString()
+  const { max } = await dbProc.get(db.img, q_inum)
+  const inum = max ? max+1 : 1
+  return inum
+}
+
+//@@ dbImgData
+const dbImgData = async ({ url }) => {
+  const q_data = select('*')
+              .from('imgs')
+              .where({ url })
+              .toParams({placeholder: '?%d'})
+
+  const rw = await dbProc.get(db.img, q_data.text, q_data.values)
+  return rw
+}
+
 
 //@@ reqJsonSecCount
 const reqJsonSecCount = async (req, res) => {
@@ -775,9 +823,9 @@ const reqHtmlSecSaved = async (req, res) => {
   const proj = _.get(query, 'proj', defaults.proj)
 
   const { htmlFile, htmlFileEx } = await htmlFileSecSaved({ proj, sec })
-  if(!htmlFileEx){ 
+  if(!htmlFileEx){
      res.send('<html><body>File not Found<body></html>')
-     return 
+     return
   }
 
   const htmlFileDir = path.dirname(htmlFile)
@@ -785,34 +833,47 @@ const reqHtmlSecSaved = async (req, res) => {
   const html = fs.readFileSync(htmlFile)
   const $ = cheerio.load(html)
 
-  res.type('html')
+  //const dom = htmlparser2.parseDocument(html);
+  //const dom = parse5.parse(html);
+
+  //res.type('html')
 
   $('script').remove()
   $('meta').remove()
 
   const icons_done = {}
-  const p_icons = $('link[rel="icon"]').each(async (i,x) => {
-     const remote = $(x).attr('data-savepage-href')
+
+  const els = $('link[rel="icon"]').map( (i, x) => {
+     return x
+  }).toArray()
+
+//@a current
+  const p_icons = els.map( async (x,i) => {
+     const $x = $(x)
+     const remote = $x.attr('data-savepage-href')
      const local = path.join(htmlFileDir, `${i}.ico`)
+
+     await dbImgStore({ url: remote })
 
      const bLocal = path.basename(local)
 
-     //const data = await axios.get(src)
-                  //.then((response) => { return response })
-                  //.catch((err) => { console.log(err) })
-     //console.log({ src, data })
-     //const data = await srvUtil.fetchImg({ remote, local })
+     console.log({ i, remote, local })
+
      await srvUtil.fetchImg({ remote, local })
-          .then((data) => { 
-               if(fs.existsSync(local)){
-                  console.log(`done : ${remote}`);
-                  icons_done[remote] = 1
-                  var href = bLocal
-                  $(x).attr({ href })
-               }
-          })
-          .catch((err) => { console.log(err) })
-  })
+            .then((data) => {
+                  if(fs.existsSync(local)){
+                     var href = bLocal
+                     console.log(`done : ${remote}, href: ${href}`);
+                     icons_done[remote] = 1
+
+                     $x.removeAttr('href')
+                     $x.removeAttr('data-savepage-href')
+                     $x.attr({ href })
+                  }
+             })
+             .catch((err) => { console.log(err) })
+
+   })
 
   await Promise.all(p_icons)
 
@@ -821,14 +882,14 @@ const reqHtmlSecSaved = async (req, res) => {
   fs.writeFileSync(htmlFileSend, htmlSend)
   res.send(htmlSend)
 
-  return 
+  return
 
   $('stylex').each((i,x) => {
      const cssFb = $(x).text();
      const cssFile = path.join(htmlFileDir, `${i}.css`)
      const errFile = path.join(htmlFileDir, `${i}.err.txt`)
      var txt,parsed
-     try { 
+     try {
         parsed = crass.parse(cssFb)
      } catch(e) {
         //console.error(e);
