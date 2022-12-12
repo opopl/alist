@@ -10,6 +10,7 @@ const crass = require('crass')
 
 const findit = require('findit')
 const yaml = require('js-yaml')
+const axios = require('axios')
 
 const cheerio = require("cheerio");
 const xregexp = require("xregexp");
@@ -721,12 +722,10 @@ const fsFind = async ({ dir, cb_file, cb_dir }) => {
  
 }
 
-//@@ reqHtmlSecSaved
-const reqHtmlSecSaved = async (req, res) => {
-  const query = req.query
-
-  const sec = _.get(query, 'sec', '')
-  const proj = _.get(query, 'proj', defaults.proj)
+//@@ htmlFileSecSaved
+const htmlFileSecSaved = async (ref = {}) => {
+  const sec = _.get(ref, 'sec', '')
+  const proj = _.get(ref, 'proj', defaults.proj)
 
   const dirNew = path.join(picDataDir, rootid, proj, 'new')
   const dirDone = path.join(picDataDir, rootid, proj, 'done')
@@ -762,13 +761,69 @@ const reqHtmlSecSaved = async (req, res) => {
   })
   await Promise.all(p_files)
 
-  if(!fs.existsSync(htmlFile)){ return }
+  const htmlFileEx = fs.existsSync(htmlFile)
+
+  return { htmlFile, htmlFileEx }
+}
+
+
+//@@ reqHtmlSecSaved
+const reqHtmlSecSaved = async (req, res) => {
+  const query = req.query
+
+  const sec = _.get(query, 'sec', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const { htmlFile, htmlFileEx } = await htmlFileSecSaved({ proj, sec })
+  if(!htmlFileEx){ 
+     res.send('<html><body>File not Found<body></html>')
+     return 
+  }
+
   const htmlFileDir = path.dirname(htmlFile)
 
   const html = fs.readFileSync(htmlFile)
   const $ = cheerio.load(html)
+
+  res.type('html')
+
   $('script').remove()
-  $('style').each((i,x) => {
+  $('meta').remove()
+
+  const icons_done = {}
+  const p_icons = $('link[rel="icon"]').each(async (i,x) => {
+     const remote = $(x).attr('data-savepage-href')
+     const local = path.join(htmlFileDir, `${i}.ico`)
+
+     const bLocal = path.basename(local)
+
+     //const data = await axios.get(src)
+                  //.then((response) => { return response })
+                  //.catch((err) => { console.log(err) })
+     //console.log({ src, data })
+     //const data = await srvUtil.fetchImg({ remote, local })
+     await srvUtil.fetchImg({ remote, local })
+          .then((data) => { 
+               if(fs.existsSync(local)){
+                  console.log(`done : ${remote}`);
+                  icons_done[remote] = 1
+                  var href = bLocal
+                  $(x).attr({ href })
+               }
+          })
+          .catch((err) => { console.log(err) })
+  })
+
+  await Promise.all(p_icons)
+
+  const htmlSend = $.html()
+  const htmlFileSend = path.join(htmlFileDir, 'send.html')
+  fs.writeFileSync(htmlFileSend, htmlSend)
+  res.send(htmlSend)
+
+  return 
+
+  $('stylex').each((i,x) => {
      const cssFb = $(x).text();
      const cssFile = path.join(htmlFileDir, `${i}.css`)
      const errFile = path.join(htmlFileDir, `${i}.err.txt`)
@@ -786,10 +841,6 @@ const reqHtmlSecSaved = async (req, res) => {
      //if (i == 1) { return }
      //console.log($(x).html());
   })
-
-  //res.json({ secDirNew, secDirDone })
-  res.type('html')
-  res.send($.html())
 
 }
 

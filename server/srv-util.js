@@ -3,6 +3,9 @@ const fs = require('fs')
 const fse = require('fs-extra')
 const _ = require('lodash')
 
+const path = require('path')
+const axios = require('axios')
+
 //@@ fsRead
 const fsRead = function(path, encoding) {
     return new Promise(function(resolve, reject) {
@@ -14,6 +17,29 @@ const fsRead = function(path, encoding) {
         })
     })
 
+}
+
+//https://futurestud.io/tutorials/download-files-images-with-axios-in-node-js
+//'use strict'
+
+//@@ fetchImg
+const fetchImg = async ({ remote, local }) => {
+  //const url = 'https://unsplash.com/photos/AaEQmoufHLk/download?force=true'
+  //const path = Path.resolve(__dirname, 'images', 'code.jpg')
+  const writer = fs.createWriteStream(local)
+
+  const response = await axios({
+		url : remote,
+    method: 'GET',
+    responseType: 'stream'
+  })
+
+  response.data.pipe(writer)
+
+  return new Promise((resolve, reject) => {
+    writer.on('finish', resolve)
+    writer.on('error', reject)
+  })
 }
 
 //@@ dictGet
@@ -51,5 +77,6 @@ const fsWrite = function(path, data) {
 module.exports = {
   fsRead,
   fsWrite,
-  dictGet
+  dictGet,
+  fetchImg
 }
