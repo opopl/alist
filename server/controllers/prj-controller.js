@@ -7,6 +7,9 @@ const srvUtil = require('./../srv-util')
 
 const { spawn, childProcess } = require('child_process')
 
+const findit = require('findit')
+const yaml = require('js-yaml')
+
 const cheerio = require("cheerio");
 const xregexp = require("xregexp");
 
@@ -20,7 +23,7 @@ const htmlOut  = path.join(process.env.HTMLOUT)
 const pdfOut   = path.join(process.env.PDFOUT)
 
 const picDataDir   = path.join(process.env.PIC_DATA)
-
+const plgDir   = path.join(process.env.PLG)
 
 // root directory for js files
 const jsRoot = path.join(htmlOut,'ctl','js')
@@ -689,6 +692,34 @@ const prjSecDate = async (ref = {}) => {
 
 }
 
+//@@ fsFind
+const fsFind = async ({ dir, cb_file, cb_dir }) => {
+
+  return new Promise(async (resolve, reject) => {
+    if (!fs.existsSync(dir)) {
+       resolve({ msg : `no dir: ${dir}` })
+       return
+    }
+
+    const finder = findit(dir);
+
+    if (cb_dir) {
+      finder.on('directory', function (found, stat, stop) {
+        cb_dir({ found, stat, stop })
+      })
+    }
+
+    if (cb_file) {
+      finder.on('file', function (found, stat) {
+        cb_file({ found, stat })
+      })
+    }
+
+    finder.on('end', () => { resolve({}) })
+  });
+ 
+}
+
 //@@ reqHtmlSecSaved
 const reqHtmlSecSaved = async (req, res) => {
   const query = req.query
@@ -703,12 +734,42 @@ const reqHtmlSecSaved = async (req, res) => {
 
   const { day, month, year } = await prjSecDate({ proj, sec })
 
+  //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
+  //let map_months = base#yaml#parse_fs({ 'file' : yfile })
+  const yFile = path.join(plgDir, 'projs', 'data', 'yaml', 'months.yaml')
+  const yFileEx = fs.existsSync(yFile)
+  const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+  const monthName = _.get(mapMonths,`en.short.${month}`,month)
+
+  console.log({ mapMonths, monthName });
+
   var secDirDone = path.join(dirDone, 'secs', sec)
-  if (day && month && year){
-    secDirDone = path.join(dirDone, year, month, day, sec )
+  if (day && monthName && year){
+    secDirDone = path.join(dirDone, year, monthName, day, sec )
   }
 
-  res.json({ secDirNew, secDirDone })
+  const secDirDoneEx = fs.existsSync(secDirDone)
+  const secDirNewEx = fs.existsSync(secDirNew)
+
+  console.log({ secDirDoneEx, secDirNewEx });
+  console.log({ secDirDone, secDirNew });
+
+  var htmlFile = ''
+  const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
+    var ff = []
+    const cb_file = ({ found }) => {
+       const bn = path.basename(found)
+       if (bn != 'we.html') { return }
+       htmlFile = found
+    }
+    await fsFind({ dir, cb_file });
+  })
+  await Promise.all(p_files)
+
+  //res.json({ secDirNew, secDirDone })
+  if(fs.existsSync(htmlFile)){
+    res.sendFile(htmlFile)
+  }
 
 }
 
