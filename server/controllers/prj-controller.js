@@ -885,7 +885,7 @@ const reqHtmlSecSaved = async (req, res) => {
   const icons_done = {}
 
   //const els = $('link[rel="icon"]').map( (i, x) => {
-  const els = $('link[rel="icon"]').map( (i, x) => {
+  const els = $('link[rel="icon"], link[rel="shortcut icon"]').map( (i, x) => {
      return x
   }).toArray()
 
@@ -920,27 +920,30 @@ const reqHtmlSecSaved = async (req, res) => {
      const $x = $(x)
      const url = $x.attr('data-savepage-href')
 
-     if (!url) {return}
+     if (!url) {
+        var txt = $x.text()
+     }
 
-     console.log({ url, i });
-
-     var dnum
+     var dnum, ext, doc, docFile
      const rw = await dbDocData({ url })
      if (rw) {
         dnum = rw.dnum
+        ext = rw.ext
         href = `/doc/raw/${dnum}`
 
-        console.log(rw);
+        doc = `${dnum}.${ext}`
+        docFile = path.join(docRoot, doc)
 
-        $x.removeAttr('data-savepage-href')
-        $x.attr({ href })
+        //$x.removeAttr('data-savepage-href')
+        $x.text('')
+        $x.attr({ src : href })
         return
      }
 
      dnum = await dbDocDnumFree()
-     const ext = 'css'
-     const doc = `${dnum}.${ext}`
-     const docFile = path.join(docRoot, doc)
+     ext = 'css'
+     doc = `${dnum}.${ext}`
+     docFile = path.join(docRoot, doc)
 
      await srvUtil.fetchFile({ url, local : docFile })
        .then(async(data) => {
@@ -955,8 +958,6 @@ const reqHtmlSecSaved = async (req, res) => {
 //@a current
           const ins = { dnum, url, ext, size, mtime, md5 }
           const q_i = insert('docs',ins).toParams({placeholder: '?%d'})
-
-          console.log({ ins });
 
           await dbProc.run(db.doc, q_i.text, q_i.values)
 
@@ -973,26 +974,6 @@ const reqHtmlSecSaved = async (req, res) => {
   res.send(htmlSend)
 
   return
-
-  $('stylex').each((i,x) => {
-     const cssFb = $(x).text();
-     const cssFile = path.join(htmlFileDir, `${i}.css`)
-     const errFile = path.join(htmlFileDir, `${i}.err.txt`)
-     var txt,parsed
-     try {
-        parsed = crass.parse(cssFb)
-     } catch(e) {
-        //console.error(e);
-        fs.writeFileSync(errFile, JSON.stringify(e))
-     }
-
-     //fs.writeFileSync(cssFile, txt)
-     //fs.writeFileSync(cssFile, parsed.pretty())
-     fs.writeFileSync(cssFile, cssFb)
-     //if (i == 1) { return }
-     //console.log($(x).html());
-  })
-
 }
 
 //@@ reqHtmlSecView
