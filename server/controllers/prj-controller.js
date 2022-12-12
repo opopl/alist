@@ -25,6 +25,7 @@ const fs = require('fs')
 const fse = require('fs-extra')
 
 const prjRoot  = path.join(process.env.P_SR)
+const imgRoot  = path.join(process.env.IMG_ROOT)
 
 const htmlOut  = path.join(process.env.HTMLOUT)
 const pdfOut   = path.join(process.env.PDFOUT)
@@ -56,10 +57,28 @@ const rootid = _.get(defaults, 'rootid')
 //@@ dbImgStore
 const dbImgStore = async ({ url }) => {
   const rw = await dbImgData({ url })
-  if (rw) { return }
+  if (rw) {
+    console.log(rw);
+    return
+  }
 
   const inum = await dbImgInumFree()
   console.log({ inum });
+
+/*  await srvUtil.fetchImg({ url, local })*/
+       //.then((data) => {
+             //if(fs.existsSync(local)){
+                //var href = bLocal
+                //console.log(`done : ${remote}, href: ${href}`);
+                //icons_done[remote] = 1
+
+                //$x.removeAttr('href')
+                //$x.removeAttr('data-savepage-href')
+                //$x.attr({ href })
+             //}
+        //})
+        /*.catch((err) => { console.log(err) })*/
+
 
 }
 
@@ -850,28 +869,38 @@ const reqHtmlSecSaved = async (req, res) => {
 //@a current
   const p_icons = els.map( async (x,i) => {
      const $x = $(x)
-     const remote = $x.attr('data-savepage-href')
+     const url = $x.attr('data-savepage-href')
      const local = path.join(htmlFileDir, `${i}.ico`)
 
-     await dbImgStore({ url: remote })
+     //await dbImgStore({ url: remote })
 
-     const bLocal = path.basename(local)
+     var inum
+     const rw = await dbImgData({ url })
+     if (rw) {
+        inum = rw.inum
+        href = `/img/raw/${inum}`
 
-     console.log({ i, remote, local })
+        $x.removeAttr('data-savepage-href')
+        $x.attr({ href })
+     }
 
-     await srvUtil.fetchImg({ remote, local })
-            .then((data) => {
-                  if(fs.existsSync(local)){
-                     var href = bLocal
-                     console.log(`done : ${remote}, href: ${href}`);
-                     icons_done[remote] = 1
+     /*const bLocal = path.basename(local)*/
 
-                     $x.removeAttr('href')
-                     $x.removeAttr('data-savepage-href')
-                     $x.attr({ href })
-                  }
-             })
-             .catch((err) => { console.log(err) })
+     //console.log({ i, remote, local })
+
+     //await srvUtil.fetchImg({ remote, local })
+            //.then((data) => {
+                  //if(fs.existsSync(local)){
+                     //var href = bLocal
+                     //console.log(`done : ${remote}, href: ${href}`);
+                     //icons_done[remote] = 1
+
+                     //$x.removeAttr('href')
+                     //$x.removeAttr('data-savepage-href')
+                     //$x.attr({ href })
+                  //}
+             //})
+             /*.catch((err) => { console.log(err) })*/
 
    })
 
