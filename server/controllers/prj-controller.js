@@ -7,6 +7,7 @@ const select = db.sql.select
 const insert = db.sql.insert
 
 const srvUtil = require('./../srv-util')
+const md5file = require('md5-file')
 
 const htmlparser2 = require("htmlparser2");
 const parse5 = require("parse5");
@@ -910,7 +911,6 @@ const reqHtmlSecSaved = async (req, res) => {
 
   await Promise.all(p_icons)
 
-//@a current
   const els_style = $('style').map( (i, x) => {
      return x
   }).toArray()
@@ -924,11 +924,13 @@ const reqHtmlSecSaved = async (req, res) => {
 
      console.log({ url, i });
 
-     var local, dnum
+     var dnum
      const rw = await dbDocData({ url })
      if (rw) {
         dnum = rw.dnum
         href = `/doc/raw/${dnum}`
+
+        console.log(rw);
 
         $x.removeAttr('data-savepage-href')
         $x.attr({ href })
@@ -936,17 +938,25 @@ const reqHtmlSecSaved = async (req, res) => {
      }
 
      dnum = await dbDocDnumFree()
-     local = path.join(docRoot, `${dnum}.css`)
-     console.log({ local });
+     const ext = 'css'
+     const doc = `${dnum}.${ext}`
+     const docFile = path.join(docRoot, doc)
 
-     await srvUtil.fetchFile({ url, local })
+     await srvUtil.fetchFile({ url, local : docFile })
        .then(async(data) => {
-          if(!fs.existsSync(local)){ return }
+          if(!fs.existsSync(docFile)){ return }
 
-          console.log(`fetch OK: ${local}`);
+          console.log(`fetch OK: ${docFile}`);
+          const stat = fs.statSync(docFile)
+          const size = stat.size
+          const mtime = Math.trunc(stat.mtimeMs)
+          const md5 = md5file.sync(docFile)
 
-          const ins = { url, dnum }
+//@a current
+          const ins = { dnum, url, ext, size, mtime, md5 }
           const q_i = insert('docs',ins).toParams({placeholder: '?%d'})
+
+          console.log({ ins });
 
           await dbProc.run(db.doc, q_i.text, q_i.values)
 

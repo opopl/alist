@@ -6,6 +6,9 @@ const _ = require('lodash')
 const path = require('path')
 const axios = require('axios')
 
+//import { createHash } from 'node:crypto'
+const crypto = require('crypto')
+
 //@@ fsRead
 const fsRead = function(path, encoding) {
     return new Promise(function(resolve, reject) {
@@ -40,6 +43,10 @@ const fetchFile = async ({ url, local }) => {
     writer.on('finish', resolve)
     writer.on('error', reject)
   })
+}
+
+const md5 = (content) => {  
+  return crypto.createHash('md5').update(content).digest('hex')
 }
 
 //@@ dictGet
