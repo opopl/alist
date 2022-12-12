@@ -675,16 +675,40 @@ const reqPdfSecView = async (req, res) => {
 
 }
 
+//@@ prjSecDate
+const prjSecDate = async (ref = {}) => {
+  const sec =  _.get(ref, 'sec', '')
+  const proj = _.get(ref, 'proj', defaults.proj)
+
+  const m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/.exec(sec)
+  if (!m) { return {} }
+
+  const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
+
+  return { day, month, year }
+
+}
+
 //@@ reqHtmlSecSaved
 const reqHtmlSecSaved = async (req, res) => {
+  const query = req.query
 
   const sec = _.get(query, 'sec', '')
   const proj = _.get(query, 'proj', defaults.proj)
 
   const dirNew = path.join(picDataDir, rootid, proj, 'new')
-  const dirNone = path.join(picDataDir, rootid, proj, 'done')
+  const dirDone = path.join(picDataDir, rootid, proj, 'done')
 
-  const secDirNew = path.join(dirNew, sec)
+  const secDirNew  = path.join(dirNew, sec)
+
+  const { day, month, year } = await prjSecDate({ proj, sec })
+
+  var secDirDone = path.join(dirDone, 'secs', sec)
+  if (day && month && year){
+    secDirDone = path.join(dirDone, year, month, day, sec )
+  }
+
+  res.json({ secDirNew, secDirDone })
 
 }
 

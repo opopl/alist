@@ -33,11 +33,10 @@ router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
 router.get('/prj/build/data', prjRoutes.reqJsonBuildData)
 
 router.get('/prj/sec/html', prjRoutes.reqHtmlSecView)
-router.get('/prj/sec/html/saved', prjRoutes.reqHtmlSecSaved)
+router.get('/prj/sec/saved', prjRoutes.reqHtmlSecSaved)
 
 router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
 router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
-
 
 router.get('/prj/sec/pdf', prjRoutes.reqPdfSecView)
 
