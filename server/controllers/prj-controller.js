@@ -6,6 +6,7 @@ const _ = require('lodash')
 const srvUtil = require('./../srv-util')
 
 const { spawn, childProcess } = require('child_process')
+const crass = require('crass')
 
 const findit = require('findit')
 const yaml = require('js-yaml')
@@ -762,16 +763,32 @@ const reqHtmlSecSaved = async (req, res) => {
   await Promise.all(p_files)
 
   if(!fs.existsSync(htmlFile)){ return }
+  const htmlFileDir = path.dirname(htmlFile)
 
   const html = fs.readFileSync(htmlFile)
   const $ = cheerio.load(html)
   $('script').remove()
-  $('style').map((x,i) => {
+  $('style').each((i,x) => {
+     const cssFb = $(x).text();
+     const cssFile = path.join(htmlFileDir, `${i}.css`)
+     const errFile = path.join(htmlFileDir, `${i}.err.txt`)
+     var txt,parsed
+     try { 
+        parsed = crass.parse(cssFb)
+     } catch(e) {
+        //console.error(e);
+        fs.writeFileSync(errFile, JSON.stringify(e))
+     }
+
+     //fs.writeFileSync(cssFile, txt)
+     //fs.writeFileSync(cssFile, parsed.pretty())
+     fs.writeFileSync(cssFile, cssFb)
+     //if (i == 1) { return }
      //console.log($(x).html());
   })
 
   //res.json({ secDirNew, secDirDone })
-  //res.type('text')
+  res.type('html')
   res.send($.html())
 
 }
