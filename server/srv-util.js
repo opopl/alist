@@ -22,14 +22,14 @@ const fsRead = function(path, encoding) {
 //https://futurestud.io/tutorials/download-files-images-with-axios-in-node-js
 //'use strict'
 
-//@@ fetchImg
-const fetchImg = async ({ remote, local }) => {
+//@@ fetchFile
+const fetchFile = async ({ url, local }) => {
   //const url = 'https://unsplash.com/photos/AaEQmoufHLk/download?force=true'
   //const path = Path.resolve(__dirname, 'images', 'code.jpg')
   const writer = fs.createWriteStream(local)
 
   const response = await axios({
-		url : remote,
+    url,
     method: 'GET',
     responseType: 'stream'
   })
@@ -78,5 +78,5 @@ module.exports = {
   fsRead,
   fsWrite,
   dictGet,
-  fetchImg
+  fetchFile
 }

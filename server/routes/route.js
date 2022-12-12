@@ -5,6 +5,7 @@ const express = require('express')
 const authRoutes = require('./../controllers/auth-controller.js')
 const imgRoutes = require('./../controllers/img-controller.js')
 const prjRoutes = require('./../controllers/prj-controller.js')
+const docRoutes = require('./../controllers/doc-controller.js')
 
 // Create router
 const router = express.Router()
@@ -49,6 +50,7 @@ router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
 
 router.get('/img/count', imgRoutes.jsonImgCount)
 router.get('/img/raw/:inum', imgRoutes.rawImg)
+
 
 // Export router
 module.exports = router

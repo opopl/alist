@@ -4,6 +4,7 @@ const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
 const select = db.sql.select
+const insert = db.sql.insert
 
 const srvUtil = require('./../srv-util')
 
@@ -26,6 +27,7 @@ const fse = require('fs-extra')
 
 const prjRoot  = path.join(process.env.P_SR)
 const imgRoot  = path.join(process.env.IMG_ROOT)
+const docRoot  = path.join(process.env.DOC_ROOT)
 
 const htmlOut  = path.join(process.env.HTMLOUT)
 const pdfOut   = path.join(process.env.PDFOUT)
@@ -103,6 +105,26 @@ const dbImgInumFree = async () => {
   return inum
 }
 
+//@@ dbDocDnumFree
+const dbDocDnumFree = async () => {
+
+  const q_dnum = select('max(dnum) as max').from('docs').toString()
+  const { max } = await dbProc.get(db.doc, q_dnum)
+  const dnum = max ? max+1 : 1
+  return dnum
+}
+
+//@@ dbDocData
+const dbDocData = async ({ url }) => {
+  const q_data = select('*')
+              .from('docs')
+              .where({ url })
+              .toParams({placeholder: '?%d'})
+
+  const rw = await dbProc.get(db.doc, q_data.text, q_data.values)
+  return rw
+}
+
 //@@ dbImgData
 const dbImgData = async ({ url }) => {
   const q_data = select('*')
@@ -113,7 +135,6 @@ const dbImgData = async ({ url }) => {
   const rw = await dbProc.get(db.img, q_data.text, q_data.values)
   return rw
 }
-
 
 //@@ reqJsonSecCount
 const reqJsonSecCount = async (req, res) => {
@@ -862,17 +883,18 @@ const reqHtmlSecSaved = async (req, res) => {
 
   const icons_done = {}
 
+  //const els = $('link[rel="icon"]').map( (i, x) => {
   const els = $('link[rel="icon"]').map( (i, x) => {
      return x
   }).toArray()
 
-//@a current
+//@a p_icons
   const p_icons = els.map( async (x,i) => {
      const $x = $(x)
      const url = $x.attr('data-savepage-href')
      const local = path.join(htmlFileDir, `${i}.ico`)
 
-     //await dbImgStore({ url: remote })
+     if (!url) {return}
 
      var inum
      const rw = await dbImgData({ url })
@@ -882,29 +904,58 @@ const reqHtmlSecSaved = async (req, res) => {
 
         $x.removeAttr('data-savepage-href')
         $x.attr({ href })
+     }else{
      }
-
-     /*const bLocal = path.basename(local)*/
-
-     //console.log({ i, remote, local })
-
-     //await srvUtil.fetchImg({ remote, local })
-            //.then((data) => {
-                  //if(fs.existsSync(local)){
-                     //var href = bLocal
-                     //console.log(`done : ${remote}, href: ${href}`);
-                     //icons_done[remote] = 1
-
-                     //$x.removeAttr('href')
-                     //$x.removeAttr('data-savepage-href')
-                     //$x.attr({ href })
-                  //}
-             //})
-             /*.catch((err) => { console.log(err) })*/
-
-   })
+  })
 
   await Promise.all(p_icons)
+
+//@a current
+  const els_style = $('style').map( (i, x) => {
+     return x
+  }).toArray()
+
+//@a p_style
+  const p_style = els_style.map( async (x,i) => {
+     const $x = $(x)
+     const url = $x.attr('data-savepage-href')
+
+     if (!url) {return}
+
+     console.log({ url, i });
+
+     var local, dnum
+     const rw = await dbDocData({ url })
+     if (rw) {
+        dnum = rw.dnum
+        href = `/doc/raw/${dnum}`
+
+        $x.removeAttr('data-savepage-href')
+        $x.attr({ href })
+        return
+     }
+
+     dnum = await dbDocDnumFree()
+     local = path.join(docRoot, `${dnum}.css`)
+     console.log({ local });
+
+     await srvUtil.fetchFile({ url, local })
+       .then(async(data) => {
+          if(!fs.existsSync(local)){ return }
+
+          console.log(`fetch OK: ${local}`);
+
+          const ins = { url, dnum }
+          const q_i = insert('docs',ins).toParams({placeholder: '?%d'})
+
+          await dbProc.run(db.doc, q_i.text, q_i.values)
+
+        })
+        .catch((err) => { console.log(err) })
+
+  })
+
+  await Promise.all(p_style)
 
   const htmlSend = $.html()
   const htmlFileSend = path.join(htmlFileDir, 'send.html')
