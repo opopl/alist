@@ -741,8 +741,6 @@ const reqHtmlSecSaved = async (req, res) => {
   const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
   const monthName = _.get(mapMonths,`en.short.${month}`,month)
 
-  console.log({ mapMonths, monthName });
-
   var secDirDone = path.join(dirDone, 'secs', sec)
   if (day && monthName && year){
     secDirDone = path.join(dirDone, year, monthName, day, sec )
@@ -750,9 +748,6 @@ const reqHtmlSecSaved = async (req, res) => {
 
   const secDirDoneEx = fs.existsSync(secDirDone)
   const secDirNewEx = fs.existsSync(secDirNew)
-
-  console.log({ secDirDoneEx, secDirNewEx });
-  console.log({ secDirDone, secDirNew });
 
   var htmlFile = ''
   const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
@@ -766,10 +761,18 @@ const reqHtmlSecSaved = async (req, res) => {
   })
   await Promise.all(p_files)
 
+  if(!fs.existsSync(htmlFile)){ return }
+
+  const html = fs.readFileSync(htmlFile)
+  const $ = cheerio.load(html)
+  $('script').remove()
+  $('style').map((x,i) => {
+     //console.log($(x).html());
+  })
+
   //res.json({ secDirNew, secDirDone })
-  if(fs.existsSync(htmlFile)){
-    res.sendFile(htmlFile)
-  }
+  //res.type('text')
+  res.send($.html())
 
 }
 
