@@ -13,7 +13,7 @@ const md5file = require('md5-file')
 const htmlparser2 = require("htmlparser2");
 const parse5 = require("parse5");
 
-const { spawn, childProcess } = require('child_process')
+const { spawn, execSync } = require('child_process')
 const crass = require('crass')
 
 const findit = require('findit')
@@ -926,17 +926,29 @@ const reqHtmlSecSaved = async (req, res) => {
   }
 
   const htmlFileDir = path.dirname(htmlFile)
+  process.chdir(htmlFileDir)
 
-  const html = fs.readFileSync(htmlFile)
+  const htmlFilePretty = path.join(htmlFileDir, `p.${path.basename(htmlFile)}`)
+
+  const cmdPretty = `prj-html-pretty -i ${path.basename(htmlFile)} -o ${path.basename(htmlFilePretty)}`
+  if(!fs.existsSync(htmlFilePretty)){
+     execSync(cmdPretty, { stdio: 'inherit' })
+  }
+
+  const htmlFileUse = fs.existsSync(htmlFilePretty) ? htmlFilePretty : htmlFile
+
+  console.log({ cmdPretty, htmlFileUse, htmlFilePretty });
+
+//@a current
+
+  const html = fs.readFileSync(htmlFileUse)
   const $ = cheerio.load(html)
 
   //const dom = htmlparser2.parseDocument(html);
   //const dom = parse5.parse(html);
 
-  //res.type('html')
-
-  $('script').remove()
-  $('meta').remove()
+  $('script, meta').remove()
+  $('link').remove()
 
   const icons_done = {}
 
@@ -973,6 +985,8 @@ const reqHtmlSecSaved = async (req, res) => {
 
 //@a p_style
   const p_style = els_style.map( async (x,i) => {
+     return true
+
      const $x = $(x)
      const url = $x.attr('data-savepage-href')
 
@@ -1012,7 +1026,6 @@ const reqHtmlSecSaved = async (req, res) => {
           const mtime = Math.trunc(stat.mtimeMs)
           const md5 = md5file.sync(docFile)
 
-//@a current
           const ins = { dnum, url, ext, size, mtime, md5 }
           const q_i = insert('docs',ins).toParams({placeholder: '?%d'})
 
