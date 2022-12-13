@@ -41,6 +41,8 @@ router.get('/prj/sec/saved', prjRoutes.reqHtmlSecSaved)
 router.get('/prj/sec/pdf', prjRoutes.reqPdfSecView)
 router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
 
+router.get(/^\/prj\/sec\/asset\/(.*)$/, prjRoutes.reqSecAsset)
+
 //@@ Authors
 router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
 
@@ -52,6 +54,7 @@ router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
 
 router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, prjRoutes.reqCssFileCtl)
 router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
+
 
 //@@ Doc
 

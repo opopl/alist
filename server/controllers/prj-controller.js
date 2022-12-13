@@ -371,6 +371,41 @@ const reqCssFileCtl = async (req, res) => {
   }
 }
 
+//@@ reqSecAsset
+// get /prj/sec/asset/path
+const reqSecAsset = async (req, res) => {
+  const asset = req.params[0]
+
+  const query = req.query
+
+  const sec = _.get(query, 'sec', '')
+  const proj = _.get(query, 'proj', defaults.proj)
+
+  const sub = 'html'
+  const { secDirDone, secDirNew } = await secDirsSaved({ proj, sec, sub })
+
+  console.log({ secDirDone, secDirNew })
+
+  var assetFile = ''
+  const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
+    var ff = []
+    const cb_file = ({ found }) => {
+       const rel = path.relative(dir, found)
+
+       if (rel != asset ) { return }
+       assetFile = found
+    }
+    await fsFind({ dir, cb_file });
+  })
+  await Promise.all(p_files)
+
+  if (assetFile) {
+    res.sendFile(assetFile)
+  }
+
+  //const cssFile = path.join(cssRoot, file)
+}
+
 //@@ reqCssFile
 // get
 const reqCssFile = async (req, res) => {
@@ -867,6 +902,38 @@ const fsFind = async ({ dir, cb_file, cb_dir }) => {
  
 }
 
+//@@ secDirsSaved
+const secDirsSaved = async (ref={}) => {
+  const sec = _.get(ref, 'sec', '')
+  const proj = _.get(ref, 'proj', defaults.proj)
+  const sub = _.get(ref, 'sub', '')
+
+  const dirNew = path.join(picDataDir, rootid, proj, 'new')
+  const dirDone = path.join(picDataDir, rootid, proj, 'done')
+
+  var secDirNew  = path.join(dirNew, sec)
+  if (sub) { secDirNew = path.join(secDirNew, sub) }
+
+  const { day, month, year } = await prjSecDate({ proj, sec })
+
+  //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
+  //let map_months = base#yaml#parse_fs({ 'file' : yfile })
+  const yFile = path.join(plgDir, 'projs', 'data', 'yaml', 'months.yaml')
+  const yFileEx = fs.existsSync(yFile)
+  const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+  const monthName = _.get(mapMonths,`en.short.${month}`,month)
+
+  var secDirDone = path.join(dirDone, 'secs', sec)
+  if (day && monthName && year){
+    secDirDone = path.join(dirDone, year, monthName, day, sec )
+  }
+
+  if (sub) { secDirDone = path.join(secDirDone, sub) }
+
+  return { secDirNew, secDirDone }
+
+}
+
 //@@ htmlFileSecSaved
 const htmlFileSecSaved = async (ref = {}) => {
   const sec = _.get(ref, 'sec', '')
@@ -939,7 +1006,6 @@ const reqHtmlSecSaved = async (req, res) => {
 
   console.log({ cmdPretty, htmlFileUse, htmlFilePretty });
 
-//@a current
 
   const html = fs.readFileSync(htmlFileUse)
   const $ = cheerio.load(html)
@@ -985,9 +1051,26 @@ const reqHtmlSecSaved = async (req, res) => {
 
 //@a p_style
   const p_style = els_style.map( async (x,i) => {
-     return true
 
      const $x = $(x)
+     const text = $(x).text()
+//@a current
+     const cssFile = path.join(htmlFileDir, `${i}.css`)
+     fs.writeFileSync(cssFile, text)
+     //$x.children().remove()
+
+     const srcNew = `/prj/sec/asset/${i}.css?sec=${sec}`;
+     var $lnk = $(`<link rel="stylesheet" href="${srcNew}" />`)
+
+/*     $(x)*/
+       //.contents()
+       //.filter(function() {
+         //return this.nodeType == 3; //Node.TEXT_NODE
+       //}).remove();
+     /*$(x).attr({ src : srcNew })*/
+
+// --------------------
+     return true
      const url = $x.attr('data-savepage-href')
 
      if (!url) {
@@ -1091,7 +1174,9 @@ const fsHandlers = {
     reqJsFile,
 
     reqCssFileCtl,
-    reqCssFile
+    reqCssFile,
+
+    reqSecAsset
 }
 
 const pdfHandlers = {
