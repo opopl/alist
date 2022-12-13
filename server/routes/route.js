@@ -47,16 +47,18 @@ router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
 //@@ Builds
 router.get('/prj/bld/data', prjRoutes.reqJsonBldData)
 
+//@@ Assets
 router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
 
 router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, prjRoutes.reqCssFileCtl)
 router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
 
+//@@ Doc
+
 //@@ Images
 
 router.get('/img/count', imgRoutes.jsonImgCount)
 router.get('/img/raw/:inum', imgRoutes.rawImg)
-
 
 // Export router
 module.exports = router
