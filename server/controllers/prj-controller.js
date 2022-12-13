@@ -468,6 +468,25 @@ const prjAct = async (ref = {}) => {
    return stat
 }
 
+//@@ dReMapTarget
+const dReMapTarget = ({ key }) => {
+  const map = {
+     auth : /^_auth\.(?<author_id>\S+)$/g,
+     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+     datePost : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/g,
+     sec : /^_buf\.(?<sec>\S+)$/g
+  }
+  return _.get(map,key)
+}
+
+//@@ dReMapSec
+const dReMapSec = ({ key }) => {
+  const map = {
+     date : /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+     datePost : /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/g,
+  }
+  return _.get(map,key)
+}
 
 //@@ htmlTargetOutput
 const htmlTargetOutput = async (ref = {}) => {
@@ -754,6 +773,11 @@ const reqPdfSecView = async (req, res) => {
 
   const target = '_buf.' + sec
 
+  if (!dReMapTarget({ key : 'datePost' }).exec(target)) {
+     var msg = 'not a datePost target'
+     return res.status(404).send({ msg })
+  }
+
   const pdfFile = await pdfFileTarget({ proj, target })
 
   const pdfFileEx = fs.existsSync(pdfFile)
@@ -768,7 +792,6 @@ const reqPdfSecView = async (req, res) => {
   }
 
   res.sendFile(pdfFile)
-
 }
 
 //@@ prjSecDate
