@@ -384,8 +384,6 @@ const reqSecAsset = async (req, res) => {
   const sub = 'html'
   const { secDirDone, secDirNew } = await secDirsSaved({ proj, sec, sub })
 
-  console.log({ secDirDone, secDirNew })
-
   var assetFile = ''
   const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
     var ff = []
