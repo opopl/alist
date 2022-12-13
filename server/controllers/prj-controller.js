@@ -5,6 +5,7 @@ const _ = require('lodash')
 
 const select = db.sql.select
 const insert = db.sql.insert
+const update = db.sql.update
 
 const srvUtil = require('./../srv-util')
 const md5file = require('md5-file')
@@ -153,11 +154,22 @@ const dbSecSelect = async (ref={}) => {
   const sec = ref.sec || ''
 }
 
+//@@ dbBldData
+const dbBldData = async (w={}) => {
+  const q = select(`*`)
+         .from('builds')
+         .where(w)
+         .toParams({placeholder: '?%d'})
+
+  const builds = await dbProc.all(db.bld, q.text, q.values)
+  return builds
+}
+
 //@@ dbAuth
 const dbAuth = async ({ author_id, author_ids }) => {
 
    if (author_ids) {
-     const q_auth = db.sql.select(`*`)
+     const q_auth = select(`*`)
             .from('authors')
             .where(db.sql.in('id', ...author_ids))
             .toParams({placeholder: '?%d'})
@@ -190,7 +202,7 @@ const dbSecData = async (ref={}) => {
   const sec = ref.sec || ''
   const proj = ref.proj || defaults.proj
 
-  const q_sec = db.sql.select('*')
+  const q_sec = select('*')
               .from('projs')
               .where({ 'sec' : sec })
               .toParams({placeholder: '?%d'})
@@ -301,16 +313,21 @@ const reqJsonSecList = async (req, res) => {
 
 }
 
-//@@ reqJsonBuildData
-const reqJsonBuildData = async (req, res) => {
+//@@ reqJsonBldData
+// get /prj/bld/data
+const reqJsonBldData = async (req, res) => {
   const query = req.query
+  const path = req.path
+  const w = {}
 
-  const q_bld = db.sql.select('*')
-              .from('builds')
-              //.where({ 'sec' : sec })
-              .toParams({placeholder: '?%d'})
-
-  var bldData = await dbProc.all(db.bld, q_bld.text, q_bld.values)
+  const cols = `bid buuid plan duration target status`.split(/\s+/)
+  cols.forEach((col) => {
+     if (!query.hasOwnProperty(col)) { return }
+     w[col] = _.get(query,col)
+     return
+  })
+  
+  const bldData = await dbBldData(w)
 
   res.json({ data: bldData })
 
@@ -781,7 +798,6 @@ const reqPdfSecView = async (req, res) => {
   const pdfFile = await pdfFileTarget({ proj, target })
 
   const pdfFileEx = fs.existsSync(pdfFile)
-  console.log({ pdfFileEx });
 
   if (!pdfFileEx) {
     const act = 'compile'
@@ -1040,7 +1056,7 @@ const jsonHandlers = {
     reqJsonAct,
 
     reqJsonTargetData,
-    reqJsonBuildData
+    reqJsonBldData
 }
 
 const fsHandlers = {

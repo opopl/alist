@@ -24,29 +24,35 @@ router.get('/auth/all', authRoutes.authAll)
 router.post('/auth/update', authRoutes.authUpdate)
 //router.put('/auth/delete', authRoutes.authDelete)
 //
+//
+router.post('/prj/act', prjRoutes.reqJsonAct)
+
+//@@ Target
+router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
+router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
+
+//@@ Sec
 router.get('/prj/sec/count', prjRoutes.reqJsonSecCount)
 router.get('/prj/sec/data', prjRoutes.reqJsonSecData)
 router.get('/prj/sec/src', prjRoutes.reqJsonSecSrc)
 
-router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
-
-router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
-router.get('/prj/build/data', prjRoutes.reqJsonBuildData)
-
 router.get('/prj/sec/html', prjRoutes.reqHtmlSecView)
 router.get('/prj/sec/saved', prjRoutes.reqHtmlSecSaved)
+router.get('/prj/sec/pdf', prjRoutes.reqPdfSecView)
+router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
 
-router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
+//@@ Authors
 router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
 
-router.get('/prj/sec/pdf', prjRoutes.reqPdfSecView)
-
-router.post('/prj/act', prjRoutes.reqJsonAct)
+//@@ Builds
+router.get('/prj/bld/data', prjRoutes.reqJsonBldData)
 
 router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
 
 router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, prjRoutes.reqCssFileCtl)
 router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
+
+//@@ Images
 
 router.get('/img/count', imgRoutes.jsonImgCount)
 router.get('/img/raw/:inum', imgRoutes.rawImg)
