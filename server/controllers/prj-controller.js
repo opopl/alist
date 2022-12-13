@@ -326,7 +326,7 @@ const reqJsonBldData = async (req, res) => {
      w[col] = _.get(query,col)
      return
   })
-  
+
   const bldData = await dbBldData(w)
 
   res.json({ data: bldData })
@@ -431,12 +431,27 @@ const prjAct = async (ref = {}) => {
    const cnf = _.get(ref,'cnf','')
    const target = _.get(ref,'target','')
 
+   const cnfa = cnf.split(',')
+   const do_htlatex = cnfa.includes('htx')
+
    const proj = _.get(ref,'proj',defaults.proj)
 
    const sCnf = cnf ? `-c ${cnf}` : ''
    const sTarget = target ? `-t ${target}` : ''
 
    const bldCmd = `prj-bld ${proj}`
+
+   const target_ext = do_htlatex ? 'html' : 'pdf'
+   const m = /^_(buf|auth)\.(.*)$/.exec(target)
+   const trg = m ? [ m[1], m[2] ].join('.') : target
+   const pln = [ act, target_ext, trg ].join('.')
+
+   const bldData = await dbBldData({ plan : pln, status : 'running' })
+   if (bldData.length) {
+      var msg = `build is already running: ${pln}`
+      console.log({ msg });
+      return {}
+   }
 
    const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
 
