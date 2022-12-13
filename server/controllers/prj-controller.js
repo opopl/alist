@@ -1004,9 +1004,6 @@ const reqHtmlSecSaved = async (req, res) => {
 
   const htmlFileUse = fs.existsSync(htmlFilePretty) ? htmlFilePretty : htmlFile
 
-  console.log({ cmdPretty, htmlFileUse, htmlFilePretty });
-
-
   const html = fs.readFileSync(htmlFileUse)
   const $ = cheerio.load(html)
 
@@ -1055,12 +1052,15 @@ const reqHtmlSecSaved = async (req, res) => {
      const $x = $(x)
      const text = $(x).text()
 //@a current
-     const cssFile = path.join(htmlFileDir, `${i}.css`)
-     fs.writeFileSync(cssFile, text)
-     //$x.children().remove()
 
-     const srcNew = `/prj/sec/asset/${i}.css?sec=${sec}`;
-     var $lnk = $(`<link rel="stylesheet" href="${srcNew}" />`)
+     if (text) {
+       const cssFile = path.join(htmlFileDir, `${i}.css`)
+       fs.writeFileSync(cssFile, text)
+
+       const srcNew = `/prj/sec/asset/${i}.css?sec=${sec}`;
+       var $lnk = $(`<link rel="stylesheet" href="${srcNew}" />`)
+       $x.replaceWith($lnk)
+     }
 
 /*     $(x)*/
        //.contents()
