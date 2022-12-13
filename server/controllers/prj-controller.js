@@ -394,7 +394,6 @@ const pdfFileTarget = async (ref = {}) => {
   const pdfDir  = path.join(pdfOut, rootid, proj )
   const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
 
-
   return pdfFile
 }
 
@@ -757,7 +756,10 @@ const reqPdfSecView = async (req, res) => {
 
   const pdfFile = await pdfFileTarget({ proj, target })
 
-  if (!fs.existsSync(pdfFile)) {
+  const pdfFileEx = fs.existsSync(pdfFile)
+  console.log({ pdfFileEx });
+
+  if (!pdfFileEx) {
     const act = 'compile'
     const cnf = ''
 
@@ -922,6 +924,7 @@ const reqHtmlSecSaved = async (req, res) => {
 
      if (!url) {
         var txt = $x.text()
+        return
      }
 
      var dnum, ext, doc, docFile
