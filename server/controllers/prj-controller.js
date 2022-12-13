@@ -1052,10 +1052,15 @@ const reqHtmlSecSaved = async (req, res) => {
 //@a current
 
      if (text) {
-       const cssFile = path.join(htmlFileDir, `${i}.css`)
+       const cssFile = `${i}.css`
        fs.writeFileSync(cssFile, text)
 
-       const srcNew = `/prj/sec/asset/${i}.css?sec=${sec}`;
+       const cssFileTidy = `p.${i}.css`
+       if(!fs.existsSync(cssFileTidy)){
+          execSync(`cat ${cssFile} | csstidy > ${cssFileTidy}`)
+       }
+
+       const srcNew = `/prj/sec/asset/p.${i}.css?sec=${sec}`;
        var $lnk = $(`<link rel="stylesheet" href="${srcNew}" />`)
        $x.replaceWith($lnk)
      }
