@@ -1008,121 +1008,52 @@ const reqHtmlSecSaved = async (req, res) => {
   //const dom = htmlparser2.parseDocument(html);
   //const dom = parse5.parse(html);
 
-  $('script, meta').remove()
-  $('link').remove()
-
   const icons_done = {}
 
-  //const els = $('link[rel="icon"]').map( (i, x) => {
-  const els = $('link[rel="icon"], link[rel="shortcut icon"]').map( (i, x) => {
+  const els_css = $('link[rel="stylesheet"]').map( (i, x) => {
      return x
   }).toArray()
 
-//@a p_icons
-  const p_icons = els.map( async (x,i) => {
+//@a p_css
+  const p_css = els_css.map( async (x,i) => {
      const $x = $(x)
-     const url = $x.attr('data-savepage-href')
-     const local = path.join(htmlFileDir, `${i}.ico`)
-
-     if (!url) {return}
-
-     var inum
-     const rw = await dbImgData({ url })
-     if (rw) {
-        inum = rw.inum
-        href = `/img/raw/${inum}`
-
-        $x.removeAttr('data-savepage-href')
-        $x.attr({ href })
-     }else{
-     }
+     const href = $x.attr('href')
+     if (!href) { return }
+     var uriAsset = `/prj/sec/asset/${href}?sec=${sec}`
+     $x.attr({ href : uriAsset })
   })
+  await Promise.all(p_css)
 
-  await Promise.all(p_icons)
-
-  const els_style = $('style').map( (i, x) => {
+  const els_img = $('img, image').map( (i, x) => {
      return x
   }).toArray()
 
-//@a p_style
-  const p_style = els_style.map( async (x,i) => {
-
+//@a p_img
+  const tagMap = {
+      img : 'src',
+      image : 'href',
+  }
+  const p_img = els_img.map( async (x,i) => {
      const $x = $(x)
-     const text = $(x).text()
-//@a current
+     const name = $x.get(0).tagName
 
-     if (text) {
-       const cssFile = `${i}.css`
-       fs.writeFileSync(cssFile, text)
+     //var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
 
-       const cssFileTidy = `p.${i}.css`
-       if(!fs.existsSync(cssFileTidy)){
-          execSync(`cat ${cssFile} | csstidy > ${cssFileTidy}`)
-       }
+     const attrName = tagMap[name]
+     const src = $x.attr(attrName)
+     if (!src) {return}
 
-       const srcNew = `/prj/sec/asset/p.${i}.css?sec=${sec}`;
-       var $lnk = $(`<link rel="stylesheet" href="${srcNew}" />`)
-       $x.replaceWith($lnk)
+     const m = /(?<inum>\d+)\.\w+$/g.exec(src)
+     const inum = m ? m.groups.inum : null
+
+     if (inum) {
+        const dict = {}
+        dict[attrName] = `/img/raw/${inum}`
+        $x.attr(dict)
      }
-
-/*     $(x)*/
-       //.contents()
-       //.filter(function() {
-         //return this.nodeType == 3; //Node.TEXT_NODE
-       //}).remove();
-     /*$(x).attr({ src : srcNew })*/
-
-// --------------------
-     return true
-     const url = $x.attr('data-savepage-href')
-
-     if (!url) {
-        var txt = $x.text()
-        return
-     }
-
-     var dnum, ext, doc, docFile
-     const rw = await dbDocData({ url })
-     if (rw) {
-        dnum = rw.dnum
-        ext = rw.ext
-        href = `/doc/raw/${dnum}`
-
-        doc = `${dnum}.${ext}`
-        docFile = path.join(docRoot, doc)
-
-        //$x.removeAttr('data-savepage-href')
-        $x.text('')
-        $x.attr({ src : href })
-        return
-     }
-
-     dnum = await dbDocDnumFree()
-     ext = 'css'
-     doc = `${dnum}.${ext}`
-     docFile = path.join(docRoot, doc)
-
-     await srvUtil.fetchFile({ url, local : docFile })
-       .then(async(data) => {
-          if(!fs.existsSync(docFile)){ return }
-
-          console.log(`fetch OK: ${docFile}`);
-          const stat = fs.statSync(docFile)
-          const size = stat.size
-          const mtime = Math.trunc(stat.mtimeMs)
-          const md5 = md5file.sync(docFile)
-
-          const ins = { dnum, url, ext, size, mtime, md5 }
-          const q_i = insert('docs',ins).toParams({placeholder: '?%d'})
-
-          await dbProc.run(db.doc, q_i.text, q_i.values)
-
-        })
-        .catch((err) => { console.log(err) })
-
   })
 
-  await Promise.all(p_style)
+  await Promise.all(p_img)
 
   const htmlSend = $.html()
   const htmlFileSend = path.join(htmlFileDir, 'send.html')
