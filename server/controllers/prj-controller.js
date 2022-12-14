@@ -995,9 +995,12 @@ const reqHtmlSecSaved = async (req, res) => {
 
   const htmlFilePretty = path.join(htmlFileDir, `p.${path.basename(htmlFile)}`)
 
-  const cmdPretty = `prj-html-pretty -i ${path.basename(htmlFile)} -o ${path.basename(htmlFilePretty)}`
   if(!fs.existsSync(htmlFilePretty)){
+     //const cmdPretty = `prj-html-pretty -i ${path.basename(htmlFile)} -o ${path.basename(htmlFilePretty)}`
+     const cmdPretty = `prj-sec-saved -p ${proj} -s ${sec}`
+     process.chdir(prjRoot)
      execSync(cmdPretty, { stdio: 'inherit' })
+     process.chdir(htmlFileDir)
   }
 
   const htmlFileUse = fs.existsSync(htmlFilePretty) ? htmlFilePretty : htmlFile
