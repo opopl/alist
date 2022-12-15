@@ -940,6 +940,8 @@ const htmlFileSecSaved = async (ref = {}) => {
   const sec = _.get(ref, 'sec', '')
   const proj = _.get(ref, 'proj', defaults.proj)
 
+  console.log('[htmlFileSecSaved] start');
+
   const dirNew = path.join(picDataDir, rootid, proj, 'new')
   const dirDone = path.join(picDataDir, rootid, proj, 'done')
 
@@ -975,6 +977,8 @@ const htmlFileSecSaved = async (ref = {}) => {
   await Promise.all(p_files)
 
   const htmlFileEx = fs.existsSync(htmlFile)
+
+  console.log('[htmlFileSecSaved] end');
 
   return { htmlFile, htmlFileEx }
 }
@@ -1054,6 +1058,7 @@ const reqHtmlSecSaved = async (req, res) => {
       img : 'src',
       image : 'href',
   }
+
   const p_img = els_img.map( async (x,i) => {
      const $x = $(x)
      const name = $x.get(0).tagName
@@ -1077,8 +1082,6 @@ const reqHtmlSecSaved = async (req, res) => {
   await Promise.all(p_img)
 
   const htmlSend = $.html()
-  const htmlFileSend = path.join(htmlFileDir, 'send.html')
-  fs.writeFileSync(htmlFileSend, htmlSend)
   res.send(htmlSend)
 
   return
