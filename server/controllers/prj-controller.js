@@ -1001,13 +1001,25 @@ const reqHtmlSecSaved = async (req, res) => {
   const orig = path.basename(htmlFile)
   const useMap = {
      orig,
-     view   : `p.${orig}`,
-     unwrap : `p.unwrap.${orig}`,
-     parse  : `p.parse.${orig}`,
+     view    : `p.${orig}`,
+     unwrap  : `p.unwrap.${orig}`,
+     parse   : `p.parse.${orig}`,
+     content : `p.parse.content.${orig}`,
+     article : `p.parse.article.${orig}`,
+     comments : `p.parse.comments.${orig}`,
+     cmttex : `p.parse.comments.${orig}.tex`,
   }
-  const htmlFileUse = _.get(useMap, use, orig)
+  const htmlFileUse = _.get(useMap, use, '')
   if(!fs.existsSync(htmlFileUse)){
      res.send(`<html><body>${use} Html File not Found: ${htmlFileUse}<body></html>`)
+     return
+  }
+
+  const ext = path.extname(htmlFileUse)
+  if (ext == 'tex') {
+     //res.type('text')
+     res.header("Content-Type", "text/plain");
+     res.sendFile(htmlFileUse)
      return
   }
 
