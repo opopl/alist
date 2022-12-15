@@ -866,7 +866,10 @@ const prjSecDate = async (ref = {}) => {
   const m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/.exec(sec)
   if (!m) { return {} }
 
-  const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
+  let { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
+  //day = Number(day)
+  day = day.replace(/^0/,'')
+  month = month.replace(/^0/,'')
 
   return { day, month, year }
 
@@ -953,7 +956,7 @@ const htmlFileSecSaved = async (ref = {}) => {
 
   var secDirDone = path.join(dirDone, 'secs', sec)
   if (day && monthName && year){
-    secDirDone = path.join(dirDone, year, monthName, day, sec )
+    secDirDone = path.join(dirDone, year, monthName, `${day}`, sec )
   }
 
   const secDirDoneEx = fs.existsSync(secDirDone)
@@ -982,28 +985,31 @@ const reqHtmlSecSaved = async (req, res) => {
   const query = req.query
 
   const sec = _.get(query, 'sec', '')
+  const use = _.get(query, 'use', 'orig')
   const proj = _.get(query, 'proj', defaults.proj)
 
   const { htmlFile, htmlFileEx } = await htmlFileSecSaved({ proj, sec })
   if(!htmlFileEx){
-     res.send('<html><body>File not Found<body></html>')
+     //res.send(`<html><body>File not Found<body></html>`)
+     res.send(`<html><body>Saved Html File not Found: ${htmlFile}<body></html>`)
      return
   }
 
   const htmlFileDir = path.dirname(htmlFile)
   process.chdir(htmlFileDir)
 
-  const htmlFilePretty = path.join(htmlFileDir, `p.${path.basename(htmlFile)}`)
-
-  if(!fs.existsSync(htmlFilePretty)){
-     //const cmdPretty = `prj-html-pretty -i ${path.basename(htmlFile)} -o ${path.basename(htmlFilePretty)}`
-     const cmdPretty = `prj-sec-saved -p ${proj} -s ${sec}`
-     process.chdir(prjRoot)
-     execSync(cmdPretty, { stdio: 'inherit' })
-     process.chdir(htmlFileDir)
+  const orig = path.basename(htmlFile)
+  const useMap = {
+     orig,
+     view   : `p.${orig}`,
+     unwrap : `p.unwrap.${orig}`,
+     parse  : `p.parse.${orig}`,
   }
-
-  const htmlFileUse = fs.existsSync(htmlFilePretty) ? htmlFilePretty : htmlFile
+  const htmlFileUse = _.get(useMap, use, orig)
+  if(!fs.existsSync(htmlFileUse)){
+     res.send(`<html><body>${use} Html File not Found: ${htmlFileUse}<body></html>`)
+     return
+  }
 
   const html = fs.readFileSync(htmlFileUse)
   const $ = cheerio.load(html)
