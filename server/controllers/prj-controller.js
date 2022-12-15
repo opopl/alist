@@ -42,6 +42,7 @@ const jsRoot = path.join(htmlOut,'ctl','js')
 // root directory for css files
 const cssRoot = path.join(htmlOut,'ctl','css')
 
+
 const htmlBare = `<!DOCTYPE html>
     <html>
       <head> <title></title>
@@ -55,6 +56,17 @@ const defaults = {
    proj : 'letopis',
    target : ''
 }
+
+//@@ config
+const config = {
+   proj : defaults.proj,
+   rootid : defaults.rootid,
+   bld : {
+       cols : 'bid buuid plan duration target status'
+   },
+   ui : {}
+}
+
 
 const rootid = _.get(defaults, 'rootid')
 
@@ -313,6 +325,13 @@ const reqJsonSecList = async (req, res) => {
 
 }
 
+//@@ reqJsonConfig
+// get /prj/config/get
+const reqJsonConfig = async (req, res) => {
+  
+  res.send(config)
+}
+
 //@@ reqJsonBldData
 // get /prj/bld/data
 const reqJsonBldData = async (req, res) => {
@@ -320,7 +339,7 @@ const reqJsonBldData = async (req, res) => {
   const path = req.path
   const w = {}
 
-  const cols = `bid buuid plan duration target status`.split(/\s+/)
+  const cols = _.get(config,'bld.cols','').split(/\s+/)
   cols.forEach((col) => {
      if (!query.hasOwnProperty(col)) { return }
      w[col] = _.get(query,col)
@@ -1125,7 +1144,8 @@ const jsonHandlers = {
     reqJsonAct,
 
     reqJsonTargetData,
-    reqJsonBldData
+    reqJsonBldData,
+    reqJsonConfig
 }
 
 const fsHandlers = {

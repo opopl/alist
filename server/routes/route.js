@@ -27,6 +27,9 @@ router.post('/auth/update', authRoutes.authUpdate)
 //
 router.post('/prj/act', prjRoutes.reqJsonAct)
 
+//@@ Config
+router.get('/prj/config/get', prjRoutes.reqJsonConfig)
+
 //@@ Target
 router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
 router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
