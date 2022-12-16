@@ -328,7 +328,7 @@ const reqJsonSecList = async (req, res) => {
 //@@ reqJsonConfig
 // get /prj/config/get
 const reqJsonConfig = async (req, res) => {
-  
+
   res.send(config)
 }
 
@@ -572,6 +572,70 @@ const dReMapSec = ({ key }) => {
   return _.get(map,key)
 }
 
+//@@ domSecTable
+const domSecTable = async ({ tableData, $, node, colss }) => {
+  tableData.map((row,i) => {
+     const {
+         href, hrefPdf,
+         title, authors,
+         htmlEx, pdfEx
+     } = srvUtil.dictGet(row, colss)
+
+     const $row = $('<tr/>')
+
+     $row.append($(`<td>${i}</td>`))
+
+     if (href && htmlEx) {
+        var $btn = $(`<button/>`)
+            .addClass('prj-link')
+            .attr({ output_ex : htmlEx, href })
+            .text('HTML')
+        $row.append($(`<td/>`).append($btn))
+     }
+
+     if (pdfEx && hrefPdf) {
+        var $btn = $(`<button/>`)
+            .addClass('prj-link')
+            .attr({ output_ex : pdfEx, href : hrefPdf })
+            .text('PDF')
+        $row.append($(`<td/>`).append($btn))
+     }
+
+     if (authors) {
+       const $cellAuth = $('<td/>')
+       if(! authors.length){
+       }else if (authors.length == 1) {
+          const author = authors.shift()
+          const hrefAuthor = `/prj/auth/html?id=${author.id}`
+          $cellAuth.append($(`<a href="${hrefAuthor}">${author.plain}</a>`))
+       }else{
+          const $select = $('<select/>').addClass('prj-link-select')
+          while(authors.length){
+            const author = authors.shift()
+            const hrefAuthor = `/prj/auth/html?id=${author.id}`
+            //$select.append($(`<option value="${author.id}">${author.plain}</option>`))
+            $select.append($(`
+                  <option class="prj-link" full="${author.plain}" value="${author.id}" href=${hrefAuthor}>
+                      ${author.plain}
+                  </option>`))
+          }
+
+          $cellAuth.append($select)
+       }
+
+       $row.append($cellAuth)
+     }
+
+     $row.append($(`<td><a href="${href}">${title}</a></td>`))
+
+     //const $cell = $('<td/>')
+     //$row.append($cell)
+
+     node.append($row)
+   })
+
+}
+
 //@@ htmlTargetOutput
 const htmlTargetOutput = async (ref = {}) => {
   const target = _.get(ref, 'target', '')
@@ -593,6 +657,8 @@ const htmlTargetOutput = async (ref = {}) => {
 
   let $ = cheerio.load(htmlBare)
 
+  var override = true
+
   while (1) {
      if (!reKeys.length) { break }
 
@@ -604,13 +670,21 @@ const htmlTargetOutput = async (ref = {}) => {
      if(!m){ continue }
 
      const tableData = []
+
      const $table = $('<table class="prj-link-table" />')
      const $thead = $('<thead />')
      const $tbody = $('<tbody />')
+
      $table.append($thead)
      $table.append($tbody)
 
      if (key == 'auth') {
+
+       $thead.append($(`<th>Num</th>`))
+       $thead.append($(`<th>Html</th>`))
+       $thead.append($(`<th>Pdf</th>`))
+       $thead.append($(`<th>Date</th>`))
+       $thead.append($(`<th>Title</th>`))
 
 //@a html_auth
        const author_id = m.groups.author_id
@@ -629,29 +703,23 @@ const htmlTargetOutput = async (ref = {}) => {
 
        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
-       secList.map((sd) => {
-          const sec = sd.sec
-          const title = sd.title
+       const p_auth = secList.map(async (rw) => {
+          const sec = rw.sec
+          const title = rw.title
+
+          const sd = await dbSecData({ proj, sec })
           const href = `/prj/sec/html?sec=${sec}`
-          $('body').append($(`<p><a href="${href}">${title}</a>`))
+          //$('body').append($(`<p><a href="${href}">${title}</a>`))
 
           const row = { sec, title, href }
           tableData.push(row)
        })
 
-       $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
-
-       html = $.html()
+       await Promise.all(p_auth)
 
      } else if (key == 'date') {
-       const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
 
-//@a html_date_table_header
-       $thead.append($(`<th>Num</th>`))
-       $thead.append($(`<th>Html</th>`))
-       $thead.append($(`<th>Pdf</th>`))
-       $thead.append($(`<th>Author</th>`))
-       $thead.append($(`<th>Title</th>`))
+       const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
 
 //@a html_date
        //const day = m.groups.day
@@ -663,8 +731,6 @@ const htmlTargetOutput = async (ref = {}) => {
 
        sec = m_sec.groups.sec
        const sd = await dbSecData({ proj, sec })
-
-       $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
 
 //@a html_date_children
        if (sd) {
@@ -692,57 +758,35 @@ const htmlTargetOutput = async (ref = {}) => {
          })
 
          await Promise.all(promises)
+
+//@a html_date_table_header
+	       $thead.append($(`<th>Num</th>`))
+	       $thead.append($(`<th>Html</th>`))
+	       $thead.append($(`<th>Pdf</th>`))
+	       $thead.append($(`<th>Author</th>`))
+	       $thead.append($(`<th>Title</th>`))
+
+         $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
+
 //@a html_date_table
-         tableData.map((row,i) => {
-           const {
-               href, hrefPdf,
-               title, authors,
-               htmlEx, pdfEx
-           } = srvUtil.dictGet(row,'href hrefPdf title authors htmlEx pdfEx')
-
-           const $row = $('<tr/>')
-
-           $row.append($(`<td>${i}</td>`))
-           $row.append($(`<td><button class="prj-link" output_ex="${htmlEx}" href="${href}">HTML</button></td>`))
-           $row.append($(`<td><button class="prj-link" output_ex="${pdfEx}" href="${hrefPdf}">PDF</button></td>`))
-
-           const $cellAuth = $('<td/>')
-           if(! authors.length){
-           }else if (authors.length == 1) {
-              const author = authors.shift()
-              const hrefAuthor = `/prj/auth/html?id=${author.id}`
-              $cellAuth.append($(`<a href="${hrefAuthor}">${author.plain}</a>`))
-           }else{
-              const $select = $('<select/>').addClass('prj-link-select')
-              while(authors.length){
-                const author = authors.shift()
-                const hrefAuthor = `/prj/auth/html?id=${author.id}`
-                //$select.append($(`<option value="${author.id}">${author.plain}</option>`))
-                $select.append($(`
-                      <option class="prj-link" full="${author.plain}" value="${author.id}" href=${hrefAuthor}>
-                          ${author.plain}
-                      </option>`))
-              }
-
-              $cellAuth.append($select)
-           }
-
-           $row.append($cellAuth)
-           $row.append($(`<td><a href="${href}">${title}</a></td>`))
-
-           //const $cell = $('<td/>')
-           //$row.append($cell)
-
-           $tbody.append($row)
+         domSecTable({
+            $, tableData, node : $tbody,
+            colss : 'href hrefPdf title authors htmlEx pdfEx',
          })
 
          $('body').append($table)
 
        }
 
+     }else{
+       override = false
+     }
+
+     if (override) {
        $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
        html = $.html()
      }
+
   }
 
   if (!html || !html.length) {
