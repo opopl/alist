@@ -573,7 +573,7 @@ const dReMapSec = ({ key }) => {
 }
 
 //@@ domSecTable
-const domSecTable = async ({ tableData, $, node, colss }) => {
+const domSecTable = async ({ tableData, $, $tbody, colss }) => {
   tableData.map((row,i) => {
      const {
          href, hrefPdf,
@@ -585,7 +585,7 @@ const domSecTable = async ({ tableData, $, node, colss }) => {
 
      $row.append($(`<td>${i}</td>`))
 
-     if (href && htmlEx) {
+     if ((href != undefined) && ( htmlEx != undefined)) {
         var $btn = $(`<button/>`)
             .addClass('prj-link')
             .attr({ output_ex : htmlEx, href })
@@ -593,7 +593,7 @@ const domSecTable = async ({ tableData, $, node, colss }) => {
         $row.append($(`<td/>`).append($btn))
      }
 
-     if (pdfEx && hrefPdf) {
+     if (( pdfEx != undefined) && ( hrefPdf != undefined )) {
         var $btn = $(`<button/>`)
             .addClass('prj-link')
             .attr({ output_ex : pdfEx, href : hrefPdf })
@@ -601,7 +601,7 @@ const domSecTable = async ({ tableData, $, node, colss }) => {
         $row.append($(`<td/>`).append($btn))
      }
 
-     if (authors) {
+     if (authors != undefined) {
        const $cellAuth = $('<td/>')
        if(! authors.length){
        }else if (authors.length == 1) {
@@ -631,7 +631,7 @@ const domSecTable = async ({ tableData, $, node, colss }) => {
      //const $cell = $('<td/>')
      //$row.append($cell)
 
-     node.append($row)
+     $tbody.append($row)
    })
 
 }
@@ -653,7 +653,7 @@ const htmlTargetOutput = async (ref = {}) => {
      sec : /^_buf\.(?<sec>\S+)$/g
   }
 
-  var html, sec
+  var html, sec, colss
 
   let $ = cheerio.load(htmlBare)
 
@@ -683,7 +683,7 @@ const htmlTargetOutput = async (ref = {}) => {
        $thead.append($(`<th>Num</th>`))
        $thead.append($(`<th>Html</th>`))
        $thead.append($(`<th>Pdf</th>`))
-       $thead.append($(`<th>Date</th>`))
+       //$thead.append($(`<th>Date</th>`))
        $thead.append($(`<th>Title</th>`))
 
 //@a html_auth
@@ -703,19 +703,24 @@ const htmlTargetOutput = async (ref = {}) => {
 
        //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
+//@a fill_auth
        const p_auth = secList.map(async (rw) => {
           const sec = rw.sec
           const title = rw.title
 
           const sd = await dbSecData({ proj, sec })
           const href = `/prj/sec/html?sec=${sec}`
-          //$('body').append($(`<p><a href="${href}">${title}</a>`))
+          const hrefPdf = `/prj/sec/pdf?sec=${sec}`
+          const pdfEx = sd.output.pdf
+          const htmlEx = sd.output.html
 
-          const row = { sec, title, href }
+          const row = { sec, title, href, hrefPdf, pdfEx, htmlEx }
           tableData.push(row)
        })
 
        await Promise.all(p_auth)
+
+       colss = 'href hrefPdf htmlEx pdfEx title'
 
      } else if (key == 'date') {
 
@@ -736,7 +741,8 @@ const htmlTargetOutput = async (ref = {}) => {
        if (sd) {
          const children = sd.children
 
-         const promises = children.map(async (child) => {
+//@a fill_date
+         const p_date = children.map(async (child) => {
            const chData = await dbSecData({ sec : child, proj })
 
            const title = chData.title
@@ -744,12 +750,11 @@ const htmlTargetOutput = async (ref = {}) => {
 
            const href = `/prj/sec/html?sec=${child}`
            const hrefPdf = `/prj/sec/pdf?sec=${child}`
+           const pdfEx = chData.output.pdf
+           const htmlEx = chData.output.html
 
            const { authors } = await dbAuth({ author_ids })
            //const authors = rAuth.map((x) => { return x.plain })
-
-           const pdfEx = chData.output.pdf
-           const htmlEx = chData.output.html
 
            const row = { authors, title, href, hrefPdf, htmlEx, pdfEx }
            tableData.push(row)
@@ -757,7 +762,7 @@ const htmlTargetOutput = async (ref = {}) => {
            return true;
          })
 
-         await Promise.all(promises)
+         await Promise.all(p_date)
 
 //@a html_date_table_header
 	       $thead.append($(`<th>Num</th>`))
@@ -769,12 +774,7 @@ const htmlTargetOutput = async (ref = {}) => {
          $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
 
 //@a html_date_table
-         domSecTable({
-            $, tableData, node : $tbody,
-            colss : 'href hrefPdf title authors htmlEx pdfEx',
-         })
-
-         $('body').append($table)
+         colss = 'href hrefPdf title authors htmlEx pdfEx'
 
        }
 
@@ -783,6 +783,13 @@ const htmlTargetOutput = async (ref = {}) => {
      }
 
      if (override) {
+       domSecTable({
+          $, $tbody, tableData,
+          colss,
+       })
+
+       $('body').append($table)
+
        $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
        html = $.html()
      }
