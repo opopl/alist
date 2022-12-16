@@ -577,7 +577,7 @@ const domSecTable = async ({ tableData, $, $tbody, colss }) => {
   tableData.map((row,i) => {
      const {
          href, hrefPdf,
-         title, authors,
+         date, title, authors,
          htmlEx, pdfEx
      } = srvUtil.dictGet(row, colss)
 
@@ -599,6 +599,14 @@ const domSecTable = async ({ tableData, $, $tbody, colss }) => {
             .attr({ output_ex : pdfEx, href : hrefPdf })
             .text('PDF')
         $row.append($(`<td/>`).append($btn))
+     }
+
+     if (date != undefined) {
+       var $a = $(`<a/>`)
+              .addClass('prj-link')
+              .attr({ href : `/prj/sec/html?sec=${date}` })
+              .text(date)
+       $row.append($(`<td/>`).append($a))
      }
 
      if (authors != undefined) {
@@ -653,7 +661,7 @@ const htmlTargetOutput = async (ref = {}) => {
      sec : /^_buf\.(?<sec>\S+)$/g
   }
 
-  var html, sec, colss
+  var html, sec, colss, tableHeader
 
   let $ = cheerio.load(htmlBare)
 
@@ -679,12 +687,8 @@ const htmlTargetOutput = async (ref = {}) => {
      $table.append($tbody)
 
      if (key == 'auth') {
-
-       $thead.append($(`<th>Num</th>`))
-       $thead.append($(`<th>Html</th>`))
-       $thead.append($(`<th>Pdf</th>`))
-       //$thead.append($(`<th>Date</th>`))
-       $thead.append($(`<th>Title</th>`))
+       tableHeader = 'Num Html Pdf Date Title'
+       colss = 'href hrefPdf htmlEx pdfEx title date'
 
 //@a html_auth
        const author_id = m.groups.author_id
@@ -705,24 +709,28 @@ const htmlTargetOutput = async (ref = {}) => {
 
 //@a fill_auth
        const p_auth = secList.map(async (rw) => {
-          const sec = rw.sec
+          const ii_sec = rw.sec
           const title = rw.title
 
-          const sd = await dbSecData({ proj, sec })
-          const href = `/prj/sec/html?sec=${sec}`
-          const hrefPdf = `/prj/sec/pdf?sec=${sec}`
+          const sd = await dbSecData({ proj, sec : ii_sec })
+          const href = `/prj/sec/html?sec=${ii_sec}`
+          const hrefPdf = `/prj/sec/pdf?sec=${ii_sec}`
           const pdfEx = sd.output.pdf
           const htmlEx = sd.output.html
 
-          const row = { sec, title, href, hrefPdf, pdfEx, htmlEx }
+          const m = dReMapTarget({ key : 'datePost' }).exec(`_buf.${ii_sec}`)
+          const date = m ? [ m.groups.day, m.groups.month, m.groups.year ].join('_') : ''
+
+          const row = { sec : ii_sec, date, title, href, hrefPdf, pdfEx, htmlEx }
           tableData.push(row)
        })
 
        await Promise.all(p_auth)
 
-       colss = 'href hrefPdf htmlEx pdfEx title'
 
      } else if (key == 'date') {
+       tableHeader = 'Num Html Pdf Author Title'
+       colss = 'href hrefPdf title authors htmlEx pdfEx'
 
        const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
 
@@ -764,18 +772,7 @@ const htmlTargetOutput = async (ref = {}) => {
 
          await Promise.all(p_date)
 
-//@a html_date_table_header
-	       $thead.append($(`<th>Num</th>`))
-	       $thead.append($(`<th>Html</th>`))
-	       $thead.append($(`<th>Pdf</th>`))
-	       $thead.append($(`<th>Author</th>`))
-	       $thead.append($(`<th>Title</th>`))
-
          $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
-
-//@a html_date_table
-         colss = 'href hrefPdf title authors htmlEx pdfEx'
-
        }
 
      }else{
@@ -783,6 +780,10 @@ const htmlTargetOutput = async (ref = {}) => {
      }
 
      if (override) {
+       tableHeader.split(/\s+/).map((x) => {
+          $thead.append($(`<th>${x}</th>`))
+       })
+
        domSecTable({
           $, $tbody, tableData,
           colss,
