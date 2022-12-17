@@ -1,37 +1,28 @@
-// Import express
+
 const express = require('express')
 
-// Import auth-controller
+const { c_AuthClass } = require('./../controllers/c_AuthClass.js')
+const { c_ImgClass }  = require('./../controllers/c_ImgClass.js')
+const { c_PrjClass }  = require('./../controllers/c_PrjClass.js')
 
-const { c_AuthorClass } = require('./../controllers/c_AuthorClass.js')
-const { c_ImgClass } = require('./../controllers/c_ImgClass.js')
-const { c_PrjClass } = require('./../controllers/c_PrjClass.js')
-
-const c_Author = new c_AuthorClass()
+const c_Auth = new c_AuthClass()
 const c_Img = new c_ImgClass()
 const c_Prj = new c_PrjClass()
 
-// Create router
 const router = express.Router()
 
-// Add route for GET request to retrieve all authors
-// In server.js, auth route is specified as '/auth'
-// this means that '/all' translates to '/auth/all'
-//
-//
 router.get('/', async (req, res) => {
    res.redirect('/prj/sec/html?sec=24_11_2022')
 })
 
-router.get('/auth/count',  c_Author.jsonCount())
-router.get('/auth/all',    c_Author.jsonAll())
-router.get('/auth/update', c_Author.jsonUpdate())
+router.get('/auth/count',  c_Auth.jsonCount())
+router.get('/auth/all',    c_Auth.jsonAll())
+router.get('/auth/update', c_Auth.jsonUpdate())
+//router.put('/auth/delete', c_Auth.jsonDelete())
 
 //@@ Images
 router.get('/img/count'     , c_Img.jsonCount())
 router.get('/img/raw/:inum' , c_Img.rawImg())
-
-//router.put('/auth/delete', authRoutes.authDelete)
 
 router.post('/prj/act', c_Prj.jsonAct())
 
