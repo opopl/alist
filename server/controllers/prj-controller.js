@@ -312,7 +312,7 @@ const reqJsonTargetData = async (req, res) => {
 const reqJsonSecData = async (req, res) => {
   const query = req.query
 
-  var data = await dbSecData(query)
+  var data = await prjj.dbSecData(query)
 
   res.json(data)
 

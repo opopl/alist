@@ -1,10 +1,17 @@
 
 const _ = require('lodash')
 const { spawn, execSync } = require('child_process')
+
 const path = require('path')
+const fs = require('fs')
+const fse = require('fs-extra')
 
 const db = require('./../db')
 const dbProc = require('./../dbproc')
+
+const select = db.sql.select
+const insert = db.sql.insert
+const update = db.sql.update
 
 const PrjClass = class {
 //@@ new
@@ -120,7 +127,7 @@ const PrjClass = class {
     const target = _.get(ref, 'target', '')
     const proj   = _.get(ref, 'proj', self.proj)
 
-    const pdfDir  = path.join(self.pdfOut, rootid, proj )
+    const pdfDir  = path.join(self.pdfOut, self.rootid, proj )
     const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
 
     return pdfFile
@@ -133,7 +140,7 @@ const PrjClass = class {
     const target = _.get(ref, 'target', self.target)
     const proj   = _.get(ref, 'proj', self.proj)
 
-    const htmlDir  = path.join(self.htmlOut, rootid, proj, target)
+    const htmlDir  = path.join(self.htmlOut, self.rootid, proj, target)
     const htmlFile = path.join(htmlDir, 'jnd_ht.html')
 
     return htmlFile
