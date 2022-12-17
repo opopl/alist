@@ -8,7 +8,7 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
-const { PrjClass } = require('./prj')
+const { PrjClass } = require('./PrjClass')
 
 const srvUtil = require('./../srv-util')
 const md5file = require('md5-file')

@@ -1,30 +1,52 @@
 
 const _ = require('lodash')
 const { spawn, execSync } = require('child_process')
+const path = require('path')
 
-
-
-const picDataDir   = path.join(process.env.PIC_DATA)
-const plgDir   = path.join(process.env.PLG)
-
-// root directory for js files
-const jsRoot = path.join(htmlOut,'ctl','js')
-// root directory for css files
-const cssRoot = path.join(htmlOut,'ctl','css')
+const db = require('./../db')
+const dbProc = require('./../dbproc')
 
 
 const PrjClass = class {
   constructor(){
-		 this.prjRoot  = path.join(process.env.P_SR)
-		 this.htmlOut  = path.join(process.env.HTMLOUT)
-		 this.pdfOut   = path.join(process.env.PDFOUT)
-		 this.imgRoot  = path.join(process.env.IMG_ROOT)
-		 this.docRoot  = path.join(process.env.DOC_ROOT)
-	}
+     this.dbc = db.prj
+
+     this.initDirs()
+  }
+
+//@@ initDirs
+  initDirs () {
+     this.prjRoot  = path.join(process.env.P_SR)
+
+     this.htmlOut  = path.join(process.env.HTMLOUT)
+     this.pdfOut   = path.join(process.env.PDFOUT)
+
+     this.imgRoot  = path.join(process.env.IMG_ROOT)
+     this.docRoot  = path.join(process.env.DOC_ROOT)
+
+     this.jsRoot  = path.join(this.htmlOut,'ctl','js')
+     this.cssRoot = path.join(this.htmlOut,'ctl','css')
+
+     this.picDataDir = path.join(process.env.PIC_DATA)
+     this.plgDir     = path.join(process.env.PLG)
+
+     return this
+  }
+
+//@@ dbBldData
+  async dbBldData (w={}) {
+    const q = select(`*`)
+           .from('builds')
+           .where(w)
+           .toParams({placeholder: '?%d'})
+
+    const builds = await dbProc.all(dbc, q.text, q.values)
+    return builds
+  }
 
 //@@ act
   async act (ref = {}) {
-		 //const self = this
+     //const self = this
 
      const act = _.get(ref,'act')
      const cnf = _.get(ref,'cnf','')
@@ -33,7 +55,7 @@ const PrjClass = class {
      const cnfa = cnf.split(',')
      const do_htlatex = cnfa.includes('htx')
 
-     const proj = _.get(ref,'proj',defaults.proj)
+     const proj = _.get(ref,'proj',this.proj)
 
      const sCnf = cnf ? `-c ${cnf}` : ''
      const sTarget = target ? `-t ${target}` : ''
@@ -45,7 +67,7 @@ const PrjClass = class {
      const trg = m ? [ m[1], m[2] ].join('.') : target
      const pln = [ act, target_ext, trg ].join('.')
 
-     const bldData = await dbBldData({ plan : pln, status : 'running' })
+     const bldData = await this.dbBldData({ plan : pln, status : 'running' })
      if (bldData.length) {
         var msg = `build is already running: ${pln}`
         console.log({ msg });
