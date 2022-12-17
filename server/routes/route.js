@@ -2,8 +2,6 @@
 const express = require('express')
 
 // Import auth-controller
-const prjRoutes = require('./../controllers/prj-controller.js')
-const docRoutes = require('./../controllers/doc-controller.js')
 
 const { c_AuthorClass } = require('./../controllers/c_AuthorClass.js')
 const { c_ImgClass } = require('./../controllers/c_ImgClass.js')
@@ -68,9 +66,6 @@ router.get(/^\/prj\/assets\/js\/(.*)$/, c_Prj.jsFile())
 
 router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, c_Prj.cssFileCtl())
 router.get(/^\/prj\/assets\/css\/main\/(.*)$/, c_Prj.cssFile())
-
-
-//@@ Doc
 
 
 // Export router

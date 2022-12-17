@@ -11,7 +11,6 @@ const { PrjClass } = require('./PrjClass')
 const { AuthClass } = require('./AuthClass')
 
 const srvUtil = require('./../srv-util')
-const md5file = require('md5-file')
 
 const htmlparser2 = require("htmlparser2");
 const parse5 = require("parse5");
@@ -31,9 +30,6 @@ const fse = require('fs-extra')
 const prjRoot  = path.join(process.env.P_SR)
 const imgRoot  = path.join(process.env.IMG_ROOT)
 const docRoot  = path.join(process.env.DOC_ROOT)
-
-
-
 
 module.exports = {}
 
