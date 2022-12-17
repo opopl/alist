@@ -78,6 +78,19 @@ const c_PrjClass = class {
     }
 }
 
+//@@ jsonSecList
+// post /prj/sec/list
+  jsonSecList () {
+    return async (req, res) => {
+      const ref = req.body
+
+      var data = await prjj.dbSecList(ref)
+
+      res.json({ data })
+
+    }
+  }
+
 //@@ jsonSecData
   jsonSecData () {
     return async (req, res) => {
@@ -408,6 +421,37 @@ const c_PrjClass = class {
       }
 
       //const cssFile = path.join(cssRoot, file)
+    }
+  }
+
+//@@ jsFile
+// GET /prj/assets/js/(.*)
+  jsFile () {
+    const self = this
+
+    return async (req, res) => {
+      const file = req.params[0]
+
+      const jsFile = path.join(prjj.jsRoot, file)
+
+      if (fs.existsSync(jsFile)) {
+        res.sendFile(jsFile)
+      }
+
+    }
+  }
+
+//@@ cssFileCtl
+// get
+  cssFileCtl ()  {
+    return async (req, res) => {
+      const file = req.params[0]
+
+      const cssFile = path.join(prjj.cssRoot, file)
+
+      if (fs.existsSync(cssFile)) {
+        res.sendFile(cssFile)
+      }
     }
   }
 

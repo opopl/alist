@@ -146,73 +146,9 @@ const dbImgData = async ({ url }) => {
 }
 
 
-
 const dbSecSelect = async (ref={}) => {
   const sec = ref.sec || ''
 }
-
-
-
-//@@ dbSecList
-const dbSecList = async (ref={}) => {
-  const proj = _.get(ref, 'proj', defaults.proj)
-
-  var list = []
-
-  return list
-}
-
-
-
-
-
-
-
-//@@ reqJsonSecList
-// post /prj/sec/list
-const reqJsonSecList = async (req, res) => {
-  const ref = req.body
-
-  var data = await dbSecList(ref)
-
-  res.json({ data })
-
-}
-
-
-
-
-
-//@@ reqCssFileCtl
-// get
-const reqCssFileCtl = async (req, res) => {
-  const file = req.params[0]
-
-  const cssFile = path.join(cssRoot, file)
-
-  if (fs.existsSync(cssFile)) {
-    res.sendFile(cssFile)
-  }
-}
-
-
-
-
-
-
-//@@ reqJsFile
-// GET /prj/assets/js/(.*)
-const reqJsFile = async (req, res) => {
-  const file = req.params[0]
-
-  const jsFile = path.join(jsRoot, file)
-
-  if (fs.existsSync(jsFile)) {
-    res.sendFile(jsFile)
-  }
-
-}
-
 
 
 //@@ dReMapSec
@@ -224,19 +160,5 @@ const dReMapSec = ({ key }) => {
   return _.get(map,key)
 }
 
-
-const jsonHandlers = {
-    reqJsonSecList
-}
-
-const fsHandlers = {
-    reqJsFile,
-    reqCssFileCtl,
-}
-
-
-module.exports = {
-    ...jsonHandlers,
-    ...fsHandlers
-}
+module.exports = {}
 

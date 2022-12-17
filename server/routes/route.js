@@ -53,7 +53,7 @@ router.get('/prj/sec/html' , c_Prj.htmlSecView())
 router.get('/prj/sec/pdf'  , c_Prj.pdfSecView())
 
 router.get('/prj/sec/saved', c_Prj.htmlSecSaved())
-router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
+router.post('/prj/sec/list', c_Prj.jsonSecList())
 
 router.get(/^\/prj\/sec\/asset\/(.*)$/, c_Prj.secAsset())
 
@@ -64,9 +64,9 @@ router.get('/prj/auth/html', c_Prj.htmlAuthView())
 router.get('/prj/bld/data', c_Prj.jsonBldData())
 
 //@@ Assets
-router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
+router.get(/^\/prj\/assets\/js\/(.*)$/, c_Prj.jsFile())
 
-router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, prjRoutes.reqCssFileCtl)
+router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, c_Prj.cssFileCtl())
 router.get(/^\/prj\/assets\/css\/main\/(.*)$/, c_Prj.cssFile())
 
 

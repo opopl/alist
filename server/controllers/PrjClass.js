@@ -109,6 +109,17 @@ const PrjClass = class {
     return { day, month, year }
   }
 
+//@@ dbSecList
+  async dbSecList (ref={}) {
+    const self = this
+
+    const proj = _.get(ref, 'proj', self.proj)
+
+    var list = []
+
+    return list
+  }
+
 //@@ dbSecData
   async dbSecData (ref={})  {
     const self = this
