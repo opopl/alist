@@ -42,7 +42,6 @@ const jsRoot = path.join(htmlOut,'ctl','js')
 // root directory for css files
 const cssRoot = path.join(htmlOut,'ctl','css')
 
-
 const htmlBare = `<!DOCTYPE html>
     <html>
       <head> <title></title>
@@ -714,7 +713,7 @@ const htmlTargetOutput = async (ref = {}) => {
 
           const sd = await dbSecData({ proj, sec : ii_sec })
           const href = `/prj/sec/html?sec=${ii_sec}`
-          const hrefPdf = `/prj/sec/pdf?sec=${ii_sec}`
+          const hrefPdf = `/prj/sec/html?sec=${ii_sec}&tab=pdf`
           const pdfEx = sd.output.pdf
           const htmlEx = sd.output.html
 
