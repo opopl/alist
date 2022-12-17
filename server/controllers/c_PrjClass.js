@@ -21,13 +21,12 @@ const update = db.sql.update
 
 const c_PrjClass = class {
 //@@ new
-  constructor(){
+  constructor(ref={}){
     this.dbc = db.prj
 
-    this.proj = 'letopis'
-    this.target = ''
+    Object.assign(this, ref)
 
-    this.prj = new PrjClass()
+    this.prj = new PrjClass(ref)
 
   }
 

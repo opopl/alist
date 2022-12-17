@@ -7,19 +7,18 @@ const { c_AuthClass } = require('./controllers/c_AuthClass.js')
 const { c_ImgClass }  = require('./controllers/c_ImgClass.js')
 const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
 
-const c_Auth = new c_AuthClass()
-const c_Img = new c_ImgClass()
-const c_Prj = new c_PrjClass()
 
 class A {
-  constructor(ref={}){
-    console.log({ ref });
+  constructor(cnf={}){
+    const self = this
 
-    Object.assign(this, ref)
-    Object.keys(ref).forEach(function(x){
-      console.log(x);
-      console.log(_.get(this,x));
+    Object.assign(this, cnf)
+
+    Object.keys(cnf).forEach(function(x){
+      console.log(_.get(self,x));
     })
+
+    console.log(Object.keys(this));
   }
 
   run(){
@@ -29,61 +28,70 @@ class A {
 //new A('2').run()
 //new A().run()
 //new A('2','3').run()
-new A({ '2' : '3', 'a' : 'b' }).run()
+//new A({ '2' : 'v1', 'a' : 'v2' }).run()
 
 class routerFactory {
-  constructor(){
+  constructor(ref={}){
+    const optsAuth = _.get(ref,'auth',{})
+    const optsImg = _.get(ref,'img',{})
+    const optsPrj = _.get(ref,'prj',{})
+
+		this.c_Auth = new c_AuthClass(optsAuth)
+		this.c_Img  = new c_ImgClass(optsImg)
+		this.c_Prj  = new c_PrjClass(optsPrj)
   }
 
   router(){
+    const self = this
+
     const router = express.Router()
 
     router.get('/', async (req, res) => {
        res.redirect('/prj/sec/html?sec=24_11_2022')
     })
 
-    router.get('/auth/count',  c_Auth.jsonCount())
-    router.get('/auth/all',    c_Auth.jsonAll())
-    router.get('/auth/update', c_Auth.jsonUpdate())
+    router.get('/auth/count',  self.c_Auth.jsonCount())
+    router.get('/auth/all',    self.c_Auth.jsonAll())
+    router.get('/auth/update', self.c_Auth.jsonUpdate())
     //router.put('/auth/delete', c_Auth.jsonDelete())
 
     //@@ Images
-    router.get('/img/count'     , c_Img.jsonCount())
-    router.get('/img/raw/:inum' , c_Img.rawImg())
+    router.get('/img/count'     , self.c_Img.jsonCount())
+    router.get('/img/raw/:inum' , self.c_Img.rawImg())
 
-    router.post('/prj/act', c_Prj.jsonAct())
+    router.post('/prj/act', self.c_Prj.jsonAct())
 
     //@@ Config
-    router.get('/prj/config/get', c_Prj.jsonConfig())
+    router.get('/prj/config/get', self.c_Prj.jsonConfig())
 
     //@@ Target
-    router.get('/prj/target/data', c_Prj.jsonTargetData())
-    router.get('/prj/target/html', c_Prj.htmlTargetView())
+    router.get('/prj/target/data', self.c_Prj.jsonTargetData())
+    router.get('/prj/target/html', self.c_Prj.htmlTargetView())
 
     //@@ Sec
-    router.get('/prj/sec/count' , c_Prj.jsonSecCount())
-    router.get('/prj/sec/src'   , c_Prj.jsonSecSrc())
-    router.get('/prj/sec/data'  , c_Prj.jsonSecData())
+    router.get('/prj/sec/count' , self.c_Prj.jsonSecCount())
+    router.get('/prj/sec/src'   , self.c_Prj.jsonSecSrc())
+    router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
 
-    router.get('/prj/sec/html' , c_Prj.htmlSecView())
-    router.get('/prj/sec/pdf'  , c_Prj.pdfSecView())
+    router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
+    router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())
 
-    router.get('/prj/sec/saved', c_Prj.htmlSecSaved())
-    router.post('/prj/sec/list', c_Prj.jsonSecList())
+    router.get('/prj/sec/saved', self.c_Prj.htmlSecSaved())
+    router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
-    router.get(/^\/prj\/sec\/asset\/(.*)$/, c_Prj.secAsset())
+    router.get(/^\/prj\/sec\/asset\/(.*)$/, self.c_Prj.secAsset())
 
     //@@ Authors
-    router.get('/prj/auth/html', c_Prj.htmlAuthView())
+    router.get('/prj/auth/html', self.c_Prj.htmlAuthView())
 
     //@@ Builds
-    router.get('/prj/bld/data', c_Prj.jsonBldData())
+    router.get('/prj/bld/data', self.c_Prj.jsonBldData())
 
     //@@ Assets
-    router.get(/^\/prj\/assets\/js\/(.*)$/, c_Prj.jsFile())
+    router.get(/^\/prj\/assets\/js\/(.*)$/, self.c_Prj.jsFile())
 
-    router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, c_Prj.cssFileCtl())
-    router.get(/^\/prj\/assets\/css\/main\/(.*)$/, c_Prj.cssFile())
+    router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, self.c_Prj.cssFileCtl())
+    router.get(/^\/prj\/assets\/css\/main\/(.*)$/, self.c_Prj.cssFile())
 
     return router
   }

@@ -21,15 +21,19 @@ const { AuthClass } = require('./AuthClass')
 
 const PrjClass = class {
 //@@ new
-  constructor(){
+  constructor(ref={}){
      this.dbc = db.prj
      this.dbc_bld = db.bld
 
      this.initDirs()
 
-     this.rootid = 'p_sr'
-     this.proj = 'letopis'
      this.target = ''
+     Object.assign(this, ref)
+
+     //this.rootid = 'p_sr'
+     //this.proj = 'letopis'
+     console.log({ proj : this.proj });
+     console.log({ rootid : this.rootid });
 
      this.auth = new AuthClass()
 

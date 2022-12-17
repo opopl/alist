@@ -5,6 +5,9 @@ const compression = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
 
+const path = require('path')
+const fs = require('fs')
+const yaml = require('js-yaml')
 
 const argv = require('yargs').argv;
 
@@ -17,7 +20,21 @@ const PORT = process.env.PORT || 4001
 class Alist {
   constructor(){}
 
+  loadYaml(){
+    const self = this
+
+    const yFile = path.join(__dirname, 'cnf.yaml')
+
+    const yFileEx = fs.existsSync(yFile)
+    self.cnf = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+
+    return self
+  }
+
   run(){
+    const self = this
+
+    self.loadYaml()
 
     // Create express app
     const app = express()
@@ -30,7 +47,9 @@ class Alist {
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
 
-    app.use('/', new routerFactory().router())
+    const cnf = self.cnf || {}
+
+    app.use('/', new routerFactory(cnf).router())
 
     // Implement 500 error route
     app.use(function (err, req, res, next) {
