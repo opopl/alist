@@ -5,13 +5,13 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
-const cAuthor = class {
+const cAuthorClass = class {
   constructor(){
     this.dbc = db.auth
   }
 
-//@@ count
-  count (){
+//@@ jsonCount
+  jsonCount (){
     const dbc = this.dbc
 
     return async (req, res) => {
@@ -22,8 +22,8 @@ const cAuthor = class {
     }
   }
 
-//@@ all
-  all(){
+//@@ jsonAll
+  jsonAll(){
     const dbc = this.dbc
 
     return async (req, res) => {
@@ -64,8 +64,8 @@ const cAuthor = class {
   }
 
 
-//@@ update
-  update(){
+//@@ jsonUpdate
+  jsonUpdate(){
     const dbc = this.dbc
 
     return async (req, res) => {
@@ -110,8 +110,7 @@ const cAuthor = class {
 
 }
 
-
 module.exports = {
-    cAuthor
+    cAuthorClass
 }
 

@@ -2,12 +2,14 @@
 const express = require('express')
 
 // Import auth-controller
-const authRoutes = require('./../controllers/auth-controller.js')
-const imgRoutes = require('./../controllers/img-controller.js')
 const prjRoutes = require('./../controllers/prj-controller.js')
 const docRoutes = require('./../controllers/doc-controller.js')
 
-const ca = new authRoutes.cAuthor()
+const { cAuthorClass } = require('./../controllers/cAuthorClass.js')
+const { cImgClass } = require('./../controllers/cImgClass.js')
+
+const cAuthor = new cAuthorClass()
+const cImg = new cImgClass()
 
 // Create router
 const router = express.Router()
@@ -21,9 +23,13 @@ router.get('/', async (req, res) => {
    res.redirect('/prj/sec/html?sec=24_11_2022')
 })
 
-router.get('/auth/count', ca.count())
-router.get('/auth/all', ca.all())
-router.get('/auth/update', ca.update())
+router.get('/auth/count',  cAuthor.jsonCount())
+router.get('/auth/all',    cAuthor.jsonAll())
+router.get('/auth/update', cAuthor.jsonUpdate())
+
+//@@ Images
+router.get('/img/count'     , cImg.jsonCount())
+router.get('/img/raw/:inum' , cImg.rawImg())
 
 //router.put('/auth/delete', authRoutes.authDelete)
 
@@ -63,10 +69,6 @@ router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
 
 //@@ Doc
 
-//@@ Images
-
-router.get('/img/count', imgRoutes.jsonImgCount)
-router.get('/img/raw/:inum', imgRoutes.rawImg)
 
 // Export router
 module.exports = router
