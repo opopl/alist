@@ -5,7 +5,7 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
-const cAuthorClass = class {
+const c_AuthorClass = class {
   constructor(){
     this.dbc = db.auth
   }
@@ -111,6 +111,6 @@ const cAuthorClass = class {
 }
 
 module.exports = {
-    cAuthorClass
+    c_AuthorClass
 }
 

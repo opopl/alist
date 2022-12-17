@@ -16,8 +16,7 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
-
-const cImgClass = class {
+const c_ImgClass = class {
   constructor(){
     this.dbc = db.img
     this.imgRoot = path.join(process.env.IMG_ROOT)
@@ -67,7 +66,5 @@ const cImgClass = class {
 }
 
 
-
-
-module.exports = { cImgClass }
+module.exports = { c_ImgClass }
 

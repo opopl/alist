@@ -5,11 +5,11 @@ const express = require('express')
 const prjRoutes = require('./../controllers/prj-controller.js')
 const docRoutes = require('./../controllers/doc-controller.js')
 
-const { cAuthorClass } = require('./../controllers/cAuthorClass.js')
-const { cImgClass } = require('./../controllers/cImgClass.js')
+const { c_AuthorClass } = require('./../controllers/c_AuthorClass.js')
+const { c_ImgClass } = require('./../controllers/c_ImgClass.js')
 
-const cAuthor = new cAuthorClass()
-const cImg = new cImgClass()
+const c_Author = new c_AuthorClass()
+const c_Img = new c_ImgClass()
 
 // Create router
 const router = express.Router()
@@ -23,13 +23,13 @@ router.get('/', async (req, res) => {
    res.redirect('/prj/sec/html?sec=24_11_2022')
 })
 
-router.get('/auth/count',  cAuthor.jsonCount())
-router.get('/auth/all',    cAuthor.jsonAll())
-router.get('/auth/update', cAuthor.jsonUpdate())
+router.get('/auth/count',  c_Author.jsonCount())
+router.get('/auth/all',    c_Author.jsonAll())
+router.get('/auth/update', c_Author.jsonUpdate())
 
 //@@ Images
-router.get('/img/count'     , cImg.jsonCount())
-router.get('/img/raw/:inum' , cImg.rawImg())
+router.get('/img/count'     , c_Img.jsonCount())
+router.get('/img/raw/:inum' , c_Img.rawImg())
 
 //router.put('/auth/delete', authRoutes.authDelete)
 

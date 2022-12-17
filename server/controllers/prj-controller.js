@@ -155,7 +155,7 @@ const dbImgData = async ({ url }) => {
 //@@ reqJsonSecCount
 const reqJsonSecCount = async (req, res) => {
 
-  const q_count = db.sql.select('COUNT(*) AS cnt').from('projs').toString()
+  const q_count = select('COUNT(*) AS cnt').from('projs').toString()
   //var row = await db.prj.get(q,(err,row) => {} )
      //res.json(row)
   //})
@@ -192,7 +192,7 @@ const dbAuth = async ({ author_id, author_ids }) => {
      return { authors }
 
    }else if(author_id){
-     const q_auth = db.sql.select(`*`)
+     const q_auth = select(`*`)
             .from('authors')
             .where({ id : author_id })
             .toParams({placeholder: '?%d'})
@@ -226,7 +226,7 @@ const dbSecData = async (ref={}) => {
 
   var sec_file = secData.file
 
-  const q_ch = db.sql.select('sec')
+  const q_ch = select('sec')
       .from('projs')
       .innerJoin('tree_children')
       .on({ 'projs.file' : 'tree_children.file_child' })
@@ -246,7 +246,7 @@ const dbSecData = async (ref={}) => {
      const icol = _.get(b2info, bcol, bcol)
      const t_info = `_info_projs_${bcol}`
 
-     const q_info = db.sql.select(`${t_info}.${icol}`)
+     const q_info = select(`${t_info}.${icol}`)
               .from('projs')
               .innerJoin(`${t_info}`)
               .on({ 'projs.file' : `${t_info}.file` })
@@ -694,7 +694,7 @@ const htmlTargetOutput = async (ref = {}) => {
 
 //@a html_auth
        const author_id = m.groups.author_id
-       const q_sec = db.sql.select('sec, title')
+       const q_sec = select('sec, title')
            .from('projs')
            .innerJoin('_info_projs_author_id')
            .on({ 'projs.file' : '_info_projs_author_id.file' })
