@@ -47,6 +47,19 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecSrc
+  jsonSecSrc () {
+    return async (req, res) => {
+      const query = req.query
+      const sec = query.sec || ''
+
+      var txt = await prjj.secTxt({ sec })
+
+      res.send({ txt })
+
+    }
+  }
+
 }
 
 module.exports = { c_PrjClass }

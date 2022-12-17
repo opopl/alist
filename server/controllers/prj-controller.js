@@ -169,17 +169,6 @@ const dbSecSelect = async (ref={}) => {
   const sec = ref.sec || ''
 }
 
-//@@ dbBldData
-const dbBldData = async (w={}) => {
-  const q = select(`*`)
-         .from('builds')
-         .where(w)
-         .toParams({placeholder: '?%d'})
-
-  const builds = await dbProc.all(db.bld, q.text, q.values)
-  return builds
-}
-
 //@@ dbAuth
 const dbAuth = async ({ author_id, author_ids }) => {
 
@@ -273,35 +262,9 @@ const reqJsonBldData = async (req, res) => {
      return
   })
 
-  const bldData = await dbBldData(w)
+  const bldData = await prjj.dbBldData(w)
 
   res.json({ data: bldData })
-
-}
-
-//@@ reqJsonAct
-// POST /prj/act
-const reqJsonAct = async (req, res) => {
-  const act = _.get(req, 'body.act', 'compile')
-  const cnf = _.get(req, 'body.cnf', '')
-
-  const target = _.get(req, 'body.target', '')
-  const proj = _.get(req, 'body.proj', defaults.proj)
-
-  const stat = await prjj.act({ act, proj, cnf, target })
-
-  res.json(stat)
-
-}
-
-//@@ reqJsonSecSrc
-const reqJsonSecSrc = async (req, res) => {
-  const query = req.query
-  const sec = query.sec || ''
-
-  var txt = await prjj.secTxt({ sec })
-
-  res.send({ txt })
 
 }
 
@@ -1044,8 +1007,6 @@ const jsonHandlers = {
     reqJsonSecCount,
     reqJsonSecData,
     reqJsonSecList,
-    reqJsonSecSrc,
-    reqJsonAct,
 
     reqJsonTargetData,
     reqJsonBldData,
