@@ -604,54 +604,89 @@ const PrjClass = class {
   }
 
 //@@ htmlFileSecSaved
-async htmlFileSecSaved (ref = {})  {
-  const self = this
+  async htmlFileSecSaved (ref = {})  {
+    const self = this
 
-  const sec = _.get(ref, 'sec', '')
-  const proj = _.get(ref, 'proj', self.proj)
+    const sec = _.get(ref, 'sec', '')
+    const proj = _.get(ref, 'proj', self.proj)
 
-  console.log('[htmlFileSecSaved] start');
+    console.log('[htmlFileSecSaved] start');
 
-  const dirNew = path.join(self.picDataDir, self.rootid, proj, 'new')
-  const dirDone = path.join(self.picDataDir, self.rootid, proj, 'done')
+    const dirNew = path.join(self.picDataDir, self.rootid, proj, 'new')
+    const dirDone = path.join(self.picDataDir, self.rootid, proj, 'done')
 
-  const secDirNew  = path.join(dirNew, sec)
+    const secDirNew  = path.join(dirNew, sec)
 
-  const { day, month, year } = self.secDate({ proj, sec })
+    const { day, month, year } = self.secDate({ proj, sec })
 
-  //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
-  //let map_months = base#yaml#parse_fs({ 'file' : yfile })
-  const yFile = path.join(self.plgDir, 'projs', 'data', 'yaml', 'months.yaml')
-  const yFileEx = fs.existsSync(yFile)
-  const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
-  const monthName = _.get(mapMonths,`en.short.${month}`,month)
+    //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
+    //let map_months = base#yaml#parse_fs({ 'file' : yfile })
+    const yFile = path.join(self.plgDir, 'projs', 'data', 'yaml', 'months.yaml')
+    const yFileEx = fs.existsSync(yFile)
+    const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+    const monthName = _.get(mapMonths,`en.short.${month}`,month)
 
-  var secDirDone = path.join(dirDone, 'secs', sec)
-  if (day && monthName && year){
-    secDirDone = path.join(dirDone, year, monthName, `${day}`, sec )
+    var secDirDone = path.join(dirDone, 'secs', sec)
+    if (day && monthName && year){
+      secDirDone = path.join(dirDone, year, monthName, `${day}`, sec )
+    }
+
+    const secDirDoneEx = fs.existsSync(secDirDone)
+    const secDirNewEx = fs.existsSync(secDirNew)
+
+    var htmlFile = ''
+    const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
+      var ff = []
+      const cb_file = ({ found }) => {
+         const bn = path.basename(found)
+         if (bn != 'we.html') { return }
+         htmlFile = found
+      }
+      await srvUtil.fsFind({ dir, cb_file });
+    })
+    await Promise.all(p_files)
+
+    const htmlFileEx = fs.existsSync(htmlFile)
+
+    console.log('[htmlFileSecSaved] end');
+
+    return { htmlFile, htmlFileEx }
   }
 
-  const secDirDoneEx = fs.existsSync(secDirDone)
-  const secDirNewEx = fs.existsSync(secDirNew)
+//@@ secDirsSaved
+  secDirsSaved (ref={}) {
+    const self = this
 
-  var htmlFile = ''
-  const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
-    var ff = []
-    const cb_file = ({ found }) => {
-       const bn = path.basename(found)
-       if (bn != 'we.html') { return }
-       htmlFile = found
+    const sec = _.get(ref, 'sec', '')
+    const proj = _.get(ref, 'proj', self.proj)
+    const sub = _.get(ref, 'sub', '')
+
+    const dirNew = path.join(self.picDataDir, self.rootid, proj, 'new')
+    const dirDone = path.join(self.picDataDir, self.rootid, proj, 'done')
+
+    var secDirNew  = path.join(dirNew, sec)
+    if (sub) { secDirNew = path.join(secDirNew, sub) }
+
+    const { day, month, year } = self.secDate({ proj, sec })
+
+    //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
+    //let map_months = base#yaml#parse_fs({ 'file' : yfile })
+    const yFile = path.join(self.plgDir, 'projs', 'data', 'yaml', 'months.yaml')
+    const yFileEx = fs.existsSync(yFile)
+    const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+    const monthName = _.get(mapMonths,`en.short.${month}`,month)
+
+    var secDirDone = path.join(dirDone, 'secs', sec)
+    if (day && monthName && year){
+      secDirDone = path.join(dirDone, year, monthName, day, sec )
     }
-    await srvUtil.fsFind({ dir, cb_file });
-  })
-  await Promise.all(p_files)
 
-  const htmlFileEx = fs.existsSync(htmlFile)
+    if (sub) { secDirDone = path.join(secDirDone, sub) }
 
-  console.log('[htmlFileSecSaved] end');
+    return { secDirNew, secDirDone }
 
-  return { htmlFile, htmlFileEx }
-}
+  }
+
 
 }
 

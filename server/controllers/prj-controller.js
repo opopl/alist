@@ -225,42 +225,6 @@ const dReMapSec = ({ key }) => {
 }
 
 
-
-
-
-//@@ secDirsSaved
-const secDirsSaved = async (ref={}) => {
-  const sec = _.get(ref, 'sec', '')
-  const proj = _.get(ref, 'proj', defaults.proj)
-  const sub = _.get(ref, 'sub', '')
-
-  const dirNew = path.join(picDataDir, rootid, proj, 'new')
-  const dirDone = path.join(picDataDir, rootid, proj, 'done')
-
-  var secDirNew  = path.join(dirNew, sec)
-  if (sub) { secDirNew = path.join(secDirNew, sub) }
-
-  const { day, month, year } = prjj.secDate({ proj, sec })
-
-  //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
-  //let map_months = base#yaml#parse_fs({ 'file' : yfile })
-  const yFile = path.join(plgDir, 'projs', 'data', 'yaml', 'months.yaml')
-  const yFileEx = fs.existsSync(yFile)
-  const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
-  const monthName = _.get(mapMonths,`en.short.${month}`,month)
-
-  var secDirDone = path.join(dirDone, 'secs', sec)
-  if (day && monthName && year){
-    secDirDone = path.join(dirDone, year, monthName, day, sec )
-  }
-
-  if (sub) { secDirDone = path.join(secDirDone, sub) }
-
-  return { secDirNew, secDirDone }
-
-}
-
-
 const jsonHandlers = {
     reqJsonSecList
 }
