@@ -12,10 +12,6 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
-const prjRoot  = path.join(process.env.P_SR)
-const imgRoot  = path.join(process.env.IMG_ROOT)
-const htmlOut  = path.join(process.env.HTMLOUT)
-
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
@@ -24,6 +20,7 @@ const update = db.sql.update
 const cImgClass = class {
   constructor(){
     this.dbc = db.img
+    this.imgRoot = path.join(process.env.IMG_ROOT)
   }
 
 //@@ jsonCount
@@ -42,6 +39,7 @@ const cImgClass = class {
 //@@ rawImg
   rawImg(){
     const dbc = this.dbc
+    const imgRoot = this.imgRoot
 
     return async (req, res) => {
       const params = req.params

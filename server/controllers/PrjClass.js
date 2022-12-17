@@ -2,11 +2,30 @@
 const _ = require('lodash')
 const { spawn, execSync } = require('child_process')
 
+
+
+const picDataDir   = path.join(process.env.PIC_DATA)
+const plgDir   = path.join(process.env.PLG)
+
+// root directory for js files
+const jsRoot = path.join(htmlOut,'ctl','js')
+// root directory for css files
+const cssRoot = path.join(htmlOut,'ctl','css')
+
+
 const PrjClass = class {
-  constructor(){}
+  constructor(){
+		 this.prjRoot  = path.join(process.env.P_SR)
+		 this.htmlOut  = path.join(process.env.HTMLOUT)
+		 this.pdfOut   = path.join(process.env.PDFOUT)
+		 this.imgRoot  = path.join(process.env.IMG_ROOT)
+		 this.docRoot  = path.join(process.env.DOC_ROOT)
+	}
 
 //@@ act
   async act (ref = {}) {
+		 //const self = this
+
      const act = _.get(ref,'act')
      const cnf = _.get(ref,'cnf','')
      const target = _.get(ref,'target','')
@@ -39,7 +58,7 @@ const PrjClass = class {
      const exe =  cmda.shift()
      const args = cmda
 
-     process.chdir(prjRoot)
+     process.chdir(this.prjRoot)
 
      //try {
        ////childProcess.execSync(cmd, { stdio: 'inherit' })
