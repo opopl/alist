@@ -39,9 +39,30 @@ const c_PrjClass = class {
        proj : self.proj,
        rootid : self.rootid,
        bld : {
-           cols : 'bid buuid plan duration target status'
+          cols : 'bid buuid plan duration target status'
        },
-       ui : {}
+       ui : {
+          tab : {
+          },
+          page : {
+             'auth' : {
+                tabs : [ 'html' ]
+             },
+             'sec@date' : {
+                tabs : [ 'html' ]
+             },
+             'sec@post' : {
+                tabs : [
+                  'html',
+                  'saved',
+                  'pdf',
+                  'tex',
+                  'log',
+                  'bld',
+                ]
+             },
+          }
+       },
     }
   }
 
