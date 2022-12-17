@@ -1,6 +1,8 @@
 
 const express = require('express')
 
+const _ = require('lodash')
+
 const { c_AuthClass } = require('./controllers/c_AuthClass.js')
 const { c_ImgClass }  = require('./controllers/c_ImgClass.js')
 const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
@@ -8,6 +10,26 @@ const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
 const c_Auth = new c_AuthClass()
 const c_Img = new c_ImgClass()
 const c_Prj = new c_PrjClass()
+
+class A {
+  constructor(ref={}){
+    console.log({ ref });
+
+    Object.assign(this, ref)
+    Object.keys(ref).forEach(function(x){
+      console.log(x);
+      console.log(_.get(this,x));
+    })
+  }
+
+  run(){
+  }
+}
+
+//new A('2').run()
+//new A().run()
+//new A('2','3').run()
+new A({ '2' : '3', 'a' : 'b' }).run()
 
 class routerFactory {
   constructor(){
