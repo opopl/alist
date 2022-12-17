@@ -6,7 +6,6 @@ const path = require('path')
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 
-
 const PrjClass = class {
   constructor(){
      this.dbc = db.prj
@@ -35,13 +34,104 @@ const PrjClass = class {
 
 //@@ dbBldData
   async dbBldData (w={}) {
+    const self = this
+
     const q = select(`*`)
            .from('builds')
            .where(w)
            .toParams({placeholder: '?%d'})
 
-    const builds = await dbProc.all(dbc, q.text, q.values)
+    const builds = await dbProc.all(self.dbc, q.text, q.values)
     return builds
+  }
+
+//@@ dbSecData
+  async dbSecData (ref={})  {
+    const self = this
+
+    const sec = ref.sec || ''
+    const proj = ref.proj || self.proj
+
+    const q_sec = select('*')
+                .from('projs')
+                .where({ 'sec' : sec })
+                .toParams({placeholder: '?%d'})
+
+    var secData = await dbProc.get(this.dbc, q_sec.text, q_sec.values)
+    if (!secData) { return }
+
+    var sec_file = secData.file
+
+    const q_ch = select('sec')
+        .from('projs')
+        .innerJoin('tree_children')
+        .on({ 'projs.file' : 'tree_children.file_child' })
+        .where({ 'tree_children.file_parent' : sec_file })
+        .toParams({placeholder: '?%d'})
+
+    var rows_ch =  await dbProc.all(self.dbc, q_ch.text, q_ch.values)
+    var children = []
+    rows_ch.map((rw) => { children.push(rw.sec) })
+
+    secData['children'] = children
+
+    const b2info = { tags : 'tag' }
+    const bcols = ['author_id','tags']
+
+    const p_info = bcols.map(async (bcol) => {
+       const icol = _.get(b2info, bcol, bcol)
+       const t_info = `_info_projs_${bcol}`
+
+       const q_info = select(`${t_info}.${icol}`)
+                .from('projs')
+                .innerJoin(`${t_info}`)
+                .on({ 'projs.file' : `${t_info}.file` })
+                .where({ 'projs.sec' : sec })
+                .toParams({placeholder: '?%d'})
+
+       const rows_info =  await dbProc.all(self.dbc, q_info.text, q_info.values)
+       secData[bcol] = rows_info.map((x) => { return x[bcol] })
+    })
+    await Promise.all(p_info)
+
+    const target = `_buf.${sec}`
+
+    const htmlFile = await self.htmlFileTarget({ proj, target })
+    const html  = fs.existsSync(htmlFile) ? 1 : 0
+
+    const pdfFile = await self.pdfFileTarget({ proj, target })
+    const pdf  = fs.existsSync(pdfFile) ? 1 : 0
+
+    var output = { pdf, html }
+    secData = { ...secData, output }
+
+    return secData
+  }
+
+//@@ pdfFileTarget
+  async pdfFileTarget (ref = {}) {
+    const self = this
+
+    const target = _.get(ref, 'target', '')
+    const proj   = _.get(ref, 'proj', self.proj)
+
+    const pdfDir  = path.join(self.pdfOut, rootid, proj )
+    const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
+
+    return pdfFile
+  }
+
+//@@ htmlFileTarget
+  async htmlFileTarget (ref = {}) {
+    const self = this
+
+    const target = _.get(ref, 'target', self.target)
+    const proj   = _.get(ref, 'proj', self.proj)
+
+    const htmlDir  = path.join(self.htmlOut, rootid, proj, target)
+    const htmlFile = path.join(htmlDir, 'jnd_ht.html')
+
+    return htmlFile
   }
 
 //@@ act
