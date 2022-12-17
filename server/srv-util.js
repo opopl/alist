@@ -9,6 +9,8 @@ const axios = require('axios')
 //import { createHash } from 'node:crypto'
 const crypto = require('crypto')
 
+const findit = require('findit')
+
 //@@ fsRead
 const fsRead = function(path, encoding) {
     return new Promise(function(resolve, reject) {
@@ -81,7 +83,36 @@ const fsWrite = function(path, data) {
 
 }
 
+//@@ fsFind
+const fsFind = async ({ dir, cb_file, cb_dir }) => {
+
+  return new Promise(async (resolve, reject) => {
+    if (!fs.existsSync(dir)) {
+       resolve({ msg : `no dir: ${dir}` })
+       return
+    }
+
+    const finder = findit(dir);
+
+    if (cb_dir) {
+      finder.on('directory', function (found, stat, stop) {
+        cb_dir({ found, stat, stop })
+      })
+    }
+
+    if (cb_file) {
+      finder.on('file', function (found, stat) {
+        cb_file({ found, stat })
+      })
+    }
+
+    finder.on('end', () => { resolve({}) })
+  });
+ 
+}
+
 module.exports = {
+  fsFind,
   fsRead,
   fsWrite,
   dictGet,

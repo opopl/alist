@@ -621,7 +621,7 @@ async htmlFileSecSaved (ref = {})  {
 
   //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
   //let map_months = base#yaml#parse_fs({ 'file' : yfile })
-  const yFile = path.join(plgDir, 'projs', 'data', 'yaml', 'months.yaml')
+  const yFile = path.join(self.plgDir, 'projs', 'data', 'yaml', 'months.yaml')
   const yFileEx = fs.existsSync(yFile)
   const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
   const monthName = _.get(mapMonths,`en.short.${month}`,month)
@@ -642,7 +642,7 @@ async htmlFileSecSaved (ref = {})  {
        if (bn != 'we.html') { return }
        htmlFile = found
     }
-    await fsFind({ dir, cb_file });
+    await srvUtil.fsFind({ dir, cb_file });
   })
   await Promise.all(p_files)
 

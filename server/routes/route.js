@@ -52,10 +52,10 @@ router.get('/prj/sec/data'  , c_Prj.jsonSecData())
 router.get('/prj/sec/html' , c_Prj.htmlSecView())
 router.get('/prj/sec/pdf'  , c_Prj.pdfSecView())
 
-router.get('/prj/sec/saved', prjRoutes.reqHtmlSecSaved)
+router.get('/prj/sec/saved', c_Prj.htmlSecSaved())
 router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
 
-router.get(/^\/prj\/sec\/asset\/(.*)$/, prjRoutes.reqSecAsset)
+router.get(/^\/prj\/sec\/asset\/(.*)$/, c_Prj.secAsset())
 
 //@@ Authors
 router.get('/prj/auth/html', c_Prj.htmlAuthView())

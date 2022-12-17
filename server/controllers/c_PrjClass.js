@@ -5,7 +5,7 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
-const util = require('./../srv-util')
+const srvUtil = require('./../srv-util')
 
 const cheerio = require("cheerio")
 
@@ -374,6 +374,42 @@ const c_PrjClass = class {
     }
   }
 
+//@@ secAsset
+// get /prj/sec/asset/path
+  secAsset () {
+    const self = this
+
+    return async (req, res) => {
+      const asset = req.params[0]
+
+      const query = req.query
+
+      const sec = _.get(query, 'sec', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const sub = 'html'
+      const { secDirDone, secDirNew } = await prjj.secDirsSaved({ proj, sec, sub })
+
+      var assetFile = ''
+      const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
+        var ff = []
+        const cb_file = ({ found }) => {
+           const rel = path.relative(dir, found)
+
+           if (rel != asset ) { return }
+           assetFile = found
+        }
+        await srvUtil.fsFind({ dir, cb_file });
+      })
+      await Promise.all(p_files)
+
+      if (assetFile) {
+        res.sendFile(assetFile)
+      }
+
+      //const cssFile = path.join(cssRoot, file)
+    }
+  }
 
 }
 

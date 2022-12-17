@@ -19,7 +19,6 @@ const parse5 = require("parse5");
 const { spawn, execSync } = require('child_process')
 const crass = require('crass')
 
-const findit = require('findit')
 const axios = require('axios')
 
 const cheerio = require("cheerio");
@@ -196,38 +195,7 @@ const reqCssFileCtl = async (req, res) => {
   }
 }
 
-//@@ reqSecAsset
-// get /prj/sec/asset/path
-const reqSecAsset = async (req, res) => {
-  const asset = req.params[0]
 
-  const query = req.query
-
-  const sec = _.get(query, 'sec', '')
-  const proj = _.get(query, 'proj', defaults.proj)
-
-  const sub = 'html'
-  const { secDirDone, secDirNew } = await secDirsSaved({ proj, sec, sub })
-
-  var assetFile = ''
-  const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
-    var ff = []
-    const cb_file = ({ found }) => {
-       const rel = path.relative(dir, found)
-
-       if (rel != asset ) { return }
-       assetFile = found
-    }
-    await fsFind({ dir, cb_file });
-  })
-  await Promise.all(p_files)
-
-  if (assetFile) {
-    res.sendFile(assetFile)
-  }
-
-  //const cssFile = path.join(cssRoot, file)
-}
 
 
 
@@ -259,34 +227,6 @@ const dReMapSec = ({ key }) => {
 
 
 
-
-//@@ fsFind
-const fsFind = async ({ dir, cb_file, cb_dir }) => {
-
-  return new Promise(async (resolve, reject) => {
-    if (!fs.existsSync(dir)) {
-       resolve({ msg : `no dir: ${dir}` })
-       return
-    }
-
-    const finder = findit(dir);
-
-    if (cb_dir) {
-      finder.on('directory', function (found, stat, stop) {
-        cb_dir({ found, stat, stop })
-      })
-    }
-
-    if (cb_file) {
-      finder.on('file', function (found, stat) {
-        cb_file({ found, stat })
-      })
-    }
-
-    finder.on('end', () => { resolve({}) })
-  });
- 
-}
 
 //@@ secDirsSaved
 const secDirsSaved = async (ref={}) => {
@@ -321,32 +261,18 @@ const secDirsSaved = async (ref={}) => {
 }
 
 
-
-
-
-
-
-
-
 const jsonHandlers = {
     reqJsonSecList
 }
 
 const fsHandlers = {
     reqJsFile,
-
     reqCssFileCtl,
-
-    reqSecAsset
 }
 
-const htmlHandlers = {
-    reqHtmlSecSaved,
-}
 
 module.exports = {
     ...jsonHandlers,
-    ...fsHandlers,
-    ...htmlHandlers
+    ...fsHandlers
 }
 
