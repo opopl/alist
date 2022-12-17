@@ -7,6 +7,8 @@ const imgRoutes = require('./../controllers/img-controller.js')
 const prjRoutes = require('./../controllers/prj-controller.js')
 const docRoutes = require('./../controllers/doc-controller.js')
 
+const ca = new authRoutes.cAuthor()
+
 // Create router
 const router = express.Router()
 
@@ -19,12 +21,12 @@ router.get('/', async (req, res) => {
    res.redirect('/prj/sec/html?sec=24_11_2022')
 })
 
-router.get('/auth/count', authRoutes.authCount)
-router.get('/auth/all', authRoutes.authAll)
-router.post('/auth/update', authRoutes.authUpdate)
+router.get('/auth/count', ca.count())
+router.get('/auth/all', ca.all())
+router.get('/auth/update', ca.update())
+
 //router.put('/auth/delete', authRoutes.authDelete)
-//
-//
+
 router.post('/prj/act', prjRoutes.reqJsonAct)
 
 //@@ Config
