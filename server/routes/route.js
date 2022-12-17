@@ -58,7 +58,7 @@ router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
 router.get(/^\/prj\/sec\/asset\/(.*)$/, prjRoutes.reqSecAsset)
 
 //@@ Authors
-router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
+router.get('/prj/auth/html', c_Prj.htmlAuthView())
 
 //@@ Builds
 router.get('/prj/bld/data', c_Prj.jsonBldData())

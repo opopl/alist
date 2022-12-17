@@ -248,6 +248,25 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlAuthView
+  htmlAuthView  ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const author_id = _.get(query, 'id', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const target = '_auth.' + author_id
+
+      const html = await prjj.htmlTargetOutput({ proj, target })
+      res.send(html)
+
+      //res.redirect(`/prj/target/html?target=${target}`)
+    }
+  }
+
 }
 
 module.exports = { c_PrjClass }

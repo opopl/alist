@@ -475,20 +475,7 @@ const reqHtmlSecSaved = async (req, res) => {
 
 
 
-//@@ reqHtmlAuthView
-const reqHtmlAuthView = async (req, res) => {
-  const query = req.query
 
-  const author_id = _.get(query, 'id', '')
-  const proj = _.get(query, 'proj', defaults.proj)
-
-  const target = '_auth.' + author_id
-
-  const html = await htmlTargetOutput({ proj, target })
-  res.send(html)
-
-  //res.redirect(`/prj/target/html?target=${target}`)
-}
 
 const jsonHandlers = {
     reqJsonSecList
@@ -504,7 +491,6 @@ const fsHandlers = {
 
 const htmlHandlers = {
     reqHtmlSecSaved,
-    reqHtmlAuthView
 }
 
 module.exports = {
