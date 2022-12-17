@@ -47,6 +47,33 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecCount
+  jsonSecCount () {
+    const self = this
+
+    return async (req, res) => {
+
+      const q_count = select('COUNT(*) AS cnt').from('projs').toString()
+      //var row = await db.prj.get(q,(err,row) => {} )
+         //res.json(row)
+      //})
+            //
+      var data = await dbProc.get(self.dbc, q_count, [])
+      res.json(data)
+    }
+}
+
+//@@ jsonSecData
+  jsonSecData () {
+    return async (req, res) => {
+      const query = req.query
+
+      var data = await prjj.dbSecData(query)
+
+      res.json(data)
+    }
+  }
+
 //@@ jsonSecSrc
   jsonSecSrc () {
     return async (req, res) => {

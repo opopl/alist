@@ -153,17 +153,7 @@ const dbImgData = async ({ url }) => {
   return rw
 }
 
-//@@ reqJsonSecCount
-const reqJsonSecCount = async (req, res) => {
 
-  const q_count = select('COUNT(*) AS cnt').from('projs').toString()
-  //var row = await db.prj.get(q,(err,row) => {} )
-     //res.json(row)
-  //})
-        //
-  var data = await dbProc.get(db.prj, q_count, [])
-  res.json(data)
-}
 
 const dbSecSelect = async (ref={}) => {
   const sec = ref.sec || ''
@@ -220,15 +210,7 @@ const reqJsonTargetData = async (req, res) => {
 
 }
 
-//@@ reqJsonSecData
-const reqJsonSecData = async (req, res) => {
-  const query = req.query
 
-  var data = await prjj.dbSecData(query)
-
-  res.json(data)
-
-}
 
 //@@ reqJsonSecList
 // post /prj/sec/list
@@ -1004,8 +986,6 @@ const reqHtmlAuthView = async (req, res) => {
 }
 
 const jsonHandlers = {
-    reqJsonSecCount,
-    reqJsonSecData,
     reqJsonSecList,
 
     reqJsonTargetData,

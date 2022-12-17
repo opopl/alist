@@ -45,10 +45,9 @@ router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
 router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
 
 //@@ Sec
-router.get('/prj/sec/count', prjRoutes.reqJsonSecCount)
-router.get('/prj/sec/data', prjRoutes.reqJsonSecData)
-
-router.get('/prj/sec/src', c_Prj.jsonSecSrc())
+router.get('/prj/sec/count' , c_Prj.jsonSecCount())
+router.get('/prj/sec/src'   , c_Prj.jsonSecSrc())
+router.get('/prj/sec/data'  , c_Prj.jsonSecData())
 
 router.get('/prj/sec/html', prjRoutes.reqHtmlSecView)
 router.get('/prj/sec/saved', prjRoutes.reqHtmlSecSaved)
