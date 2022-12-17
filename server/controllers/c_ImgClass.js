@@ -24,21 +24,20 @@ const c_ImgClass = class {
 
 //@@ jsonCount
   jsonCount(){
-    const dbc = this.dbc
+    const self = this
 
     return async (req, res) => {
 
       const q_count = select('count(*) as cnt').from('imgs').toString()
 
-      var data = await dbProc.get(dbc, q_count, [])
+      var data = await dbProc.get(self.dbc, q_count, [])
       res.json(data)
     }
   }
 
 //@@ rawImg
   rawImg(){
-    const dbc = this.dbc
-    const imgRoot = this.imgRoot
+    const self = this
 
     return async (req, res) => {
       const params = req.params
@@ -51,9 +50,9 @@ const c_ImgClass = class {
                   .toParams({placeholder: '?%d'})
 
       if (inum) {
-         var rw = await dbProc.get(dbc, q_file.text, q_file.values)
+         var rw = await dbProc.get(self.dbc, q_file.text, q_file.values)
          var img = _.get(rw,'img')
-         var imgFile = path.join(imgRoot, img)
+         var imgFile = path.join(self.imgRoot, img)
          if (fs.existsSync(imgFile)) {
             res.sendFile(imgFile)
          }else{
