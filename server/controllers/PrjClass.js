@@ -399,7 +399,7 @@ const PrjClass = class {
             $thead.append($(`<th>${x}</th>`))
          })
 
-         domSecTable({
+         self.domSecTable({
             $, $tbody, tableData,
             colss,
          })
@@ -510,6 +510,78 @@ const PrjClass = class {
        sec : /^_buf\.(?<sec>\S+)$/g
     }
     return _.get(map,key)
+  }
+
+//@@ domSecTable
+  async domSecTable ({ tableData, $, $tbody, colss }) {
+    tableData.map((row,i) => {
+       const {
+           href, hrefPdf,
+           date, title, authors,
+           htmlEx, pdfEx
+       } = srvUtil.dictGet(row, colss)
+
+       const $row = $('<tr/>')
+
+       $row.append($(`<td>${i}</td>`))
+
+       if ((href != undefined) && ( htmlEx != undefined)) {
+          var $btn = $(`<button/>`)
+              .addClass('prj-link')
+              .attr({ output_ex : htmlEx, href })
+              .text('HTML')
+          $row.append($(`<td/>`).append($btn))
+       }
+
+       if (( pdfEx != undefined) && ( hrefPdf != undefined )) {
+          var $btn = $(`<button/>`)
+              .addClass('prj-link')
+              .attr({ output_ex : pdfEx, href : hrefPdf })
+              .text('PDF')
+          $row.append($(`<td/>`).append($btn))
+       }
+
+       if (date != undefined) {
+         var $a = $(`<a/>`)
+                .addClass('prj-link')
+                .attr({ href : `/prj/sec/html?sec=${date}` })
+                .text(date)
+         $row.append($(`<td/>`).append($a))
+       }
+
+       if (authors != undefined) {
+         const $cellAuth = $('<td/>')
+         if(! authors.length){
+         }else if (authors.length == 1) {
+            const author = authors.shift()
+            const hrefAuthor = `/prj/auth/html?id=${author.id}`
+            $cellAuth.append($(`<a href="${hrefAuthor}">${author.plain}</a>`))
+         }else{
+            const $select = $('<select/>').addClass('prj-link-select')
+            while(authors.length){
+              const author = authors.shift()
+              const hrefAuthor = `/prj/auth/html?id=${author.id}`
+              //$select.append($(`<option value="${author.id}">${author.plain}</option>`))
+              $select.append($(`
+                    <option class="prj-link" full="${author.plain}" value="${author.id}" href=${hrefAuthor}>
+                        ${author.plain}
+                    </option>`))
+            }
+
+            $cellAuth.append($select)
+         }
+
+         $row.append($cellAuth)
+       }
+
+       $row.append($(`<td><a href="${href}">${title}</a></td>`))
+
+       //const $cell = $('<td/>')
+       //$row.append($cell)
+
+       $tbody.append($row)
+     })
+
   }
 
 }
