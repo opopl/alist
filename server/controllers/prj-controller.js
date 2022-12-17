@@ -174,22 +174,7 @@ const dbSecList = async (ref={}) => {
 
 
 
-//@@ reqJsonTargetData
-// GET /prj/target/data
-const reqJsonTargetData = async (req, res) => {
-  const target = _.get(req, 'query.target', defaults.target)
-  const proj = _.get(req, 'query.proj', defaults.proj)
 
-  const htmlFile = await prjj.htmlFileTarget({ proj, target })
-  const html  = fs.existsSync(htmlFile) ? 1 : 0
-
-  const pdfFile = await pdfFileTarget({ proj, target })
-  const pdf  = fs.existsSync(pdfFile) ? 1 : 0
-
-  var output = { html, pdf }
-  res.json({ output })
-
-}
 
 
 
@@ -211,25 +196,7 @@ const reqJsonConfig = async (req, res) => {
   res.send(config)
 }
 
-//@@ reqJsonBldData
-// get /prj/bld/data
-const reqJsonBldData = async (req, res) => {
-  const query = req.query
-  const path = req.path
-  const w = {}
 
-  const cols = _.get(config,'bld.cols','').split(/\s+/)
-  cols.forEach((col) => {
-     if (!query.hasOwnProperty(col)) { return }
-     w[col] = _.get(query,col)
-     return
-  })
-
-  const bldData = await prjj.dbBldData(w)
-
-  res.json({ data: bldData })
-
-}
 
 //@@ reqCssFileCtl
 // get
@@ -276,23 +243,7 @@ const reqSecAsset = async (req, res) => {
   //const cssFile = path.join(cssRoot, file)
 }
 
-//@@ reqCssFile
-// get
-const reqCssFile = async (req, res) => {
-  const file = req.params[0]
 
-  const target = _.get(req,'query.target',defaults.target)
-  const proj   = _.get(req,'query.proj',defaults.proj)
-
-  const htmlFile = await htmlFileTarget({ target, proj })
-  const htmlFileDir = path.dirname(htmlFile)
-
-  const cssFile = path.join(htmlFileDir, file)
-
-  if (fs.existsSync(cssFile)) {
-    res.sendFile(cssFile)
-  }
-}
 
 
 //@@ reqJsFile
@@ -308,16 +259,6 @@ const reqJsFile = async (req, res) => {
 
 }
 
-//@@ pdfFileTarget
-const pdfFileTarget = async (ref = {}) => {
-  const target = _.get(ref, 'target', '')
-  const proj   = _.get(ref, 'proj', defaults.proj)
-
-  const pdfDir  = path.join(pdfOut, rootid, proj )
-  const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
-
-  return pdfFile
-}
 
 
 //@@ dReMapSec
@@ -332,66 +273,6 @@ const dReMapSec = ({ key }) => {
 
 
 
-
-//@@ reqHtmlTargetView
-const reqHtmlTargetView = async (req, res) => {
-  const query = req.query
-
-  const target = _.get(query, 'target', '')
-  const proj   = _.get(query, 'proj', defaults.proj)
-
-  const action = _.get(query, 'action', 'render')
-
-  const html = await htmlTargetOutput({ proj, target })
-  res.send(html)
-
-}
-
-//@@ reqPdfSecView
-const reqPdfSecView = async (req, res) => {
-  const query = req.query
-
-  const sec = _.get(query, 'sec', '')
-  const proj = _.get(query, 'proj', defaults.proj)
-
-  const target = '_buf.' + sec
-
-  if (!dReMapTarget({ key : 'datePost' }).exec(target)) {
-     var msg = 'not a datePost target'
-     return res.status(404).send({ msg })
-  }
-
-  const pdfFile = await pdfFileTarget({ proj, target })
-
-  const pdfFileEx = fs.existsSync(pdfFile)
-
-  if (!pdfFileEx) {
-    const act = 'compile'
-    const cnf = ''
-
-    const { code, msg, stdout } = await prjj.act({ act, proj, cnf, target })
-    if (code) { return res.status(404).send({ msg }) }
-  }
-
-  res.sendFile(pdfFile)
-}
-
-//@@ prjSecDate
-const prjSecDate = async (ref = {}) => {
-  const sec =  _.get(ref, 'sec', '')
-  const proj = _.get(ref, 'proj', defaults.proj)
-
-  const m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/.exec(sec)
-  if (!m) { return {} }
-
-  let { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
-  //day = Number(day)
-  day = day.replace(/^0/,'')
-  month = month.replace(/^0/,'')
-
-  return { day, month, year }
-
-}
 
 //@@ fsFind
 const fsFind = async ({ dir, cb_file, cb_dir }) => {
@@ -433,7 +314,7 @@ const secDirsSaved = async (ref={}) => {
   var secDirNew  = path.join(dirNew, sec)
   if (sub) { secDirNew = path.join(secDirNew, sub) }
 
-  const { day, month, year } = await prjSecDate({ proj, sec })
+  const { day, month, year } = prjj.secDate({ proj, sec })
 
   //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
   //let map_months = base#yaml#parse_fs({ 'file' : yfile })
@@ -465,7 +346,7 @@ const htmlFileSecSaved = async (ref = {}) => {
 
   const secDirNew  = path.join(dirNew, sec)
 
-  const { day, month, year } = await prjSecDate({ proj, sec })
+  const { day, month, year } = prjj.secDate({ proj, sec })
 
   //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
   //let map_months = base#yaml#parse_fs({ 'file' : yfile })
@@ -605,20 +486,7 @@ const reqHtmlSecSaved = async (req, res) => {
   return
 }
 
-//@@ reqHtmlSecView
-const reqHtmlSecView = async (req, res) => {
-  const query = req.query
 
-  const sec = _.get(query, 'sec', '')
-  const proj = _.get(query, 'proj', defaults.proj)
-
-  const target = '_buf.' + sec
-
-  const html = await htmlTargetOutput({ proj, target })
-  res.send(html)
-
-  //res.redirect(`/prj/target/html?target=${target}`)
-}
 
 //@@ reqHtmlAuthView
 const reqHtmlAuthView = async (req, res) => {
@@ -638,8 +506,6 @@ const reqHtmlAuthView = async (req, res) => {
 const jsonHandlers = {
     reqJsonSecList,
 
-    reqJsonTargetData,
-    reqJsonBldData,
     reqJsonConfig
 }
 
@@ -647,26 +513,18 @@ const fsHandlers = {
     reqJsFile,
 
     reqCssFileCtl,
-    reqCssFile,
 
     reqSecAsset
 }
 
-const pdfHandlers = {
-    reqPdfSecView
-}
-
 const htmlHandlers = {
-    reqHtmlSecView,
     reqHtmlSecSaved,
-    reqHtmlAuthView,
-    reqHtmlTargetView
+    reqHtmlAuthView
 }
 
 module.exports = {
     ...jsonHandlers,
     ...fsHandlers,
-    ...htmlHandlers,
-    ...pdfHandlers
+    ...htmlHandlers
 }
 

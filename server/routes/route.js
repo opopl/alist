@@ -41,17 +41,18 @@ router.post('/prj/act', c_Prj.jsonAct())
 router.get('/prj/config/get', prjRoutes.reqJsonConfig)
 
 //@@ Target
-router.get('/prj/target/data', prjRoutes.reqJsonTargetData)
-router.get('/prj/target/html', prjRoutes.reqHtmlTargetView)
+router.get('/prj/target/data', c_Prj.jsonTargetData())
+router.get('/prj/target/html', c_Prj.htmlTargetView())
 
 //@@ Sec
 router.get('/prj/sec/count' , c_Prj.jsonSecCount())
 router.get('/prj/sec/src'   , c_Prj.jsonSecSrc())
 router.get('/prj/sec/data'  , c_Prj.jsonSecData())
 
-router.get('/prj/sec/html', prjRoutes.reqHtmlSecView)
+router.get('/prj/sec/html' , c_Prj.htmlSecView())
+router.get('/prj/sec/pdf'  , c_Prj.pdfSecView())
+
 router.get('/prj/sec/saved', prjRoutes.reqHtmlSecSaved)
-router.get('/prj/sec/pdf', prjRoutes.reqPdfSecView)
 router.post('/prj/sec/list', prjRoutes.reqJsonSecList)
 
 router.get(/^\/prj\/sec\/asset\/(.*)$/, prjRoutes.reqSecAsset)
@@ -60,13 +61,13 @@ router.get(/^\/prj\/sec\/asset\/(.*)$/, prjRoutes.reqSecAsset)
 router.get('/prj/auth/html', prjRoutes.reqHtmlAuthView)
 
 //@@ Builds
-router.get('/prj/bld/data', prjRoutes.reqJsonBldData)
+router.get('/prj/bld/data', c_Prj.jsonBldData())
 
 //@@ Assets
 router.get(/^\/prj\/assets\/js\/(.*)$/, prjRoutes.reqJsFile)
 
 router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, prjRoutes.reqCssFileCtl)
-router.get(/^\/prj\/assets\/css\/main\/(.*)$/, prjRoutes.reqCssFile)
+router.get(/^\/prj\/assets\/css\/main\/(.*)$/, c_Prj.cssFile())
 
 
 //@@ Doc

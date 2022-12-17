@@ -90,6 +90,24 @@ const PrjClass = class {
     return secTxt
   }
 
+//@@ secDate
+  secDate (ref = {})  {
+    const self = this
+
+    const sec =  _.get(ref, 'sec', '')
+    const proj = _.get(ref, 'proj', self.proj)
+
+    const m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/.exec(sec)
+    if (!m) { return {} }
+
+    let { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
+    //day = Number(day)
+    day = day.replace(/^0/,'')
+    month = month.replace(/^0/,'')
+
+    return { day, month, year }
+  }
+
 //@@ dbSecData
   async dbSecData (ref={})  {
     const self = this
@@ -141,29 +159,16 @@ const PrjClass = class {
 
     const target = `_buf.${sec}`
 
-    const htmlFile = await self.htmlFileTarget({ proj, target })
+    const htmlFile = self.htmlFileTarget({ proj, target })
     const html  = fs.existsSync(htmlFile) ? 1 : 0
 
-    const pdfFile = await self.pdfFileTarget({ proj, target })
+    const pdfFile = self.pdfFileTarget({ proj, target })
     const pdf  = fs.existsSync(pdfFile) ? 1 : 0
 
     var output = { pdf, html }
     secData = { ...secData, output }
 
     return secData
-  }
-
-//@@ pdfFileTarget
-  async pdfFileTarget (ref = {}) {
-    const self = this
-
-    const target = _.get(ref, 'target', '')
-    const proj   = _.get(ref, 'proj', self.proj)
-
-    const pdfDir  = path.join(self.pdfOut, self.rootid, proj )
-    const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
-
-    return pdfFile
   }
 
 
@@ -257,6 +262,19 @@ const PrjClass = class {
     return htmlFile
   }
 
+//@@ pdfFileTarget
+  pdfFileTarget (ref = {}) {
+    const self = this
+
+    const target = _.get(ref, 'target', '')
+    const proj   = _.get(ref, 'proj', self.proj)
+
+    const pdfDir  = path.join(self.pdfOut, self.rootid, proj )
+    const pdfFile = path.join(pdfDir, `${proj}.${target}.pdf`)
+
+    return pdfFile
+  }
+
 //@@ htmlTargetOutput
   async htmlTargetOutput (ref = {}) {
     const self = this
@@ -266,7 +284,7 @@ const PrjClass = class {
 
     const htmlDir  = path.join(self.htmlOut, self.rootid, proj, target)
 
-    const htmlFile = await self.htmlFileTarget({ target, proj })
+    const htmlFile = self.htmlFileTarget({ target, proj })
     const htmlFileDir = path.dirname(htmlFile)
 
     const reKeys = ['auth','date']
