@@ -3,9 +3,12 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
+
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
+
+const { PrjClass } = require('./prj')
 
 const srvUtil = require('./../srv-util')
 const md5file = require('md5-file')
