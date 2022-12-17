@@ -18,6 +18,7 @@ const PrjClass = class {
 //@@ new
   constructor(){
      this.dbc = db.prj
+     this.dbc_bld = db.bld
 
      this.initDirs()
 
@@ -54,7 +55,7 @@ const PrjClass = class {
            .where(w)
            .toParams({placeholder: '?%d'})
 
-    const builds = await dbProc.all(self.dbc, q.text, q.values)
+    const builds = await dbProc.all(self.dbc_bld, q.text, q.values)
     return builds
   }
 
