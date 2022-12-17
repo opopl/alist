@@ -7,10 +7,15 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 
 const PrjClass = class {
+//@@ new
   constructor(){
      this.dbc = db.prj
 
      this.initDirs()
+
+     this.rootid = 'p_sr'
+     this.proj = 'letopis'
+     this.target = ''
   }
 
 //@@ initDirs

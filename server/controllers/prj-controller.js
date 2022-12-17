@@ -59,6 +59,8 @@ const defaults = {
    target : ''
 }
 
+const prjj = new PrjClass()
+
 //@@ config
 const config = {
    proj : defaults.proj,
