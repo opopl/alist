@@ -120,6 +120,13 @@ const PrjClass = class {
     return list
   }
 
+
+//@@ dbSecSelect
+  async dbSecSelect (ref={})  {
+    const self = this
+    const sec = ref.sec || ''
+  }
+
 //@@ dbSecData
   async dbSecData (ref={})  {
     const self = this
