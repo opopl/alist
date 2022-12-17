@@ -35,7 +35,7 @@ router.get('/img/raw/:inum' , c_Img.rawImg())
 
 //router.put('/auth/delete', authRoutes.authDelete)
 
-router.post('/prj/act', prjRoutes.reqJsonAct)
+router.post('/prj/act', c_Prj.jsonAct())
 
 //@@ Config
 router.get('/prj/config/get', prjRoutes.reqJsonConfig)

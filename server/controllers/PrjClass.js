@@ -87,7 +87,7 @@ const PrjClass = class {
                 .where({ 'sec' : sec })
                 .toParams({placeholder: '?%d'})
 
-    var secData = await dbProc.get(this.dbc, q_sec.text, q_sec.values)
+    var secData = await dbProc.get(self.dbc, q_sec.text, q_sec.values)
     if (!secData) { return }
 
     var sec_file = secData.file
@@ -166,7 +166,7 @@ const PrjClass = class {
 
 //@@ act
   async act (ref = {}) {
-     //const self = this
+     const self = this
 
      const act = _.get(ref,'act')
      const cnf = _.get(ref,'cnf','')
@@ -175,7 +175,7 @@ const PrjClass = class {
      const cnfa = cnf.split(',')
      const do_htlatex = cnfa.includes('htx')
 
-     const proj = _.get(ref,'proj',this.proj)
+     const proj = _.get(ref, 'proj', self.proj)
 
      const sCnf = cnf ? `-c ${cnf}` : ''
      const sTarget = target ? `-t ${target}` : ''
@@ -187,7 +187,7 @@ const PrjClass = class {
      const trg = m ? [ m[1], m[2] ].join('.') : target
      const pln = [ act, target_ext, trg ].join('.')
 
-     const bldData = await this.dbBldData({ plan : pln, status : 'running' })
+     const bldData = await self.dbBldData({ plan : pln, status : 'running' })
      if (bldData.length) {
         var msg = `build is already running: ${pln}`
         console.log({ msg });

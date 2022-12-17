@@ -7,7 +7,9 @@ const _ = require('lodash')
 
 const util = require('./../srv-util')
 
-const cheerio = require("cheerio");
+const cheerio = require("cheerio")
+
+const { PrjClass } = require('./PrjClass')
 
 const path = require('path')
 const fs = require('fs')
@@ -17,9 +19,32 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
+const prjj = new PrjClass()
+
 const c_PrjClass = class {
+//@@ new
   constructor(){
     this.dbc = db.prj
+
+    this.proj = 'letopis'
+  }
+
+//@@ jsonAct
+// POST /prj/act
+  jsonAct () {
+    const self = this
+
+    return async (req, res) => {
+      const act = _.get(req, 'body.act', 'compile')
+      const cnf = _.get(req, 'body.cnf', '')
+
+      const target = _.get(req, 'body.target', '')
+      const proj = _.get(req, 'body.proj', self.proj)
+
+      const stat = await prjj.act({ act, proj, cnf, target })
+
+      res.json(stat)
+    }
   }
 
 }
