@@ -19,8 +19,6 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
-const prjj = new PrjClass()
-
 const c_PrjClass = class {
 //@@ new
   constructor(){
@@ -29,14 +27,17 @@ const c_PrjClass = class {
     this.proj = 'letopis'
     this.target = ''
 
+    this.prj = new PrjClass()
 
   }
 
 //@@ config
   config(){
+    const self = this
+
     return {
-       proj : this.proj,
-       rootid : this.rootid,
+       proj : self.proj,
+       rootid : self.rootid,
        bld : {
            cols : 'bid buuid plan duration target status'
        },
@@ -56,7 +57,7 @@ const c_PrjClass = class {
       const target = _.get(req, 'body.target', '')
       const proj = _.get(req, 'body.proj', self.proj)
 
-      const stat = await prjj.act({ act, proj, cnf, target })
+      const stat = await self.prj.act({ act, proj, cnf, target })
 
       res.json(stat)
     }
@@ -81,10 +82,12 @@ const c_PrjClass = class {
 //@@ jsonSecList
 // post /prj/sec/list
   jsonSecList () {
+    const self = this
+
     return async (req, res) => {
       const ref = req.body
 
-      var data = await prjj.dbSecList(ref)
+      var data = await self.prj.dbSecList(ref)
 
       res.json({ data })
 
@@ -93,10 +96,12 @@ const c_PrjClass = class {
 
 //@@ jsonSecData
   jsonSecData () {
+    const self = this
+
     return async (req, res) => {
       const query = req.query
 
-      var data = await prjj.dbSecData(query)
+      var data = await self.prj.dbSecData(query)
 
       res.json(data)
     }
@@ -104,11 +109,13 @@ const c_PrjClass = class {
 
 //@@ jsonSecSrc
   jsonSecSrc () {
+    const self = this
+
     return async (req, res) => {
       const query = req.query
       const sec = query.sec || ''
 
-      var txt = await prjj.secTxt({ sec })
+      var txt = await self.prj.secTxt({ sec })
 
       res.send({ txt })
 
@@ -127,7 +134,7 @@ const c_PrjClass = class {
 
       const target = '_buf.' + sec
 
-      const html = await prjj.htmlTargetOutput({ proj, target })
+      const html = await self.prj.htmlTargetOutput({ proj, target })
       res.send(html)
 
       //res.redirect(`/prj/target/html?target=${target}`)
@@ -146,7 +153,7 @@ const c_PrjClass = class {
 
       const action = _.get(query, 'action', 'render')
 
-      const html = await prjj.htmlTargetOutput({ proj, target })
+      const html = await self.prj.htmlTargetOutput({ proj, target })
       res.send(html)
 
     }
@@ -162,7 +169,7 @@ const c_PrjClass = class {
       const target = _.get(req,'query.target',self.target)
       const proj   = _.get(req,'query.proj',self.proj)
 
-      const htmlFile = await prjj.htmlFileTarget({ target, proj })
+      const htmlFile = await self.prj.htmlFileTarget({ target, proj })
       const htmlFileDir = path.dirname(htmlFile)
 
       const cssFile = path.join(htmlFileDir, file)
@@ -185,12 +192,12 @@ const c_PrjClass = class {
 
       const target = '_buf.' + sec
 
-      if (!prjj.dReMapTarget({ key : 'datePost' }).exec(target)) {
+      if (!self.prj.dReMapTarget({ key : 'datePost' }).exec(target)) {
          var msg = 'not a datePost target'
          return res.status(404).send({ msg })
       }
 
-      const pdfFile = prjj.pdfFileTarget({ proj, target })
+      const pdfFile = self.prj.pdfFileTarget({ proj, target })
 
       const pdfFileEx = fs.existsSync(pdfFile)
 
@@ -198,7 +205,7 @@ const c_PrjClass = class {
         const act = 'compile'
         const cnf = ''
 
-        const { code, msg, stdout } = await prjj.act({ act, proj, cnf, target })
+        const { code, msg, stdout } = await self.prj.act({ act, proj, cnf, target })
         if (code) { return res.status(404).send({ msg }) }
       }
 
@@ -215,10 +222,10 @@ const c_PrjClass = class {
       const target = _.get(req, 'query.target', self.target)
       const proj = _.get(req, 'query.proj', self.proj)
 
-      const htmlFile = prjj.htmlFileTarget({ proj, target })
+      const htmlFile = self.prj.htmlFileTarget({ proj, target })
       const html  = fs.existsSync(htmlFile) ? 1 : 0
 
-      const pdfFile = prjj.pdfFileTarget({ proj, target })
+      const pdfFile = self.prj.pdfFileTarget({ proj, target })
       const pdf  = fs.existsSync(pdfFile) ? 1 : 0
 
       var output = { html, pdf }
@@ -244,7 +251,7 @@ const c_PrjClass = class {
          return
       })
 
-      const bldData = await prjj.dbBldData(w)
+      const bldData = await self.prj.dbBldData(w)
 
       res.json({ data: bldData })
 
@@ -273,7 +280,7 @@ const c_PrjClass = class {
 
       const target = '_auth.' + author_id
 
-      const html = await prjj.htmlTargetOutput({ proj, target })
+      const html = await self.prj.htmlTargetOutput({ proj, target })
       res.send(html)
 
       //res.redirect(`/prj/target/html?target=${target}`)
@@ -291,7 +298,7 @@ const c_PrjClass = class {
       const use = _.get(query, 'use', 'orig')
       const proj = _.get(query, 'proj', self.proj)
 
-      const { htmlFile, htmlFileEx } = await prjj.htmlFileSecSaved({ proj, sec })
+      const { htmlFile, htmlFileEx } = await self.prj.htmlFileSecSaved({ proj, sec })
       if(!htmlFileEx){
          //res.send(`<html><body>File not Found<body></html>`)
          res.send(`<html><body>Saved Html File not Found: ${htmlFile}<body></html>`)
@@ -401,7 +408,7 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       const sub = 'html'
-      const { secDirDone, secDirNew } = await prjj.secDirsSaved({ proj, sec, sub })
+      const { secDirDone, secDirNew } = await self.prj.secDirsSaved({ proj, sec, sub })
 
       var assetFile = ''
       const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
@@ -432,7 +439,7 @@ const c_PrjClass = class {
     return async (req, res) => {
       const file = req.params[0]
 
-      const jsFile = path.join(prjj.jsRoot, file)
+      const jsFile = path.join(self.prj.jsRoot, file)
 
       if (fs.existsSync(jsFile)) {
         res.sendFile(jsFile)
@@ -444,10 +451,12 @@ const c_PrjClass = class {
 //@@ cssFileCtl
 // get
   cssFileCtl ()  {
+    const self = this
+
     return async (req, res) => {
       const file = req.params[0]
 
-      const cssFile = path.join(prjj.cssRoot, file)
+      const cssFile = path.join(self.prj.cssRoot, file)
 
       if (fs.existsSync(cssFile)) {
         res.sendFile(cssFile)
