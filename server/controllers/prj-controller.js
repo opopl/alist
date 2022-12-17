@@ -8,6 +8,7 @@ const insert = db.sql.insert
 const update = db.sql.update
 
 const { PrjClass } = require('./PrjClass')
+const { AuthClass } = require('./AuthClass')
 
 const srvUtil = require('./../srv-util')
 const md5file = require('md5-file')
@@ -59,6 +60,7 @@ const defaults = {
 }
 
 const prjj = new PrjClass()
+const authj = new AuthClass()
 
 //@@ config
 const config = {
@@ -159,28 +161,7 @@ const dbSecSelect = async (ref={}) => {
   const sec = ref.sec || ''
 }
 
-//@@ dbAuth
-const dbAuth = async ({ author_id, author_ids }) => {
 
-   if (author_ids) {
-     const q_auth = select(`*`)
-            .from('authors')
-            .where(db.sql.in('id', ...author_ids))
-            .toParams({placeholder: '?%d'})
-
-     const authors = await dbProc.all(db.auth, q_auth.text, q_auth.values)
-     return { authors }
-
-   }else if(author_id){
-     const q_auth = select(`*`)
-            .from('authors')
-            .where({ id : author_id })
-            .toParams({placeholder: '?%d'})
-
-     const author = await dbProc.get(db.auth, q_auth.text, q_auth.values)
-     return { author }
-   }
-}
 
 //@@ dbSecList
 const dbSecList = async (ref={}) => {
@@ -199,7 +180,7 @@ const reqJsonTargetData = async (req, res) => {
   const target = _.get(req, 'query.target', defaults.target)
   const proj = _.get(req, 'query.proj', defaults.proj)
 
-  const htmlFile = await htmlFileTarget({ proj, target })
+  const htmlFile = await prjj.htmlFileTarget({ proj, target })
   const html  = fs.existsSync(htmlFile) ? 1 : 0
 
   const pdfFile = await pdfFileTarget({ proj, target })
@@ -338,27 +319,7 @@ const pdfFileTarget = async (ref = {}) => {
   return pdfFile
 }
 
-//@@ htmlFileTarget
-const htmlFileTarget = async (ref = {}) => {
-  const target = _.get(ref, 'target', defaults.target)
-  const proj   = _.get(ref, 'proj', defaults.proj)
 
-  const htmlDir  = path.join(htmlOut, rootid, proj, target)
-  const htmlFile = path.join(htmlDir, 'jnd_ht.html')
-
-  return htmlFile
-}
-
-//@@ dReMapTarget
-const dReMapTarget = ({ key }) => {
-  const map = {
-     auth : /^_auth\.(?<author_id>\S+)$/g,
-     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
-     datePost : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/g,
-     sec : /^_buf\.(?<sec>\S+)$/g
-  }
-  return _.get(map,key)
-}
 
 //@@ dReMapSec
 const dReMapSec = ({ key }) => {
@@ -441,247 +402,7 @@ const domSecTable = async ({ tableData, $, $tbody, colss }) => {
 
 }
 
-//@@ htmlTargetOutput
-const htmlTargetOutput = async (ref = {}) => {
-  const target = _.get(ref, 'target', '')
-  const proj   = _.get(ref, 'proj', defaults.proj)
 
-  const htmlDir  = path.join(htmlOut, rootid, proj, target)
-
-  const htmlFile = await htmlFileTarget({ target, proj })
-  const htmlFileDir = path.dirname(htmlFile)
-
-  const reKeys = ['auth','date']
-  const reMap = {
-     auth : /^_auth\.(?<author_id>\S+)$/g,
-     date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
-     sec : /^_buf\.(?<sec>\S+)$/g
-  }
-
-  var html, sec, colss, tableHeader
-
-  let $ = cheerio.load(htmlBare)
-
-  var override = true
-
-  while (1) {
-     if (!reKeys.length) { break }
-
-     const key = reKeys.shift()
-     const re = reMap[key]
-
-     //const m = /^_auth\.(?<author_id>\S+)$/.exec(target)
-     const m = re.exec(target)
-     if(!m){ continue }
-
-     const tableData = []
-
-     const $table = $('<table class="prj-link-table" />')
-     const $thead = $('<thead />')
-     const $tbody = $('<tbody />')
-
-     $table.append($thead)
-     $table.append($tbody)
-
-     if (key == 'auth') {
-       tableHeader = 'Num Html Pdf Date Title'
-       colss = 'href hrefPdf htmlEx pdfEx title date'
-
-//@a html_auth
-       const author_id = m.groups.author_id
-       const q_sec = select('sec, title')
-           .from('projs')
-           .innerJoin('_info_projs_author_id')
-           .on({ 'projs.file' : '_info_projs_author_id.file' })
-           .where({ '_info_projs_author_id.author_id' : author_id })
-           .toParams({placeholder: '?%d'})
-
-       const secList = await dbProc.all(db.prj, q_sec.text, q_sec.values)
-       const secs = secList.map((x,i) => { return x.sec })
-
-       const { author } = await dbAuth({ author_id })
-       $('body').append($(`<h1>${author.plain}</h1>`))
-
-       //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
-
-//@a fill_auth
-       const p_auth = secList.map(async (rw) => {
-          const ii_sec = rw.sec
-          const title = rw.title
-
-          const sd = await prjj.dbSecData({ proj, sec : ii_sec })
-          const href = `/prj/sec/html?sec=${ii_sec}`
-          const hrefPdf = `/prj/sec/html?sec=${ii_sec}&tab=pdf`
-          const pdfEx = sd.output.pdf
-          const htmlEx = sd.output.html
-
-          const m = dReMapTarget({ key : 'datePost' }).exec(`_buf.${ii_sec}`)
-          const date = m ? [ m.groups.day, m.groups.month, m.groups.year ].join('_') : ''
-
-          const row = { sec : ii_sec, date, title, href, hrefPdf, pdfEx, htmlEx }
-          tableData.push(row)
-       })
-
-       await Promise.all(p_auth)
-
-
-     } else if (key == 'date') {
-       tableHeader = 'Num Html Pdf Author Title'
-       colss = 'href hrefPdf title authors htmlEx pdfEx'
-
-       const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
-
-//@a html_date
-       //const day = m.groups.day
-       //const month = m.groups.month
-       //const year = m.groups.year
-
-       const m_sec = reMap.sec.exec(target)
-       if (!m_sec) { continue }
-
-       sec = m_sec.groups.sec
-       const sd = await prjj.dbSecData({ proj, sec })
-
-//@a html_date_children
-       if (sd) {
-         const children = sd.children
-
-//@a fill_date
-         const p_date = children.map(async (child) => {
-           const chData = await prjj.dbSecData({ sec : child, proj })
-
-           const title = chData.title
-           const author_ids = _.get(chData,'author_id',[])
-
-           const href = `/prj/sec/html?sec=${child}`
-           const hrefPdf = `/prj/sec/pdf?sec=${child}`
-           const pdfEx = chData.output.pdf
-           const htmlEx = chData.output.html
-
-           const { authors } = await dbAuth({ author_ids })
-           //const authors = rAuth.map((x) => { return x.plain })
-
-           const row = { authors, title, href, hrefPdf, htmlEx, pdfEx }
-           tableData.push(row)
-
-           return true;
-         })
-
-         await Promise.all(p_date)
-
-         $('body').append($(`<h1>${day}-${month}-${year}</h1>`))
-       }
-
-     }else{
-       override = false
-     }
-
-     if (override) {
-       tableHeader.split(/\s+/).map((x) => {
-          $thead.append($(`<th>${x}</th>`))
-       })
-
-       domSecTable({
-          $, $tbody, tableData,
-          colss,
-       })
-
-       $('body').append($table)
-
-       $('body').append('<script src="/prj/assets/js/dist/bundle.js"></script>')
-       html = $.html()
-     }
-
-  }
-
-  if (!html || !html.length) {
-     if (!fs.existsSync(htmlFile)) {
-       const act = 'compile'
-       const cnf = 'htx'
-
-       const { code, msg, stdout } = await prjj.act({ act, proj, cnf, target })
-       if (code) { return '' }
-     }
-
-     if (fs.existsSync(htmlFile)) {
-       html = await srvUtil.fsRead(htmlFile)
-     }
-  }
-
-  if (!html || !html.length) { return }
-
-  $ = cheerio.load(html)
-
-  //const $pane = $('<div></div>')
-  //$pane.append($('<input type="text" />'))
-  //$('body').prepend($pane)
-
-  const $css = $('link[type="text/css"]')
-  $css.each((i, elem) => {
-    var urlCssFs = $(elem).attr('href')
-
-    var fpath = path.resolve(htmlFileDir, urlCssFs)
-    if (fs.existsSync(fpath)) {
-      var query = `target=${target}&proj=${proj}`
-      var urlCss = `/prj/assets/css/main/${urlCssFs}?${query}`
-      $(elem).attr({ href : urlCss })
-    }
-  })
-
-  const $script = $('script')
-  $script.each((i, elem) => {
-    var src = $(elem).attr('src')
-    if (!src) { return }
-
-    var fpath = path.resolve(htmlFileDir,src)
-    var rel = path.relative(jsRoot, fpath)
-    var jsUrl = `/prj/assets/js/${rel}`
-    $(elem).attr({ src : jsUrl })
-  })
-
-  const $imgs = $('img')
-  $imgs.each((i, elem) => {
-    var src = $(elem).attr('src')
-    if (src) {
-       var bn = path.basename(src)
-       var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
-       $(elem).attr({ 'src' : `/img/raw/${inum}` })
-    }
-  })
-
-  const $a = $('a')
-  $a.each((i, elem) => {
-    var href = $(elem).attr('href')
-    if (!href) { return }
-
-    const re = /(?<target>[^/\s\t]+)\/jnd_ht\.html$/g
-    const m = re.exec(href)
-    const target = m ? m.groups.target : ''
-
-    if (!target) { return }
-
-    const re_buf = /^\_buf\.(?<sec>\S+)$/g
-    const re_auth = /^\_auth\.(?<auth>\S+)$/g
-
-    const m_buf  = re_buf.exec(target)
-    const m_auth = re_auth.exec(target)
-
-    const sec = m_buf ? m_buf.groups.sec : ''
-    const author_id = m_auth ? m_auth.groups.auth : ''
-
-    if (sec) {
-       $(elem).attr({ 'href' : `/prj/sec/html?sec=${sec}` })
-
-    } else if (author_id){
-       $(elem).attr({ 'href' : `/prj/auth/html?id=${author_id}` })
-    }
-
-  })
-
-  html = $.html()
-  return html
-
-}
 
 //@@ reqHtmlTargetView
 const reqHtmlTargetView = async (req, res) => {
