@@ -8,6 +8,7 @@ const fse = require('fs-extra')
 
 const db = require('./../db')
 const dbProc = require('./../dbproc')
+const srvUtil = require('./../srv-util')
 
 const select = db.sql.select
 const insert = db.sql.insert
@@ -55,6 +56,23 @@ const PrjClass = class {
 
     const builds = await dbProc.all(self.dbc, q.text, q.values)
     return builds
+  }
+
+//@@ secTxt
+  async secTxt (ref={}) {
+    const self = this
+
+    //const sec = _.get(ref, 'sec', '')
+
+    const sd = await self.dbSecData(ref)
+    if (!sd) { return }
+
+    const file = sd.file
+
+    const file_path = path.join(self.prjRoot, file)
+
+    var secTxt = await srvUtil.fsRead(file_path)
+    return secTxt
   }
 
 //@@ dbSecData

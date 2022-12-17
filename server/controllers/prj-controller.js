@@ -3,7 +3,6 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
-
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
@@ -213,83 +212,7 @@ const dbSecList = async (ref={}) => {
   return list
 }
 
-//@@ dbSecData
-const dbSecData = async (ref={}) => {
-  const sec = ref.sec || ''
-  const proj = ref.proj || defaults.proj
 
-  const q_sec = select('*')
-              .from('projs')
-              .where({ 'sec' : sec })
-              .toParams({placeholder: '?%d'})
-
-  var secData = await dbProc.get(db.prj, q_sec.text, q_sec.values)
-  if (!secData) { return }
-
-  var sec_file = secData.file
-
-  const q_ch = select('sec')
-      .from('projs')
-      .innerJoin('tree_children')
-      .on({ 'projs.file' : 'tree_children.file_child' })
-      .where({ 'tree_children.file_parent' : sec_file })
-      .toParams({placeholder: '?%d'})
-
-  var rows_ch =  await dbProc.all(db.prj, q_ch.text, q_ch.values)
-  var children = []
-  rows_ch.map((rw) => { children.push(rw.sec) })
-
-  secData['children'] = children
-
-  const b2info = { tags : 'tag' }
-  const bcols = ['author_id','tags']
-
-  const p_info = bcols.map(async (bcol) => {
-     const icol = _.get(b2info, bcol, bcol)
-     const t_info = `_info_projs_${bcol}`
-
-     const q_info = select(`${t_info}.${icol}`)
-              .from('projs')
-              .innerJoin(`${t_info}`)
-              .on({ 'projs.file' : `${t_info}.file` })
-              .where({ 'projs.sec' : sec })
-              .toParams({placeholder: '?%d'})
-
-     const rows_info =  await dbProc.all(db.prj, q_info.text, q_info.values)
-     secData[bcol] = rows_info.map((x) => { return x[bcol] })
-  })
-  await Promise.all(p_info)
-
-  const target = `_buf.${sec}`
-
-  const htmlFile = await htmlFileTarget({ proj, target })
-  const html  = fs.existsSync(htmlFile) ? 1 : 0
-
-  const pdfFile = await pdfFileTarget({ proj, target })
-  const pdf  = fs.existsSync(pdfFile) ? 1 : 0
-
-  var output = { pdf, html }
-  secData = { ...secData, output }
-
-  return secData
-
-}
-
-//@@ secTxt
-const secTxt = async (ref={}) => {
-  //const sec = _.get(ref, 'sec', '')
-
-  const sd = await dbSecData(ref)
-  if (!sd) { return }
-
-  const file = sd.file
-
-  const file_path = path.join(prjRoot, file)
-
-  var secTxt = await srvUtil.fsRead(file_path)
-  return secTxt
-
-}
 
 //@@ reqJsonTargetData
 // GET /prj/target/data
@@ -376,7 +299,7 @@ const reqJsonSecSrc = async (req, res) => {
   const query = req.query
   const sec = query.sec || ''
 
-  var txt = await secTxt({ sec })
+  var txt = await prjj.secTxt({ sec })
 
   res.send({ txt })
 
@@ -716,7 +639,7 @@ const htmlTargetOutput = async (ref = {}) => {
           const ii_sec = rw.sec
           const title = rw.title
 
-          const sd = await dbSecData({ proj, sec : ii_sec })
+          const sd = await prjj.dbSecData({ proj, sec : ii_sec })
           const href = `/prj/sec/html?sec=${ii_sec}`
           const hrefPdf = `/prj/sec/html?sec=${ii_sec}&tab=pdf`
           const pdfEx = sd.output.pdf
@@ -747,7 +670,7 @@ const htmlTargetOutput = async (ref = {}) => {
        if (!m_sec) { continue }
 
        sec = m_sec.groups.sec
-       const sd = await dbSecData({ proj, sec })
+       const sd = await prjj.dbSecData({ proj, sec })
 
 //@a html_date_children
        if (sd) {
@@ -755,7 +678,7 @@ const htmlTargetOutput = async (ref = {}) => {
 
 //@a fill_date
          const p_date = children.map(async (child) => {
-           const chData = await dbSecData({ sec : child, proj })
+           const chData = await prjj.dbSecData({ sec : child, proj })
 
            const title = chData.title
            const author_ids = _.get(chData,'author_id',[])

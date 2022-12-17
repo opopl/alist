@@ -7,9 +7,11 @@ const docRoutes = require('./../controllers/doc-controller.js')
 
 const { c_AuthorClass } = require('./../controllers/c_AuthorClass.js')
 const { c_ImgClass } = require('./../controllers/c_ImgClass.js')
+const { c_PrjClass } = require('./../controllers/c_PrjClass.js')
 
 const c_Author = new c_AuthorClass()
 const c_Img = new c_ImgClass()
+const c_Prj = new c_PrjClass()
 
 // Create router
 const router = express.Router()
