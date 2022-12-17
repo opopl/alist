@@ -20,7 +20,6 @@ const { spawn, execSync } = require('child_process')
 const crass = require('crass')
 
 const findit = require('findit')
-const yaml = require('js-yaml')
 const axios = require('axios')
 
 const cheerio = require("cheerio");
@@ -321,157 +320,9 @@ const secDirsSaved = async (ref={}) => {
 
 }
 
-//@@ htmlFileSecSaved
-const htmlFileSecSaved = async (ref = {}) => {
-  const sec = _.get(ref, 'sec', '')
-  const proj = _.get(ref, 'proj', defaults.proj)
-
-  console.log('[htmlFileSecSaved] start');
-
-  const dirNew = path.join(picDataDir, rootid, proj, 'new')
-  const dirDone = path.join(picDataDir, rootid, proj, 'done')
-
-  const secDirNew  = path.join(dirNew, sec)
-
-  const { day, month, year } = prjj.secDate({ proj, sec })
-
-  //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
-  //let map_months = base#yaml#parse_fs({ 'file' : yfile })
-  const yFile = path.join(plgDir, 'projs', 'data', 'yaml', 'months.yaml')
-  const yFileEx = fs.existsSync(yFile)
-  const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
-  const monthName = _.get(mapMonths,`en.short.${month}`,month)
-
-  var secDirDone = path.join(dirDone, 'secs', sec)
-  if (day && monthName && year){
-    secDirDone = path.join(dirDone, year, monthName, `${day}`, sec )
-  }
-
-  const secDirDoneEx = fs.existsSync(secDirDone)
-  const secDirNewEx = fs.existsSync(secDirNew)
-
-  var htmlFile = ''
-  const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
-    var ff = []
-    const cb_file = ({ found }) => {
-       const bn = path.basename(found)
-       if (bn != 'we.html') { return }
-       htmlFile = found
-    }
-    await fsFind({ dir, cb_file });
-  })
-  await Promise.all(p_files)
-
-  const htmlFileEx = fs.existsSync(htmlFile)
-
-  console.log('[htmlFileSecSaved] end');
-
-  return { htmlFile, htmlFileEx }
-}
 
 
-//@@ reqHtmlSecSaved
-const reqHtmlSecSaved = async (req, res) => {
-  const query = req.query
 
-  const sec = _.get(query, 'sec', '')
-  const use = _.get(query, 'use', 'orig')
-  const proj = _.get(query, 'proj', defaults.proj)
-
-  const { htmlFile, htmlFileEx } = await htmlFileSecSaved({ proj, sec })
-  if(!htmlFileEx){
-     //res.send(`<html><body>File not Found<body></html>`)
-     res.send(`<html><body>Saved Html File not Found: ${htmlFile}<body></html>`)
-     return
-  }
-
-  const htmlFileDir = path.dirname(htmlFile)
-  process.chdir(htmlFileDir)
-
-  const orig = path.basename(htmlFile)
-  const useMap = {
-     orig,
-     view    : `p.${orig}`,
-     unwrap  : `p.unwrap.${orig}`,
-     parse   : `p.parse.${orig}`,
-     content : `p.parse.content.${orig}`,
-     article : `p.parse.article.${orig}`,
-     comments : `p.parse.comments.${orig}`,
-     cmttex : `p.parse.comments.${orig}.tex`,
-  }
-  const htmlFileUse = _.get(useMap, use, '')
-  if(!fs.existsSync(htmlFileUse)){
-     res.send(`<html><body>${use} Html File not Found: ${htmlFileUse}<body></html>`)
-     return
-  }
-
-  const ext = path.extname(htmlFileUse)
-  if (ext == 'tex') {
-     //res.type('text')
-     res.header("Content-Type", "text/plain");
-     res.sendFile(htmlFileUse)
-     return
-  }
-
-  const html = fs.readFileSync(htmlFileUse)
-  const $ = cheerio.load(html)
-
-  //const dom = htmlparser2.parseDocument(html);
-  //const dom = parse5.parse(html);
-
-  const icons_done = {}
-
-  const els_css = $('link[rel="stylesheet"]').map( (i, x) => {
-     return x
-  }).toArray()
-
-//@a p_css
-  const p_css = els_css.map( async (x,i) => {
-     const $x = $(x)
-     const href = $x.attr('href')
-     if (!href) { return }
-     var uriAsset = `/prj/sec/asset/${href}?sec=${sec}`
-     $x.attr({ href : uriAsset })
-  })
-  await Promise.all(p_css)
-
-  const els_img = $('img, image').map( (i, x) => {
-     return x
-  }).toArray()
-
-//@a p_img
-  const tagMap = {
-      img : 'src',
-      image : 'href',
-  }
-
-  const p_img = els_img.map( async (x,i) => {
-     const $x = $(x)
-     const name = $x.get(0).tagName
-
-     //var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
-
-     const attrName = tagMap[name]
-     const src = $x.attr(attrName)
-     if (!src) {return}
-
-     const m = /(?<inum>\d+)\.\w+$/g.exec(src)
-     const inum = m ? m.groups.inum : null
-
-     if (inum) {
-        const dict = {}
-        dict[attrName] = `/img/raw/${inum}`
-        $x.attr(dict)
-     }
-  })
-
-  await Promise.all(p_img)
-
-  const htmlSend = $.html()
-  res.send(htmlSend)
-
-  return
-}
 
 
 

@@ -267,6 +267,114 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlSecSaved
+  htmlSecSaved ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const sec = _.get(query, 'sec', '')
+      const use = _.get(query, 'use', 'orig')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const { htmlFile, htmlFileEx } = await prjj.htmlFileSecSaved({ proj, sec })
+      if(!htmlFileEx){
+         //res.send(`<html><body>File not Found<body></html>`)
+         res.send(`<html><body>Saved Html File not Found: ${htmlFile}<body></html>`)
+         return
+      }
+
+      const htmlFileDir = path.dirname(htmlFile)
+      process.chdir(htmlFileDir)
+
+      const orig = path.basename(htmlFile)
+      const useMap = {
+         orig,
+         view    : `p.${orig}`,
+         unwrap  : `p.unwrap.${orig}`,
+         parse   : `p.parse.${orig}`,
+         content : `p.parse.content.${orig}`,
+         article : `p.parse.article.${orig}`,
+         comments : `p.parse.comments.${orig}`,
+         cmttex : `p.parse.comments.${orig}.tex`,
+      }
+      const htmlFileUse = _.get(useMap, use, '')
+      if(!fs.existsSync(htmlFileUse)){
+         res.send(`<html><body>${use} Html File not Found: ${htmlFileUse}<body></html>`)
+         return
+      }
+
+      const ext = path.extname(htmlFileUse)
+      if (ext == 'tex') {
+         //res.type('text')
+         res.header("Content-Type", "text/plain");
+         res.sendFile(htmlFileUse)
+         return
+      }
+
+      const html = fs.readFileSync(htmlFileUse)
+      const $ = cheerio.load(html)
+
+      //const dom = htmlparser2.parseDocument(html);
+      //const dom = parse5.parse(html);
+
+      const icons_done = {}
+
+      const els_css = $('link[rel="stylesheet"]').map( (i, x) => {
+         return x
+      }).toArray()
+
+    //@a p_css
+      const p_css = els_css.map( async (x,i) => {
+         const $x = $(x)
+         const href = $x.attr('href')
+         if (!href) { return }
+         var uriAsset = `/prj/sec/asset/${href}?sec=${sec}`
+         $x.attr({ href : uriAsset })
+      })
+      await Promise.all(p_css)
+
+      const els_img = $('img, image').map( (i, x) => {
+         return x
+      }).toArray()
+
+    //@a p_img
+      const tagMap = {
+          img : 'src',
+          image : 'href',
+      }
+
+      const p_img = els_img.map( async (x,i) => {
+         const $x = $(x)
+         const name = $x.get(0).tagName
+
+         //var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
+
+         const attrName = tagMap[name]
+         const src = $x.attr(attrName)
+         if (!src) {return}
+
+         const m = /(?<inum>\d+)\.\w+$/g.exec(src)
+         const inum = m ? m.groups.inum : null
+
+         if (inum) {
+            const dict = {}
+            dict[attrName] = `/img/raw/${inum}`
+            $x.attr(dict)
+         }
+      })
+
+      await Promise.all(p_img)
+
+      const htmlSend = $.html()
+      res.send(htmlSend)
+
+      return
+    }
+  }
+
+
 }
 
 module.exports = { c_PrjClass }

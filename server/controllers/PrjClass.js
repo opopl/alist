@@ -6,7 +6,8 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
-const cheerio = require("cheerio");
+const cheerio = require("cheerio")
+const yaml = require('js-yaml')
 
 const db = require('./../db')
 const dbProc = require('./../dbproc')
@@ -601,6 +602,56 @@ const PrjClass = class {
      })
 
   }
+
+//@@ htmlFileSecSaved
+async htmlFileSecSaved (ref = {})  {
+  const self = this
+
+  const sec = _.get(ref, 'sec', '')
+  const proj = _.get(ref, 'proj', self.proj)
+
+  console.log('[htmlFileSecSaved] start');
+
+  const dirNew = path.join(self.picDataDir, self.rootid, proj, 'new')
+  const dirDone = path.join(self.picDataDir, self.rootid, proj, 'done')
+
+  const secDirNew  = path.join(dirNew, sec)
+
+  const { day, month, year } = self.secDate({ proj, sec })
+
+  //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
+  //let map_months = base#yaml#parse_fs({ 'file' : yfile })
+  const yFile = path.join(plgDir, 'projs', 'data', 'yaml', 'months.yaml')
+  const yFileEx = fs.existsSync(yFile)
+  const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+  const monthName = _.get(mapMonths,`en.short.${month}`,month)
+
+  var secDirDone = path.join(dirDone, 'secs', sec)
+  if (day && monthName && year){
+    secDirDone = path.join(dirDone, year, monthName, `${day}`, sec )
+  }
+
+  const secDirDoneEx = fs.existsSync(secDirDone)
+  const secDirNewEx = fs.existsSync(secDirNew)
+
+  var htmlFile = ''
+  const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
+    var ff = []
+    const cb_file = ({ found }) => {
+       const bn = path.basename(found)
+       if (bn != 'we.html') { return }
+       htmlFile = found
+    }
+    await fsFind({ dir, cb_file });
+  })
+  await Promise.all(p_files)
+
+  const htmlFileEx = fs.existsSync(htmlFile)
+
+  console.log('[htmlFileSecSaved] end');
+
+  return { htmlFile, htmlFileEx }
+}
 
 }
 
