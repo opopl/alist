@@ -8,7 +8,7 @@ const helmet = require('helmet')
 //const argv = require('yargs').argv;
 
 // Import routes
-const router = require('./routes/route')
+const { routerFactory } = require('./routes/route')
 
 // Set default port for express app
 const PORT = process.env.PORT || 4001
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // Implement auth route
-app.use('/', router)
+app.use('/', new routerFactory().router())
 //app.use('/img', imgRouter)
 
 // Implement 500 error route

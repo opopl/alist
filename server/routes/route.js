@@ -9,55 +9,63 @@ const c_Auth = new c_AuthClass()
 const c_Img = new c_ImgClass()
 const c_Prj = new c_PrjClass()
 
-const router = express.Router()
+class routerFactory {
+  constructor(){
+  }
 
-router.get('/', async (req, res) => {
-   res.redirect('/prj/sec/html?sec=24_11_2022')
-})
+  router(){
+    const router = express.Router()
 
-router.get('/auth/count',  c_Auth.jsonCount())
-router.get('/auth/all',    c_Auth.jsonAll())
-router.get('/auth/update', c_Auth.jsonUpdate())
-//router.put('/auth/delete', c_Auth.jsonDelete())
+    router.get('/', async (req, res) => {
+       res.redirect('/prj/sec/html?sec=24_11_2022')
+    })
 
-//@@ Images
-router.get('/img/count'     , c_Img.jsonCount())
-router.get('/img/raw/:inum' , c_Img.rawImg())
+    router.get('/auth/count',  c_Auth.jsonCount())
+    router.get('/auth/all',    c_Auth.jsonAll())
+    router.get('/auth/update', c_Auth.jsonUpdate())
+    //router.put('/auth/delete', c_Auth.jsonDelete())
 
-router.post('/prj/act', c_Prj.jsonAct())
+    //@@ Images
+    router.get('/img/count'     , c_Img.jsonCount())
+    router.get('/img/raw/:inum' , c_Img.rawImg())
 
-//@@ Config
-router.get('/prj/config/get', c_Prj.jsonConfig())
+    router.post('/prj/act', c_Prj.jsonAct())
 
-//@@ Target
-router.get('/prj/target/data', c_Prj.jsonTargetData())
-router.get('/prj/target/html', c_Prj.htmlTargetView())
+    //@@ Config
+    router.get('/prj/config/get', c_Prj.jsonConfig())
 
-//@@ Sec
-router.get('/prj/sec/count' , c_Prj.jsonSecCount())
-router.get('/prj/sec/src'   , c_Prj.jsonSecSrc())
-router.get('/prj/sec/data'  , c_Prj.jsonSecData())
+    //@@ Target
+    router.get('/prj/target/data', c_Prj.jsonTargetData())
+    router.get('/prj/target/html', c_Prj.htmlTargetView())
 
-router.get('/prj/sec/html' , c_Prj.htmlSecView())
-router.get('/prj/sec/pdf'  , c_Prj.pdfSecView())
+    //@@ Sec
+    router.get('/prj/sec/count' , c_Prj.jsonSecCount())
+    router.get('/prj/sec/src'   , c_Prj.jsonSecSrc())
+    router.get('/prj/sec/data'  , c_Prj.jsonSecData())
 
-router.get('/prj/sec/saved', c_Prj.htmlSecSaved())
-router.post('/prj/sec/list', c_Prj.jsonSecList())
+    router.get('/prj/sec/html' , c_Prj.htmlSecView())
+    router.get('/prj/sec/pdf'  , c_Prj.pdfSecView())
 
-router.get(/^\/prj\/sec\/asset\/(.*)$/, c_Prj.secAsset())
+    router.get('/prj/sec/saved', c_Prj.htmlSecSaved())
+    router.post('/prj/sec/list', c_Prj.jsonSecList())
 
-//@@ Authors
-router.get('/prj/auth/html', c_Prj.htmlAuthView())
+    router.get(/^\/prj\/sec\/asset\/(.*)$/, c_Prj.secAsset())
 
-//@@ Builds
-router.get('/prj/bld/data', c_Prj.jsonBldData())
+    //@@ Authors
+    router.get('/prj/auth/html', c_Prj.htmlAuthView())
 
-//@@ Assets
-router.get(/^\/prj\/assets\/js\/(.*)$/, c_Prj.jsFile())
+    //@@ Builds
+    router.get('/prj/bld/data', c_Prj.jsonBldData())
 
-router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, c_Prj.cssFileCtl())
-router.get(/^\/prj\/assets\/css\/main\/(.*)$/, c_Prj.cssFile())
+    //@@ Assets
+    router.get(/^\/prj\/assets\/js\/(.*)$/, c_Prj.jsFile())
 
+    router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, c_Prj.cssFileCtl())
+    router.get(/^\/prj\/assets\/css\/main\/(.*)$/, c_Prj.cssFile())
+
+    return router
+  }
+}
 
 // Export router
-module.exports = router
+module.exports = { routerFactory }
