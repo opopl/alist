@@ -62,15 +62,7 @@ const defaults = {
 const prjj = new PrjClass()
 const authj = new AuthClass()
 
-//@@ config
-const config = {
-   proj : defaults.proj,
-   rootid : defaults.rootid,
-   bld : {
-       cols : 'bid buuid plan duration target status'
-   },
-   ui : {}
-}
+
 
 
 const rootid = _.get(defaults, 'rootid')
@@ -189,12 +181,7 @@ const reqJsonSecList = async (req, res) => {
 
 }
 
-//@@ reqJsonConfig
-// get /prj/config/get
-const reqJsonConfig = async (req, res) => {
 
-  res.send(config)
-}
 
 
 
@@ -504,9 +491,7 @@ const reqHtmlAuthView = async (req, res) => {
 }
 
 const jsonHandlers = {
-    reqJsonSecList,
-
-    reqJsonConfig
+    reqJsonSecList
 }
 
 const fsHandlers = {

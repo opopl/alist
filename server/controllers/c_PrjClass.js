@@ -28,6 +28,20 @@ const c_PrjClass = class {
 
     this.proj = 'letopis'
     this.target = ''
+
+
+  }
+
+//@@ config
+  config(){
+    return {
+       proj : this.proj,
+       rootid : this.rootid,
+       bld : {
+           cols : 'bid buuid plan duration target status'
+       },
+       ui : {}
+    }
   }
 
 //@@ jsonAct
@@ -116,111 +130,123 @@ const c_PrjClass = class {
 
       const target = _.get(query, 'target', '')
       const proj   = _.get(query, 'proj', self.proj)
-    
+
       const action = _.get(query, 'action', 'render')
-    
+
       const html = await prjj.htmlTargetOutput({ proj, target })
       res.send(html)
-    
+
     }
   }
 
 //@@ cssFile
-	cssFile () {
+  cssFile () {
     const self = this
 
-		return async (req, res) => {
-		  const file = req.params[0]
-		
-		  const target = _.get(req,'query.target',self.target)
-		  const proj   = _.get(req,'query.proj',self.proj)
-		
-		  const htmlFile = await prjj.htmlFileTarget({ target, proj })
-		  const htmlFileDir = path.dirname(htmlFile)
-		
-		  const cssFile = path.join(htmlFileDir, file)
-		
-		  if (fs.existsSync(cssFile)) {
-		    res.sendFile(cssFile)
-		  }
-		}
-	}
+    return async (req, res) => {
+      const file = req.params[0]
+
+      const target = _.get(req,'query.target',self.target)
+      const proj   = _.get(req,'query.proj',self.proj)
+
+      const htmlFile = await prjj.htmlFileTarget({ target, proj })
+      const htmlFileDir = path.dirname(htmlFile)
+
+      const cssFile = path.join(htmlFileDir, file)
+
+      if (fs.existsSync(cssFile)) {
+        res.sendFile(cssFile)
+      }
+    }
+  }
 
 //@@ pdfSecView
-	pdfSecView () {
+  pdfSecView () {
     const self = this
 
-		return async (req, res) => {
-		  const query = req.query
-		
-		  const sec = _.get(query, 'sec', '')
-		  const proj = _.get(query, 'proj', self.proj)
-		
-		  const target = '_buf.' + sec
-		
-		  if (!prjj.dReMapTarget({ key : 'datePost' }).exec(target)) {
-		     var msg = 'not a datePost target'
-		     return res.status(404).send({ msg })
-		  }
-		
-		  const pdfFile = prjj.pdfFileTarget({ proj, target })
-		
-		  const pdfFileEx = fs.existsSync(pdfFile)
-		
-		  if (!pdfFileEx) {
-		    const act = 'compile'
-		    const cnf = ''
-		
-		    const { code, msg, stdout } = await prjj.act({ act, proj, cnf, target })
-		    if (code) { return res.status(404).send({ msg }) }
-		  }
-		
-		  res.sendFile(pdfFile)
-		}
-	}
+    return async (req, res) => {
+      const query = req.query
+
+      const sec = _.get(query, 'sec', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const target = '_buf.' + sec
+
+      if (!prjj.dReMapTarget({ key : 'datePost' }).exec(target)) {
+         var msg = 'not a datePost target'
+         return res.status(404).send({ msg })
+      }
+
+      const pdfFile = prjj.pdfFileTarget({ proj, target })
+
+      const pdfFileEx = fs.existsSync(pdfFile)
+
+      if (!pdfFileEx) {
+        const act = 'compile'
+        const cnf = ''
+
+        const { code, msg, stdout } = await prjj.act({ act, proj, cnf, target })
+        if (code) { return res.status(404).send({ msg }) }
+      }
+
+      res.sendFile(pdfFile)
+    }
+  }
 
 //@@ jsonTargetData
 // GET /prj/target/data
-	jsonTargetData () {
+  jsonTargetData () {
     const self = this
 
-		return async (req, res) => {
-		  const target = _.get(req, 'query.target', self.target)
-		  const proj = _.get(req, 'query.proj', self.proj)
-		
-		  const htmlFile = prjj.htmlFileTarget({ proj, target })
-		  const html  = fs.existsSync(htmlFile) ? 1 : 0
-		
-		  const pdfFile = prjj.pdfFileTarget({ proj, target })
-		  const pdf  = fs.existsSync(pdfFile) ? 1 : 0
-		
-		  var output = { html, pdf }
-		  res.json({ output })
-		
-		}
-	}
+    return async (req, res) => {
+      const target = _.get(req, 'query.target', self.target)
+      const proj = _.get(req, 'query.proj', self.proj)
+
+      const htmlFile = prjj.htmlFileTarget({ proj, target })
+      const html  = fs.existsSync(htmlFile) ? 1 : 0
+
+      const pdfFile = prjj.pdfFileTarget({ proj, target })
+      const pdf  = fs.existsSync(pdfFile) ? 1 : 0
+
+      var output = { html, pdf }
+      res.json({ output })
+
+    }
+  }
 
 //@@ jsonBldData
 // get /prj/bld/data
-	jsonBldData () {
-		return async (req, res) => {
-		  const query = req.query
-		  const path = req.path
-		  const w = {}
-		
-		  const cols = _.get(config,'bld.cols','').split(/\s+/)
-		  cols.forEach((col) => {
-		     if (!query.hasOwnProperty(col)) { return }
-		     w[col] = _.get(query,col)
-		     return
-		  })
-		
-		  const bldData = await prjj.dbBldData(w)
-		
-		  res.json({ data: bldData })
-		
-		}
-	}
+  jsonBldData () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+      const path = req.path
+      const w = {}
+
+      const cols = _.get(self.config(),'bld.cols','').split(/\s+/)
+      cols.forEach((col) => {
+         if (!query.hasOwnProperty(col)) { return }
+         w[col] = _.get(query,col)
+         return
+      })
+
+      const bldData = await prjj.dbBldData(w)
+
+      res.json({ data: bldData })
+
+    }
+  }
+
+//@@ jsonConfig
+// get /prj/config/get
+  jsonConfig () {
+    const self = this
+
+    return async (req, res) => {
+      res.send(self.config())
+    }
+  }
 
 }
 

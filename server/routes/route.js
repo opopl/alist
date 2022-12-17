@@ -38,7 +38,7 @@ router.get('/img/raw/:inum' , c_Img.rawImg())
 router.post('/prj/act', c_Prj.jsonAct())
 
 //@@ Config
-router.get('/prj/config/get', prjRoutes.reqJsonConfig)
+router.get('/prj/config/get', c_Prj.jsonConfig())
 
 //@@ Target
 router.get('/prj/target/data', c_Prj.jsonTargetData())
