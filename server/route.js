@@ -1,9 +1,9 @@
 
 const express = require('express')
 
-const { c_AuthClass } = require('./../controllers/c_AuthClass.js')
-const { c_ImgClass }  = require('./../controllers/c_ImgClass.js')
-const { c_PrjClass }  = require('./../controllers/c_PrjClass.js')
+const { c_AuthClass } = require('./controllers/c_AuthClass.js')
+const { c_ImgClass }  = require('./controllers/c_ImgClass.js')
+const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
 
 const c_Auth = new c_AuthClass()
 const c_Img = new c_ImgClass()
