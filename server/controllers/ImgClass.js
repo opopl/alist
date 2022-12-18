@@ -4,6 +4,8 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const md5file = require('md5-file')
 
+const path = require('path')
+
 const select = db.sql.select
 
 const ImgClass = class {
