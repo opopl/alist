@@ -28,9 +28,6 @@ const c_PrjClass = class {
 
     this.prj = new PrjClass(ref)
 
-		const config = this.config
-		console.log({ config });
-		console.log(this.getConfig());
   }
 
 
@@ -38,13 +35,12 @@ const c_PrjClass = class {
   getConfig(){
     const self = this
 
-		const config = self.config
-		console.log({ config });
+    const config = self.config
 
     return {
        proj : self.proj,
        rootid : self.rootid,
-			 ...config
+       ...config
     }
   }
 
