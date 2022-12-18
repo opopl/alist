@@ -5,6 +5,8 @@ const compression = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
 
+const fileUpload = require('express-fileupload')
+
 const path = require('path')
 const fs = require('fs')
 const yaml = require('js-yaml')
@@ -70,6 +72,7 @@ class Alist {
     srv.use(compression())
     srv.use(bodyParser.urlencoded({ extended: false }))
     srv.use(bodyParser.json())
+    srv.use(fileUpload())
 
     const cnf = self.cnf || {}
 

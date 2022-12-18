@@ -29,6 +29,7 @@ const c_PrjClass = class {
     this.prj = new PrjClass(ref)
   }
 
+
 //@@ config
   config(){
     const self = this
@@ -303,6 +304,40 @@ const c_PrjClass = class {
       res.send(html)
 
       //res.redirect(`/prj/target/html?target=${target}`)
+    }
+  }
+
+//@@ uploadSecSaved
+  uploadSecSaved ()  {
+    const self = this
+
+    return async (req, res) => {
+      if (!req.files) {
+        return res.status(400).send("No files were uploaded.");
+      }
+
+      const query = req.query
+      const sec = _.get(query, 'sec', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const { secDirDone, secDirNew } = await self.prj.secDirsSaved({ proj, sec, sub : 'html' })
+
+      var pathSaved
+      [ secDirDone, secDirNew ].forEach((dir) => {
+          if(pathSaved){ return }
+
+          if(fs.existsSync(dir)){ pathSaved = path.join(dir,'we.html') }
+      })
+
+      const file = req.files.file;
+      console.log({ file, pathSaved });
+
+/*      file.mv(pathSaved, (err) => {*/
+        //if (err) {
+          //return res.status(500).send(err);
+        //}
+        //return res.send({ status: "success", path: path });
+      /*});*/
     }
   }
 
