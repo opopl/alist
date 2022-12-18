@@ -102,7 +102,11 @@ const c_PrjClass = class {
 
       var data = await self.prj.dbSecData(query)
 
-      res.json(data)
+      if (data) {
+        res.json(data)
+      }else{
+        res.status(500).send({ 'msg' : 'no section data!' })
+      }
     }
   }
 
