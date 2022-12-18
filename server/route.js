@@ -32,13 +32,16 @@ class A {
 
 class routerFactory {
   constructor(ref={}){
-    const optsAuth = _.get(ref,'auth',{})
-    const optsImg = _.get(ref,'img',{})
-    const optsPrj = _.get(ref,'prj',{})
 
-		this.c_Auth = new c_AuthClass(optsAuth)
-		this.c_Img  = new c_ImgClass(optsImg)
-		this.c_Prj  = new c_PrjClass(optsPrj)
+    Object.assign(this, ref)
+
+    const app = _.get(ref,'app')
+    this.app = app
+
+    this.c_Auth = app ? app.c_Auth : new c_AuthClass()
+    this.c_Img = app ? app.c_Img : new c_ImgClass()
+    this.c_Prj = app ? app.c_Prj : new c_PrjClass()
+
   }
 
   router(){

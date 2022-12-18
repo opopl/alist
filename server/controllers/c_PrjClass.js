@@ -27,7 +27,6 @@ const c_PrjClass = class {
     Object.assign(this, ref)
 
     this.prj = new PrjClass(ref)
-
   }
 
 //@@ config
