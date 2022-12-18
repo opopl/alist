@@ -125,6 +125,50 @@ const PrjClass = class {
   }
 
 
+//@@ secNew
+  async secNew ({
+          sec, parent, rw, append, prepend,
+          seccmd, title, url,
+          author_id, tags
+    }){
+
+    const self = this
+
+    const { proj, root, rootid } = srvUtil.dictGet(self,'proj root rootid')
+
+    const sd = await self.dbSecData({ proj, sec })
+
+    var file = _.get(sd,'file')
+    var filePath = path.join(root, file)
+    var fileEx = fs.existsSync(filePath)
+
+    if (!rw && fileEx) { return self }
+
+    file = self._secFile({ sec })
+    filePath = self._secFilePath({ file })
+
+    const lines = self._secNewLines({
+        sec, parent, append, prepend,
+    })
+    srvUtil.fsWrite(filePath, lines)
+
+    //todo git add
+
+    if (!sd) {
+        const ins = {
+          sec, file, proj, rootid,
+          parent, title, tags, author_id
+        }
+
+        const q_ins = insert('projs',ins)
+               .toParams({placeholder: '?%d'})
+
+        await dbProc.run(self.dbc, q_ins.text, q_ins.values)
+    }
+
+    return self
+  }
+
 //@@ dbSecSelect
   async dbSecSelect (ref={})  {
     const self = this
