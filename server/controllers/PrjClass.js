@@ -124,34 +124,89 @@ const PrjClass = class {
     return list
   }
 
-
-/*sub _sec_file {*/
-    //my ($self, $ref) = @_;
-    //$ref ||= {};
-
-    //my $sec = $ref->{sec} || '';
-
-    //my $proj   = $ref->{proj} || $self->{proj};
-    //my $rootid = $ref->{rootid} || $self->{rootid};
-    //return unless $sec && $proj;
-
-    //my @file_a = $self->_sec_file_a({
-        //sec    => $sec,
-        //proj   => $proj,
-        //rootid => $rootid
-    //});
-    //my $file = catfile(@file_a);
-
-    //return $file;
-/*}*/
-
 //@@ _secFile
   _secFile ({ sec, proj, rootid }){
      const self = this
 
      proj = proj ? proj : self.proj
      rootid = rootid ? rootid : self.rootid
+     if (!sec || !proj) { return self }
+
+     const fileA = self._secFileA({ sec, proj, rootid })
+     const file = path.join(...fileA)
+
+     return file
   }
+
+  _secFileA({ sec, proj, rootid }){
+     const self = this
+
+     proj = proj ? proj : self.proj
+     rootid = rootid ? rootid : self.rootid
+
+     if (!sec || !proj) { return [] }
+
+     const fileA = []
+
+    //my $run_ext = $^O eq 'MSWin32' ? 'bat' : 'sh';
+          //
+     const extss = 'vim pl zlan sql yml'
+     const exts = extss.split(/\s+/)
+
+     var do_break, m
+     while(1){
+
+       if (sec == '_main_') {
+          fileA.push(`${proj}.tex`)
+          break
+       }
+
+       if (sec == '_main_htlatex_') {
+          fileA.push(`${proj}.main_htlatex.tex`)
+          break
+       }
+
+       if (sec == '_bib_') {
+          fileA.push(`${proj}.refs.bib`)
+          break
+       }
+
+       exts.forEach((ext) => {
+           const extSec = `_${ext}_`
+           if (sec == extSec) {
+              fileA.push(`${proj}.${ext}`)
+              do_break = true
+           }
+       })
+       if (do_break) { break }
+
+       m = /^_bld\.(?<target>.*)$/.exec(sec)
+       if (m) {
+          fileA.push(`${proj}.bld.${m.groups.target}.yml`)
+          break
+       }
+
+       m = /^_perl\.(?<sec_pl>.*)$/.exec(sec)
+       if (m) {
+          fileA.push(`${proj}.${m.groups.sec_pl}.pl`)
+          break
+       }
+
+       m = /^_pm\.(?<sec_pm>.*)$/.exec(sec)
+       if (m) {
+          fileA.push('perl', 'lib', 'projs')
+          fileA.push(rootid, proj)
+          fileA.push(`${m.groups.sec_pm}.pm`)
+          break
+       }
+
+       fileA.push(`${proj}.${sec}.tex`)
+       break
+     }
+
+     return fileA
+  }
+
 
 //@@ secNew
   async secNew ({
