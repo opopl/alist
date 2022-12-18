@@ -124,6 +124,68 @@ const PrjClass = class {
     return list
   }
 
+//@@ _secNewLines
+  _secNewLines({
+    sec, seccmd, title,
+    append, prepend, doo
+  }){
+    const self = this
+
+    doo = doo ? doo : {}
+    append = append ? append : []
+    prepend = prepend ? prepend : []
+
+    const labelStr = `\\label{sec:${sec}}`
+    const lines = []
+
+    const head = self._secHead()
+    lines.push(...head, ...prepend)
+
+    if (seccmd && title) {
+       lines.push('', `\\${seccmd}{${title}}`, labelStr, '')
+    }
+
+    lines.push(...append)
+
+    return lines
+  }
+
+
+//@@ _secHead
+  _secHead({
+     sec, parent, url, author_id, date,
+     tags, title,
+     keymap, ext
+  }){
+    const self = this
+
+    ext = ext ? ext : 'tex'
+
+    const head = []
+    if (ext == 'tex') {
+       if (keymap) {
+          head.push(`% vim: keymap=${keymap}`)
+       }
+       head.push('%%beginhead ')
+       head.push(' ')
+       head.push(`%%file ${sec || ''}`)
+       head.push(`%%parent ${parent || ''}`)
+       head.push(' ')
+       head.push(`%%url ${url || ''}`)
+       head.push(' ')
+       head.push(`%%author_id ${author_id || ''}`)
+       head.push(`%%date ${date || ''}`)
+       head.push(' ')
+       head.push(`%%tags ${tags || ''}`)
+       head.push(`%%title ${title || ''}`)
+       head.push(' ')
+       head.push('%%endhead ')
+    }
+
+    return head
+
+  }
+
 //@@ _secFilePath
   _secFilePath ({ file }){
      const self = this
