@@ -6,3 +6,32 @@ img:
 prj:
   proj: letopis
   rootid : p_sr
+
+  class:
+    proj: letopis
+    rootid : p_sr
+
+  controller:
+    proj: letopis
+    rootid : p_sr
+    config:
+       bld : 
+          cols : 'bid buuid plan duration target status'
+       ui : 
+          tab : {}
+          page : 
+             'auth' : 
+                tabs : [ 'html' ]
+             
+             'sec@date' : 
+                tabs : [ 'html' ]
+             
+             'sec@post' : 
+                tabs : 
+                - 'html'
+                - 'images'
+                - 'saved'
+                - 'pdf'
+                - 'tex'
+                - 'log'
+                - 'bld'

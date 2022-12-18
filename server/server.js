@@ -25,6 +25,7 @@ const { routerFactory } = require('./route')
 const PORT = process.env.PORT || 4001
 
 class Alist {
+//@@ new
   constructor(){}
 
 //@@ loadYaml
@@ -45,7 +46,7 @@ class Alist {
 
     const optsAuth = _.get(self,'cnf.auth',{})
     const optsImg  = _.get(self,'cnf.img',{})
-    const optsPrj  = _.get(self,'cnf.prj',{})
+    const optsPrj  = _.get(self,'cnf.prj.controller',{})
 
     self.c_Auth = new c_AuthClass(optsAuth)
     self.c_Img  = new c_ImgClass(optsImg)

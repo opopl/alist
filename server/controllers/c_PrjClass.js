@@ -27,41 +27,24 @@ const c_PrjClass = class {
     Object.assign(this, ref)
 
     this.prj = new PrjClass(ref)
+
+		const config = this.config
+		console.log({ config });
+		console.log(this.getConfig());
   }
 
 
-//@@ config
-  config(){
+//@@ getConfig
+  getConfig(){
     const self = this
+
+		const config = self.config
+		console.log({ config });
 
     return {
        proj : self.proj,
        rootid : self.rootid,
-       bld : {
-          cols : 'bid buuid plan duration target status'
-       },
-       ui : {
-          tab : {
-          },
-          page : {
-             'auth' : {
-                tabs : [ 'html' ]
-             },
-             'sec@date' : {
-                tabs : [ 'html' ]
-             },
-             'sec@post' : {
-                tabs : [
-                  'html',
-                  'saved',
-                  'pdf',
-                  'tex',
-                  'log',
-                  'bld',
-                ]
-             },
-          }
-       },
+			 ...config
     }
   }
 
@@ -264,7 +247,7 @@ const c_PrjClass = class {
       const path = req.path
       const w = {}
 
-      const cols = _.get(self.config(),'bld.cols','').split(/\s+/)
+      const cols = _.get(self.getConfig(),'bld.cols','').split(/\s+/)
       cols.forEach((col) => {
          if (!query.hasOwnProperty(col)) { return }
          w[col] = _.get(query,col)
@@ -284,7 +267,7 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
-      res.send(self.config())
+      res.send(self.getConfig())
     }
   }
 

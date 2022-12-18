@@ -30,7 +30,10 @@ class A {
 //new A('2','3').run()
 //new A({ '2' : 'v1', 'a' : 'v2' }).run()
 
+//@@ _class.routerFactory
 class routerFactory {
+
+//@@ new
   constructor(ref={}){
 
     Object.assign(this, ref)
@@ -44,6 +47,7 @@ class routerFactory {
 
   }
 
+//@@ router
   router(){
     const self = this
 
