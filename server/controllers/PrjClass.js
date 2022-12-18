@@ -18,6 +18,7 @@ const insert = db.sql.insert
 const update = db.sql.update
 
 const { AuthClass } = require('./AuthClass')
+const { ImgClass } = require('./ImgClass')
 
 const PrjClass = class {
 //@@ new
@@ -26,6 +27,8 @@ const PrjClass = class {
      this.dbc_bld = db.bld
 
      this.initDirs()
+
+     this.imgman = new ImgClass()
 
      this.target = ''
      Object.assign(this, ref)

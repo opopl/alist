@@ -9,8 +9,12 @@ const select = db.sql.select
 const ImgClass = class {
 
 //@@ new
-  constructor(){
+  constructor(ref={}){
     this.dbc = db.img
+
+    this.imgRoot  = path.join(process.env.IMG_ROOT)
+
+    Object.assign(this,ref)
   }
 
 //@@ dbImgData
@@ -52,7 +56,11 @@ const ImgClass = class {
   }
 
 //@@ dbImgStore
-  async dbImgStore ({ url }) {
+  async dbImgStore ({
+    url,
+    url_parent, tags, caption, name,
+    proj, sec, rootid,
+  }) {
     const self = this
 
     const rw = await self.dbImgData({ url })
@@ -64,20 +72,17 @@ const ImgClass = class {
     const inum = await self.dbImgInumFree()
     console.log({ inum });
 
-  /*  await srvUtil.fetchImg({ url, local })*/
-         //.then((data) => {
-               //if(fs.existsSync(local)){
-                  //var href = bLocal
-                  //console.log(`done : ${remote}, href: ${href}`);
-                  //icons_done[remote] = 1
+    const local = path.join(self.imgRoot, `${inum}.jpg`)
 
-                  //$x.removeAttr('href')
-                  //$x.removeAttr('data-savepage-href')
-                  //$x.attr({ href })
-               //}
-          //})
-          /*.catch((err) => { console.log(err) })*/
+    await srvUtil.fetchImg({ url, local })
+         .then((data) => {
+             if(!fs.existsSync(local)){ return }
 
+             var href = bLocal
+          })
+          .catch((err) => { console.log(err) })
+
+    return self
   }
 
 }

@@ -311,7 +311,7 @@ const c_PrjClass = class {
 
        urls.forEach((url) => {
          const cmd = `prj-get-img -c fetch_uri -p ${proj} -s ${sec} --uri ${url}`
-         childProcess.execSync(cmd, { stdio: 'inherit' })
+         execSync(cmd, { stdio: 'inherit' })
        })
 
     }
