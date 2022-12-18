@@ -330,14 +330,13 @@ const c_PrjClass = class {
       })
 
       const file = req.files.file;
-      console.log({ file, pathSaved });
 
-/*      file.mv(pathSaved, (err) => {*/
-        //if (err) {
-          //return res.status(500).send(err);
-        //}
-        //return res.send({ status: "success", path: path });
-      /*});*/
+      file.mv(pathSaved, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        return res.send({ status: "success", path: pathSaved });
+      });
     }
   }
 
