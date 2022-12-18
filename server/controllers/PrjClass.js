@@ -124,6 +124,13 @@ const PrjClass = class {
     return list
   }
 
+//@@ _secFilePath
+  _secFilePath ({ file }){
+     const self = this
+
+     return path.join(self.root, file)
+  }
+
 //@@ _secFile
   _secFile ({ sec, proj, rootid }){
      const self = this
@@ -138,6 +145,7 @@ const PrjClass = class {
      return file
   }
 
+//@@ _secFileA
   _secFileA({ sec, proj, rootid }){
      const self = this
 
