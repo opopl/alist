@@ -131,7 +131,6 @@ const PrjClass = class {
   }){
     const self = this
 
-    doo = doo ? doo : {}
     append = append ? append : []
     prepend = prepend ? prepend : []
 
@@ -190,7 +189,7 @@ const PrjClass = class {
   _secFilePath ({ file }){
      const self = this
 
-     return path.join(self.root, file)
+     return path.join(self.prjRoot, file)
   }
 
 //@@ _secFile
