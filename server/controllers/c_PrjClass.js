@@ -11,6 +11,8 @@ const cheerio = require("cheerio")
 
 const { PrjClass } = require('./PrjClass')
 
+const { spawn, execSync } = require('child_process')
+
 const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
@@ -297,11 +299,21 @@ const c_PrjClass = class {
 
     return async (req, res) => {
        const body = req.body
-       const { sec, proj, urls } = srvUtil.dictGet(body,'sec proj urls')
 
-       console.log({ sec, proj, urls });
+       const data = JSON.parse(body.data)
+       const { sec, proj, urls } = srvUtil.dictGet(data,'sec proj urls')
 
-       return res.status(400).send("No files were uploaded.");
+       if (!urls || !urls.length) {
+          return res.status(400).send({ 'msg' : 'no urls!'});
+       }
+
+       process.chdir(self.prj.prjRoot)
+
+       urls.forEach((url) => {
+         const cmd = `prj-get-img -c fetch_uri -p ${proj} -s ${sec} --uri ${url}`
+         childProcess.execSync(cmd, { stdio: 'inherit' })
+       })
+
     }
   }
 
