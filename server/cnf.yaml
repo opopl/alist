@@ -29,7 +29,7 @@ prj:
              'sec@post' : 
                 tabs : 
                 - 'html'
-                - 'images'
+                - 'pics'
                 - 'saved'
                 - 'pdf'
                 - 'tex'

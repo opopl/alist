@@ -86,7 +86,9 @@ class routerFactory {
     router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
     router.get('/prj/sec/saved', self.c_Prj.htmlSecSaved())
-    router.post('/prj/sec/saved/upload', self.c_Prj.uploadSecSaved())
+
+    router.post('/prj/sec/saved/upload'   , self.c_Prj.uploadSecSaved())
+    router.post('/prj/sec/pic/upload/url' , self.c_Prj.uploadSecPicUrl())
 
     router.get(/^\/prj\/sec\/asset\/(.*)$/, self.c_Prj.secAsset())
 

@@ -290,6 +290,21 @@ const c_PrjClass = class {
     }
   }
 
+//@@ uploadSecPicUrl
+// post /prj/sec/pic/upload/url
+  uploadSecPicUrl ()  {
+    const self = this
+
+    return async (req, res) => {
+       const body = req.body
+       const { sec, proj, urls } = srvUtil.dictGet(body,'sec proj urls')
+
+       console.log({ sec, proj, urls });
+
+       return res.status(400).send("No files were uploaded.");
+    }
+  }
+
 //@@ uploadSecSaved
   uploadSecSaved ()  {
     const self = this
