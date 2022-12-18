@@ -14,5 +14,10 @@ const sec = '02_12_2022.fb.ohmatdet.bolnica.1.35_operacij_divchynka'
 //})
         //
 console.log(prj.prjRoot);
-console.log(prj);
+console.log(prj.rootid);
+console.log(prj.proj);
+
+prj.secNew({ 
+   sec : 'aaa' 
+})
 

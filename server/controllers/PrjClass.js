@@ -126,8 +126,11 @@ const PrjClass = class {
 
 //@@ _secNewLines
   _secNewLines({
-    sec, seccmd, title,
-    append, prepend, doo
+       seccmd, append, prepend,
+
+       sec, parent, url, author_id, date,
+       tags, title,
+       keymap, ext
   }){
     const self = this
 
@@ -137,7 +140,11 @@ const PrjClass = class {
     const labelStr = `\\label{sec:${sec}}`
     const lines = []
 
-    const head = self._secHead()
+    const head = self._secHead({
+       sec, parent, url, author_id, date,
+       tags, title,
+       keymap, ext
+    })
     lines.push(...head, ...prepend)
 
     if (seccmd && title) {
@@ -286,15 +293,17 @@ const PrjClass = class {
 
     const self = this
 
-    const { proj, root, rootid } = srvUtil.dictGet(self,'proj root rootid')
+    const { proj, rootid } = srvUtil.dictGet(self,'proj rootid')
 
     const sd = await self.dbSecData({ proj, sec })
 
-    var file = _.get(sd,'file')
-    var filePath = path.join(root, file)
-    var fileEx = fs.existsSync(filePath)
-
-    if (!rw && fileEx) { return self }
+    var file, filePath, fileEx
+    if (sd) {
+      file = _.get(sd,'file')
+      filePath = path.join(self.prjRoot, file)
+      fileEx = fs.existsSync(filePath)
+      if (!rw && fileEx) { return self }
+    }
 
     file = self._secFile({ sec })
     filePath = self._secFilePath({ file })
