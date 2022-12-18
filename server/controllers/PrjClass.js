@@ -125,6 +125,34 @@ const PrjClass = class {
   }
 
 
+/*sub _sec_file {*/
+    //my ($self, $ref) = @_;
+    //$ref ||= {};
+
+    //my $sec = $ref->{sec} || '';
+
+    //my $proj   = $ref->{proj} || $self->{proj};
+    //my $rootid = $ref->{rootid} || $self->{rootid};
+    //return unless $sec && $proj;
+
+    //my @file_a = $self->_sec_file_a({
+        //sec    => $sec,
+        //proj   => $proj,
+        //rootid => $rootid
+    //});
+    //my $file = catfile(@file_a);
+
+    //return $file;
+/*}*/
+
+//@@ _secFile
+  _secFile ({ sec, proj, rootid }){
+     const self = this
+
+     proj = proj ? proj : self.proj
+     rootid = rootid ? rootid : self.rootid
+  }
+
 //@@ secNew
   async secNew ({
           sec, parent, rw, append, prepend,
