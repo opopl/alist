@@ -339,6 +339,42 @@ const PrjClass = class {
     const sec = ref.sec || ''
   }
 
+//@@ dbSecPicData
+  async dbSecPicData (ref={})  {
+    const self = this
+
+    const sec = ref.sec || ''
+    const proj = ref.proj || self.proj
+
+    var picData = { urls: [] }
+
+    const sd = await self.dbSecData({ sec, proj })
+    if (!sd) { return }
+
+    var child, children, sdc = sd, descendants = []
+    var iiList = [ sec ]
+    while(iiList.length){
+       child = iiList.shift()
+       sdc = await self.dbSecData({ proj, sec: child })
+       if (!sdc) { continue }
+
+       console.log({ child });
+       const q = select('*').from('imgs')
+                .where({ proj, sec: child })
+                .toParams({placeholder: '?%d'})
+
+       const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
+       rows.forEach((rw) => {
+          picData.urls.push(rw.url)
+       })
+
+       children = sdc.children
+       iiList.push(...children)
+    }
+
+    return picData;
+  }
+
 //@@ dbSecData
   async dbSecData (ref={})  {
     const self = this

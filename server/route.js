@@ -65,6 +65,7 @@ class routerFactory {
     //@@ Images
     router.get('/img/count'     , self.c_Img.jsonCount())
     router.get('/img/raw/:inum' , self.c_Img.rawImg())
+    router.get('/img/raw/url/:url' , self.c_Img.rawImgUrl())
 
     router.post('/prj/act', self.c_Prj.jsonAct())
 
@@ -89,6 +90,9 @@ class routerFactory {
 
     router.post('/prj/sec/saved/upload'   , self.c_Prj.uploadSecSaved())
     router.post('/prj/sec/pic/upload/url' , self.c_Prj.uploadSecPicUrl())
+
+    router.get('/prj/sec/pic/data' , self.c_Prj.jsonSecPicData())
+    router.get('/prj/sec/pic/html' , self.c_Prj.htmlSecPicData())
 
     router.get(/^\/prj\/sec\/asset\/(.*)$/, self.c_Prj.secAsset())
 

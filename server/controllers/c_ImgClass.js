@@ -62,6 +62,38 @@ const c_ImgClass = class {
       }
     }
   }
+
+//@@ rawImgUrl
+  rawImgUrl(){
+    const self = this
+
+    return async (req, res) => {
+      const params = req.params
+
+      const urlEnc = _.get(params,'url')
+      if (!urlEnc) {
+         res.status(500).send({ 'msg' : 'no url!' })
+      }
+
+      const url = decodeURIComponent(urlEnc)
+
+      const q_file = select('img')
+                  .from('imgs')
+                  .where({ url })
+                  .toParams({placeholder: '?%d'})
+
+      var rw = await dbProc.get(self.dbc, q_file.text, q_file.values)
+      var img = _.get(rw,'img')
+      var imgFile = path.join(self.imgRoot, img)
+
+      if (fs.existsSync(imgFile)) {
+         res.sendFile(imgFile)
+      }else{
+         res.status(500)
+      }
+    }
+  }
+
 }
 
 

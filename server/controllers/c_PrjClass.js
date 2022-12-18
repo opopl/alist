@@ -112,6 +112,23 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecPicData
+  jsonSecPicData () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      var data = await self.prj.dbSecPicData(query)
+
+      if (data) {
+        res.json(data)
+      }else{
+        res.status(500).send({ 'msg' : 'no pics data!' })
+      }
+    }
+  }
+
 //@@ jsonSecSrc
   jsonSecSrc () {
     const self = this
@@ -124,6 +141,34 @@ const c_PrjClass = class {
 
       res.send({ txt })
 
+    }
+  }
+
+//@@ htmlSecPicData
+  htmlSecPicData () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      var data = await self.prj.dbSecPicData(query)
+
+      if (data) {
+        var urls = data.urls
+
+        const $ = cheerio.load(self.prj.htmlBare)
+
+        urls.forEach((url) => {
+           const urlEnc = encodeURIComponent(url)
+           const $img = $(`<p><img src="/img/raw/url/${urlEnc}" /img>`)
+
+           $('body').append($img)
+        })
+
+        res.send($.html())
+      }else{
+        res.status(500).send({ 'msg' : 'no pics data!' })
+      }
     }
   }
 
