@@ -102,7 +102,7 @@ const c_ImgClass = class {
 
       const urlEnc = _.get(params,'url')
       if (!urlEnc) {
-         res.status(500).send({ 'msg' : 'no url!' })
+         res.status(404).send({ 'msg' : 'no url!' })
       }
 
       const url = decodeURIComponent(urlEnc)
@@ -113,7 +113,11 @@ const c_ImgClass = class {
                   .toParams({placeholder: '?%d'})
 
       var rw = await dbProc.get(self.dbc, q.text, q.values)
-      res.send(rw)
+      if (rw) {
+        res.send(rw)
+      }else{
+        res.status(404).send({ 'msg' : 'no img!' })
+      }
     }
   }
 

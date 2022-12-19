@@ -155,10 +155,13 @@ const c_PrjClass = class {
 
       if (data) {
         var urls = data.urls
+        console.log(data);
 
         const $ = cheerio.load(self.prj.htmlBare)
 
-        urls.forEach((url) => {
+        data.forEach((x) => {
+           const url = x.url
+
            const urlEnc = encodeURIComponent(url)
            const $img = $(`<p><img src="/img/raw/url/${urlEnc}" /img>`)
 
@@ -354,7 +357,9 @@ const c_PrjClass = class {
 
        process.chdir(self.prj.prjRoot)
 
-       pics.forEach((pic) => {
+       var ok = true
+
+       const p_pics = pics.map(async(pic) => {
          const url  = _.get(pic,'url')
          if (!url) { return }
 
@@ -362,17 +367,45 @@ const c_PrjClass = class {
          const tags = tagsA.join(',')
 
          const exe = `prj-get-img`
-         const opts = []
-         opts.push('-c', 'fetch_uri' )
-         opts.push('-p', `${proj}` )
-         opts.push('-s', `${sec}` )
-         opts.push('--uri', `"${url}"` )
+         const args = []
+         args.push('-c', 'fetch_uri' )
+         args.push('-p', `${proj}` )
+         args.push('-s', `${sec}` )
+         args.push('--uri', `${url}` )
 
-         if (tags) { opts.push('--uri_tags', `"${tags}"` ) }
+         if (tags) { args.push('--uri_tags', `${tags}` ) }
 
-         const cmd = [ exe, ...opts ].join(' ')
-         execSync(cmd, { stdio: 'inherit' })
+         const cmd = [ exe, ...args ].join(' ')
+         //execSync(cmd, { stdio: 'inherit' })
+
+         const ff = () =>  {
+            return new Promise(async (resolve, reject) => {
+              const spawned = spawn(exe, args, {})
+              var stdout = []
+
+              spawned.on('exit', (code) => {
+                resolve({ code, stdout })
+              })
+
+              for await (const data of spawned.stdout) {
+                console.log(`${data}`);
+                const a = `${data}`.split('\n')
+                a.map((x) => { stdout.push(x) })
+              }
+            })
+         }
+
+         const { code, stdout } = await ff()
+         if (code) { ok = false }
        })
+
+       await Promise.all(p_pics)
+       if (ok) {
+          res.status(200)
+       }else{
+          const msg = `fail to fetch pics`
+          res.status(404).send({ msg })
+       }
 
     }
   }
