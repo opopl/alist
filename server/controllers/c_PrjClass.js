@@ -346,16 +346,31 @@ const c_PrjClass = class {
        const body = req.body
 
        const data = JSON.parse(body.data)
-       const { sec, proj, urls } = srvUtil.dictGet(data,'sec proj urls')
+       const { sec, proj, pics } = srvUtil.dictGet(data,'sec proj pics')
 
-       if (!urls || !urls.length) {
-          return res.status(400).send({ 'msg' : 'no urls!'});
+       if (!pics || !pics.length) {
+          return res.status(400).send({ 'msg' : 'no input pics!'});
        }
 
        process.chdir(self.prj.prjRoot)
 
-       urls.forEach((url) => {
-         const cmd = `prj-get-img -c fetch_uri -p ${proj} -s ${sec} --uri "${url}"`
+       pics.forEach((pic) => {
+         const url  = _.get(pic,'url')
+         if (!url) { return }
+
+         const tagsA = _.get(pic,'tags',[]) || []
+         const tags = tagsA.join(',')
+
+         const exe = `prj-get-img`
+         const opts = []
+         opts.push('-c', 'fetch_uri' )
+         opts.push('-p', `${proj}` )
+         opts.push('-s', `${sec}` )
+         opts.push('--uri', `"${url}"` )
+
+         if (tags) { opts.push('--uri_tags', `"${tags}"` ) }
+
+         const cmd = [ exe, ...opts ].join(' ')
          execSync(cmd, { stdio: 'inherit' })
        })
 
