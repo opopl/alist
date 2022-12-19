@@ -58,7 +58,6 @@ const c_ImgClass = class {
          }else{
             res.status(500)
          }
-         //console.log(rw);
       }
     }
   }
@@ -91,6 +90,49 @@ const c_ImgClass = class {
       }else{
          res.status(500)
       }
+    }
+  }
+
+//@@ jsonImgDataUrl
+  jsonImgDataUrl(){
+    const self = this
+
+    return async (req, res) => {
+      const params = req.params
+
+      const urlEnc = _.get(params,'url')
+      if (!urlEnc) {
+         res.status(500).send({ 'msg' : 'no url!' })
+      }
+
+      const url = decodeURIComponent(urlEnc)
+
+      const q = select('*')
+                  .from('imgs')
+                  .where({ url })
+                  .toParams({placeholder: '?%d'})
+
+      var rw = await dbProc.get(self.dbc, q.text, q.values)
+      res.send(rw)
+    }
+  }
+
+//@@ jsonImgData
+  jsonImgData(){
+    const self = this
+
+    return async (req, res) => {
+      const params = req.params
+
+      const inum = _.get(params,'inum')
+
+      const q = select('*')
+                  .from('imgs')
+                  .where({ inum })
+                  .toParams({placeholder: '?%d'})
+
+      var rw = await dbProc.get(self.dbc, q.text, q.values)
+      res.send(rw)
     }
   }
 

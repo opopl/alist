@@ -17,7 +17,9 @@ console.log(prj.prjRoot);
 console.log(prj.rootid);
 console.log(prj.proj);
 
-prj.secNew({ 
-   sec : 'aaa' 
-})
+console.log(Object.keys({ sec }).length);
+
+//prj.secNew({ 
+   //sec : 'aaa' 
+//})
 
