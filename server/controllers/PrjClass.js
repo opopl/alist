@@ -340,33 +340,40 @@ const PrjClass = class {
   }
 
 //@@ dbSecPicData
-  async dbSecPicData (ref={})  {
+  async dbSecPicData ({ proj, sec })  {
     const self = this
 
-    const sec = ref.sec || ''
-    const proj = ref.proj || self.proj
+    if (!proj) { proj = self.proj }
 
-    var picData = { urls: [] }
+    var picData = []
 
     const sd = await self.dbSecData({ sec, proj })
     if (!sd) { return }
 
-    var child, children, sdc = sd, descendants = []
+    var child, children
     var iiList = [ sec ]
     while(iiList.length){
        child = iiList.shift()
-       sdc = await self.dbSecData({ proj, sec: child })
+       const sdc = await self.dbSecData({ proj, sec: child })
        if (!sdc) { continue }
 
-       console.log({ child });
-       const q = select('*').from('imgs')
+       const q = select('sec, url').from('imgs')
                 .where({ proj, sec: child })
                 .toParams({placeholder: '?%d'})
 
        const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
-       rows.forEach((rw) => {
-          picData.urls.push(rw.url)
+       const p_rw = rows.map(async (rw) => {
+          const url = rw.url
+          const q_tags = select('tag').from('_info_imgs_tags')
+                  .where({ url })
+                  .toParams({placeholder: '?%d'})
+          const tags_r = await dbProc.all(self.imgman.dbc, q_tags.text, q_tags.values)
+          const tags = tags_r.map((x) => { return x.tag })
+
+          rw = { ...rw, tags }
+          picData.push(rw)
        })
+       await Promise.all(p_rw)
 
        children = sdc.children
        iiList.push(...children)
