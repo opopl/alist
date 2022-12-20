@@ -751,11 +751,17 @@ const PrjClass = class {
 
     const $imgs = $('img')
     $imgs.each((i, elem) => {
-      var src = $(elem).attr('src')
+      const src = $(elem).attr('src')
+      const url = $(elem).attr('url')
       if (src) {
-         var bn = path.basename(src)
-         var inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
-         $(elem).attr({ 'src' : `/img/raw/${inum}` })
+         const bn = path.basename(src)
+         const inum = bn.replace( /^(?<inum>\d+)\.\w+$/g,'$<inum>')
+         if (url) {
+            const urlEnc = encodeURIComponent(url)
+            $(elem).attr({ 'src' : `/img/raw/url/${urlEnc}` })
+         }else{
+            $(elem).attr({ 'src' : `/img/raw/${inum}` })
+         }
       }
     })
 
