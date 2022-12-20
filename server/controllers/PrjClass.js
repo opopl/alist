@@ -361,10 +361,11 @@ const PrjClass = class {
 
        const q = select('sec, url').from('imgs')
                 .where({ proj, sec: child })
+                .orderBy('inum')
                 .toParams({placeholder: '?%d'})
 
        const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
-       const p_rw = rows.map(async (rw) => {
+       for(let rw of rows){
           const url = rw.url
           const q_tags = select('tag').from('_info_imgs_tags')
                   .where({ url })
@@ -374,12 +375,11 @@ const PrjClass = class {
 
           var ok = true
           w_tags.map((x) => { ok = ok && tags.includes(x) })
-          if (!ok) { return }
+          if (!ok) { continue }
 
           rw = { ...rw, tags }
           picData.push(rw)
-       })
-       await Promise.all(p_rw)
+       }
 
        children = sdc.children
        iiList.push(...children)

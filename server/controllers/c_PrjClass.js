@@ -119,7 +119,7 @@ const c_PrjClass = class {
 
     return async (req, res) => {
       var ref
-      if (req.method == 'GET'){ 
+      if (req.method == 'GET'){
         ref = req.query
       }else{
         const data = req.body.data
