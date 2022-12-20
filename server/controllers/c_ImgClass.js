@@ -83,12 +83,12 @@ const c_ImgClass = class {
 
       var rw = await dbProc.get(self.dbc, q_file.text, q_file.values)
       var img = _.get(rw,'img')
-      var imgFile = path.join(self.imgRoot, img)
+      var imgFile = path.join(self.imgRoot, img || '')
 
-      if (fs.existsSync(imgFile)) {
+      if (img && fs.existsSync(imgFile)) {
          res.status(200).sendFile(imgFile)
       }else{
-         res.status(500)
+         res.status(404)
       }
     }
   }
