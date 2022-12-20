@@ -359,7 +359,7 @@ const c_PrjClass = class {
 
        var ok = true
 
-       const p_pics = pics.map(async(pic) => {
+       const p_pics = pics.map(async (pic) => {
          const url  = _.get(pic,'url')
          if (!url) { return }
 
@@ -401,12 +401,13 @@ const c_PrjClass = class {
 
        await Promise.all(p_pics)
        if (ok) {
-          res.status(200)
+          const msg = `pic fetch ok`
+          res.status(200).send({ msg })
        }else{
           const msg = `fail to fetch pics`
           res.status(404).send({ msg })
        }
-
+       return
     }
   }
 
