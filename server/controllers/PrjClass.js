@@ -340,7 +340,7 @@ const PrjClass = class {
   }
 
 //@@ dbSecPicData
-  async dbSecPicData ({ proj, sec })  {
+  async dbSecPicData ({ proj, sec, where })  {
     const self = this
 
     if (!proj) { proj = self.proj }
@@ -349,6 +349,8 @@ const PrjClass = class {
 
     const sd = await self.dbSecData({ sec, proj })
     if (!sd) { return }
+
+    const w_tags = where ? _.get(where,'tags',[]) : []
 
     var child, children
     var iiList = [ sec ]
@@ -369,6 +371,10 @@ const PrjClass = class {
                   .toParams({placeholder: '?%d'})
           const tags_r = await dbProc.all(self.imgman.dbc, q_tags.text, q_tags.values)
           const tags = tags_r.map((x) => { return x.tag })
+
+          var ok = true
+          w_tags.map((x) => { ok = ok && tags.includes(x) })
+          if (!ok) { return }
 
           rw = { ...rw, tags }
           picData.push(rw)

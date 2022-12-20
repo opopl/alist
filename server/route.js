@@ -33,7 +33,7 @@ class A {
 //@@ _class.routerFactory
 class routerFactory {
 
-//@@ new
+//@@ new()
   constructor(ref={}){
 
     Object.assign(this, ref)
@@ -47,7 +47,7 @@ class routerFactory {
 
   }
 
-//@@ router
+//@@ router()
   router(){
     const self = this
 
@@ -62,7 +62,7 @@ class routerFactory {
     router.get('/auth/update', self.c_Auth.jsonUpdate())
     //router.put('/auth/delete', c_Auth.jsonDelete())
 
-    //@@ Images
+//@@ Images
     router.get('/img/count'         , self.c_Img.jsonCount())
     router.get('/img/raw/:inum'     , self.c_Img.rawImg())
     router.get('/img/raw/url/:url'  , self.c_Img.rawImgUrl())
@@ -71,14 +71,14 @@ class routerFactory {
 
     router.post('/prj/act', self.c_Prj.jsonAct())
 
-    //@@ Config
+//@@ Config
     router.get('/prj/config/get', self.c_Prj.jsonConfig())
 
-    //@@ Target
+//@@ Target
     router.get('/prj/target/data', self.c_Prj.jsonTargetData())
     router.get('/prj/target/html', self.c_Prj.htmlTargetView())
 
-    //@@ Sec
+//@@ Sec
     router.get('/prj/sec/count' , self.c_Prj.jsonSecCount())
     router.get('/prj/sec/src'   , self.c_Prj.jsonSecSrc())
     router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
@@ -91,20 +91,23 @@ class routerFactory {
     router.get('/prj/sec/saved', self.c_Prj.htmlSecSaved())
 
     router.post('/prj/sec/saved/upload'   , self.c_Prj.uploadSecSaved())
-    router.post('/prj/sec/pic/upload/url' , self.c_Prj.uploadSecPicUrl())
 
-    router.get('/prj/sec/pic/data' , self.c_Prj.jsonSecPicData())
+//@@ Sec/Pic
+    router.post('/prj/sec/pic/upload/url' , self.c_Prj.uploadSecPicUrl())
+    router.post('/prj/sec/pic/data'       , self.c_Prj.jsonSecPicData())
+
     router.get('/prj/sec/pic/html' , self.c_Prj.htmlSecPicData())
+    router.get('/prj/sec/pic/data' , self.c_Prj.jsonSecPicData())
 
     router.get(/^\/prj\/sec\/asset\/(.*)$/, self.c_Prj.secAsset())
 
-    //@@ Authors
+//@@ Authors
     router.get('/prj/auth/html', self.c_Prj.htmlAuthView())
 
-    //@@ Builds
+//@@ Builds
     router.get('/prj/bld/data', self.c_Prj.jsonBldData())
 
-    //@@ Assets
+//@@ Assets
     router.get(/^\/prj\/assets\/js\/(.*)$/, self.c_Prj.jsFile())
 
     router.get(/^\/prj\/assets\/css\/ctl\/(.*)$/, self.c_Prj.cssFileCtl())

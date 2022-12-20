@@ -54,7 +54,7 @@ const c_ImgClass = class {
          var img = _.get(rw,'img')
          var imgFile = path.join(self.imgRoot, img)
          if (fs.existsSync(imgFile)) {
-            res.sendFile(imgFile)
+            res.status(200).sendFile(imgFile)
          }else{
             res.status(500)
          }
@@ -86,7 +86,7 @@ const c_ImgClass = class {
       var imgFile = path.join(self.imgRoot, img)
 
       if (fs.existsSync(imgFile)) {
-         res.sendFile(imgFile)
+         res.status(200).sendFile(imgFile)
       }else{
          res.status(500)
       }

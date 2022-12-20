@@ -113,16 +113,23 @@ const c_PrjClass = class {
   }
 
 //@@ jsonSecPicData
+// GET, POST
   jsonSecPicData () {
     const self = this
 
     return async (req, res) => {
-      const query = req.query
+      var ref
+      if (req.method == 'GET'){ 
+        ref = req.query
+      }else{
+        const data = req.body.data
+        ref = JSON.parse(data)
+      }
 
-      var data = await self.prj.dbSecPicData(query)
+      var data = await self.prj.dbSecPicData(ref)
 
       if (data) {
-        res.json(data)
+        res.status(200).json(data)
       }else{
         res.status(500).send({ 'msg' : 'no pics data!' })
       }
