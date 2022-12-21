@@ -112,6 +112,23 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecFsData
+  jsonSecFsData () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      var data = self.prj._secFsData(query)
+
+      if (data) {
+        res.json(data)
+      }else{
+        res.status(404).send({ 'msg' : 'no section filesystem data!' })
+      }
+    }
+  }
+
 //@@ jsonSecPicData
 // GET, POST
   jsonSecPicData () {

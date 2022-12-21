@@ -3,6 +3,7 @@ const _ = require('lodash')
 const { spawn, execSync } = require('child_process')
 
 const path = require('path')
+const util = require('util')
 const fs = require('fs')
 const fse = require('fs-extra')
 
@@ -16,6 +17,9 @@ const srvUtil = require('./../srv-util')
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
+
+const fsMove = util.promisify(fse.move)
+const fsMakePath = util.promisify(fs.mkdir)
 
 const { AuthClass } = require('./AuthClass')
 const { ImgClass } = require('./ImgClass')
@@ -386,6 +390,45 @@ const PrjClass = class {
     }
 
     return picData;
+  }
+
+//@@ secFsNew
+  async secFsNew ({ sec, proj })  {
+    const self = this
+    proj = proj ? proj : self.proj
+
+    const {
+      exNew, exDone,
+      secDirNew, secDirDone
+    } = self._secFsData({ sec, proj })
+
+    if (exNew) { return self }
+
+    if (!exDone) {
+      await fsMakePath(secDirNew,{ recursive : true })
+    }else{
+      await fsMakePath( dirname(secDirNew),{ recursive : true }).then(async() => {
+         await fsMove( secDirDone, secDirNew )
+      })
+    }
+
+    return self
+  }
+
+//@@ _secFsData
+  _secFsData ({ sec, proj })  {
+    const self = this
+    proj = proj ? proj : self.proj
+
+    const { secDirNew, secDirDone } = self.secDirsSaved({ sec, proj })
+
+    const exNew = fs.existsSync(secDirNew)
+    const exDone = fs.existsSync(secDirDone)
+
+    return { 
+      exNew, exDone,
+      secDirNew, secDirDone
+    }
   }
 
 //@@ dbSecData

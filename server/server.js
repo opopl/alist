@@ -12,6 +12,9 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 const _ = require('lodash')
 
+const cons = require('consolidate');
+const nunjucks = require('nunjucks');
+
 const { c_AuthClass } = require('./controllers/c_AuthClass.js')
 const { c_ImgClass }  = require('./controllers/c_ImgClass.js')
 const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
@@ -65,6 +68,7 @@ class Alist {
 
     // Create express server
     const srv = express()
+		self.srv = srv
 
     // srvly middleware
     // Note: Keep this at the top, above routes
@@ -74,6 +78,18 @@ class Alist {
     srv.use(bodyParser.urlencoded({ extended: false }))
     srv.use(bodyParser.json())
     srv.use(fileUpload())
+
+		// add nunjucks to requires so filters can be
+		// added and the same instance will be used inside the render method
+		cons.requires.nunjucks = nunjucks.configure('views', {
+		  autoescape: true,
+		  express   : srv
+		});
+
+    // view engine setup
+    srv.engine('html', cons.nunjucks);
+    srv.set('views', path.join(__dirname, 'views'));
+    srv.set('view engine', 'html');
 
     const cnf = self.cnf || {}
 

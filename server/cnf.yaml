@@ -30,7 +30,8 @@ prj:
                 tabs : 
                 - 'html'
                 - 'pics'
-                - 'saved'
+                - 'fs'
+                #- 'saved'
                 - 'pdf'
                 - 'tex'
                 - 'log'
