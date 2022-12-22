@@ -129,6 +129,49 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecFsNew
+  jsonSecFsNew () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const sec = query.sec || ''
+      const proj = query.proj || self.proj
+
+      await self.prj.secFsNew({ sec, proj })
+
+      const { exNew } = self.prj._secFsData({ sec, proj })
+      if (exNew) {
+         return res.status(200).send({ 'msg' : 'new' })
+      }else{
+         return res.status(404).send({ 'msg' : 'error: new' })
+      }
+
+    }
+  }
+
+//@@ jsonSecFsDone
+  jsonSecFsDone () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const sec = query.sec || ''
+      const proj = query.proj || self.proj
+
+      await self.prj.secFsDone({ sec, proj })
+
+      const { exDone } = self.prj._secFsData({ sec, proj })
+      if (exDone) {
+         return res.status(200).send({ 'msg' : 'done' })
+      }else{
+         return res.status(404).send({ 'msg' : 'error: done' })
+      }
+    }
+  }
+
 //@@ jsonSecPicData
 // GET, POST
   jsonSecPicData () {

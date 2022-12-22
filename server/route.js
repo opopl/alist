@@ -84,6 +84,9 @@ class routerFactory {
     router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
     router.get('/prj/sec/fs/data' , self.c_Prj.jsonSecFsData())
 
+    router.get('/prj/sec/fs/new' , self.c_Prj.jsonSecFsNew())
+    router.get('/prj/sec/fs/done' , self.c_Prj.jsonSecFsDone())
+
     router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
     router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())
 

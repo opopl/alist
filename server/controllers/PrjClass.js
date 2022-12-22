@@ -406,11 +406,33 @@ const PrjClass = class {
 
     if (!exDone) {
       await fsMakePath(secDirNew,{ recursive : true })
-    }else{
-      await fsMakePath( dirname(secDirNew),{ recursive : true }).then(async() => {
+
+    }else if(!exNew){
+      await fsMakePath( path.dirname(secDirNew),{ recursive : true }).then(async() => {
          await fsMove( secDirDone, secDirNew )
       })
     }
+
+    return self
+  }
+
+//@@ secFsDone
+  async secFsDone ({ sec, proj })  {
+    const self = this
+    proj = proj ? proj : self.proj
+
+    const {
+      exNew, exDone,
+      secDirNew, secDirDone
+    } = self._secFsData({ sec, proj })
+
+    if (exDone) { return self }
+
+    if (!exNew) {
+      await self.secFsNew({ sec, proj })
+    }
+
+    await fsMove( secDirNew, secDirDone )
 
     return self
   }
@@ -425,7 +447,7 @@ const PrjClass = class {
     const exNew = fs.existsSync(secDirNew)
     const exDone = fs.existsSync(secDirDone)
 
-    return { 
+    return {
       exNew, exDone,
       secDirNew, secDirDone
     }
