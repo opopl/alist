@@ -793,9 +793,35 @@ const PrjClass = class {
 
     $ = cheerio.load(html)
 
-    //const $pane = $('<div></div>')
-    //$pane.append($('<input type="text" />'))
-    //$('body').prepend($pane)
+    self.$ = $
+
+    self.domImg()
+        .domCss({ htmlFileDir, target, proj })
+        .domScript({ htmlFileDir })
+        .domLinks()
+
+    html = $.html()
+    return html
+
+  }
+
+//@@ dReMapTarget
+  dReMapTarget ({ key }) {
+    const map = {
+       auth : /^_auth\.(?<author_id>\S+)$/g,
+       date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
+       datePost : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/g,
+       sec : /^_buf\.(?<sec>\S+)$/g
+    }
+    return _.get(map,key)
+  }
+
+//@@ domCss
+  domCss ({ $, htmlFileDir, target, proj }) {
+    const self = this
+
+    $ = $ ? $ : self.$
+    proj = proj ? proj : self.proj
 
     const $css = $('link[type="text/css"]')
     $css.each((i, elem) => {
@@ -809,6 +835,15 @@ const PrjClass = class {
       }
     })
 
+    return self
+  }
+
+//@@ domScript
+  domScript ({ $, htmlFileDir }) {
+    const self = this
+
+    $ = $ ? $ : self.$
+
     const $script = $('script')
     $script.each((i, elem) => {
       var src = $(elem).attr('src')
@@ -819,6 +854,16 @@ const PrjClass = class {
       var jsUrl = `/prj/assets/js/${rel}`
       $(elem).attr({ src : jsUrl })
     })
+
+    return self
+  }
+
+
+//@@ domImg
+  domImg ({ $ } = {}) {
+    const self = this
+
+    $ = $ ? $ : self.$
 
     const $imgs = $('img')
     $imgs.each((i, elem) => {
@@ -835,6 +880,15 @@ const PrjClass = class {
          }
       }
     })
+
+    return self
+  }
+
+//@@ domLinks
+  domLinks ({ $ } = {}) {
+    const self = this
+
+    $ = $ ? $ : self.$
 
     const $a = $('a')
     $a.each((i, elem) => {
@@ -865,20 +919,7 @@ const PrjClass = class {
 
     })
 
-    html = $.html()
-    return html
-
-  }
-
-//@@ dReMapTarget
-  dReMapTarget ({ key }) {
-    const map = {
-       auth : /^_auth\.(?<author_id>\S+)$/g,
-       date : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/g,
-       datePost : /^_buf\.(?<day>\d+)_(?<month>\d+)_(?<year>\d+)\.(\S+)$/g,
-       sec : /^_buf\.(?<sec>\S+)$/g
-    }
-    return _.get(map,key)
+    return self
   }
 
 //@@ domSecTable
