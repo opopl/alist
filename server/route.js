@@ -79,7 +79,13 @@ class routerFactory {
     router.get('/prj/target/data', self.c_Prj.jsonTargetData())
     router.get('/prj/target/html', self.c_Prj.htmlTargetView())
 
+//@@ Sec/New
+
+    router.get('/prj/sec/new/html' , self.c_Prj.htmlSecNew())
+    router.post('/prj/sec/new'     , self.c_Prj.jsonSecNew())
+
 //@@ Sec
+
     router.get('/prj/sec/count' , self.c_Prj.jsonSecCount())
     router.get('/prj/sec/src'   , self.c_Prj.jsonSecSrc())
     router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
@@ -88,7 +94,6 @@ class routerFactory {
     router.get('/prj/sec/fs/new' , self.c_Prj.jsonSecFsNew())
     router.get('/prj/sec/fs/done' , self.c_Prj.jsonSecFsDone())
 
-    router.get('/prj/sec/new/html' , self.c_Prj.htmlSecNew())
 
     router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
     router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())

@@ -197,6 +197,22 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecNew
+//  POST
+  jsonSecNew () {
+    const self = this
+
+    return async (req, res) => {
+       const body = req.body
+
+       const data = JSON.parse(body.data)
+       const { sec, proj, url, title, date  } = srvUtil.dictGet(data,'sec proj')
+
+       console.log(data);
+       res.send({ sec, proj })
+    }
+  }
+
 //@@ jsonSecSrc
   jsonSecSrc () {
     const self = this
@@ -254,7 +270,8 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       //const html = await self.prj.htmlTargetOutput({ proj, target })
-      return res.render('sec/new')
+      const title = 'Create new section'
+      return res.render('sec/new', { title })
     }
   }
 
