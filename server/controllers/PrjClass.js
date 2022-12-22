@@ -621,11 +621,10 @@ const PrjClass = class {
   }
 
 //@@ htmlTargetOutput
-  async htmlTargetOutput (ref = {}) {
+  async htmlTargetOutput ({ target, proj }) {
     const self = this
 
-    const target = _.get(ref, 'target', '')
-    const proj   = _.get(ref, 'proj', self.proj)
+    proj = proj ? proj : self.proj
 
     const htmlDir  = path.join(self.htmlOut, self.rootid, proj, target)
 
