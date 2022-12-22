@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
+const logger = require('morgan')
 
 const fileUpload = require('express-fileupload')
 
@@ -68,7 +69,23 @@ class Alist {
 
     // Create express server
     const srv = express()
-		self.srv = srv
+    self.srv = srv
+
+    // add nunjucks to requires so filters can be
+    // added and the same instance will be used inside the render method
+
+    const viewsDir = path.resolve(__dirname, 'views')
+    cons.requires.nunjucks = nunjucks.configure(viewsDir, {
+      autoescape: true,
+      express   : srv
+    });
+
+    // view engine setup
+    srv.engine('html', cons.nunjucks);
+    srv.set('views', path.resolve(__dirname, 'views'));
+    srv.set('view engine', 'html');
+
+    console.log(path.resolve(__dirname, 'views'));
 
     // srvly middleware
     // Note: Keep this at the top, above routes
@@ -78,18 +95,7 @@ class Alist {
     srv.use(bodyParser.urlencoded({ extended: false }))
     srv.use(bodyParser.json())
     srv.use(fileUpload())
-
-		// add nunjucks to requires so filters can be
-		// added and the same instance will be used inside the render method
-		cons.requires.nunjucks = nunjucks.configure('views', {
-		  autoescape: true,
-		  express   : srv
-		});
-
-    // view engine setup
-    srv.engine('html', cons.nunjucks);
-    srv.set('views', path.join(__dirname, 'views'));
-    srv.set('view engine', 'html');
+    srv.use(logger('dev'))
 
     const cnf = self.cnf || {}
 

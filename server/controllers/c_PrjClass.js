@@ -254,10 +254,7 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       //const html = await self.prj.htmlTargetOutput({ proj, target })
-			res.render('index')
-			//res.render('sec/new')
-
-      //res.redirect(`/prj/target/html?target=${target}`)
+      return res.render('sec/new')
     }
   }
 
