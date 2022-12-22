@@ -73,6 +73,7 @@ class routerFactory {
 
 //@@ Config
     router.get('/prj/config/get', self.c_Prj.jsonConfig())
+    router.get(/\/prj\/config\/get\/(.*)/, self.c_Prj.jsonConfig())
 
 //@@ Target
     router.get('/prj/target/data', self.c_Prj.jsonTargetData())
@@ -86,6 +87,8 @@ class routerFactory {
 
     router.get('/prj/sec/fs/new' , self.c_Prj.jsonSecFsNew())
     router.get('/prj/sec/fs/done' , self.c_Prj.jsonSecFsDone())
+
+    router.get('/prj/sec/new/html' , self.c_Prj.htmlSecNew())
 
     router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
     router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())

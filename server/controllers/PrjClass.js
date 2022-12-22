@@ -680,7 +680,6 @@ const PrjClass = class {
          const secs = secList.map((x,i) => { return x.sec })
 
          const { author } = await self.auth.dbAuth({ author_id })
-         $('body').append($(`<h1>${author.plain}</h1>`))
 
          //<link rel="stylesheet" type="text/css" href="/prj/assets/css/main/jnd_ht.css?target=${target}?proj=${proj}">
 
@@ -704,6 +703,7 @@ const PrjClass = class {
 
          await Promise.all(p_auth)
 
+         $('body').append($(`<h1>${author.plain}</h1>`))
 
        } else if (key == 'date') {
          tableHeader = 'Num Html Pdf Author Title'

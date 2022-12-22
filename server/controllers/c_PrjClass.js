@@ -32,18 +32,19 @@ const c_PrjClass = class {
 
   }
 
-
 //@@ getConfig
-  getConfig(){
+  getConfig({ path } = {}){
     const self = this
 
     const config = self.config
 
-    return {
+    const cnf = {
        proj : self.proj,
        rootid : self.rootid,
        ...config
     }
+    const val = path ? _.get(cnf, path) : cnf
+    return val
   }
 
 //@@ jsonAct
@@ -242,6 +243,24 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlSecNew
+// GET /prj/sec/new/html
+  htmlSecNew () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const proj = _.get(query, 'proj', self.proj)
+
+      //const html = await self.prj.htmlTargetOutput({ proj, target })
+			res.render('index')
+			//res.render('sec/new')
+
+      //res.redirect(`/prj/target/html?target=${target}`)
+    }
+  }
+
 //@@ htmlSecView
   htmlSecView () {
     const self = this
@@ -384,7 +403,9 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
-      res.send(self.getConfig())
+      const asset = req.params[0]
+      const path = asset ? asset.split('/') : ''
+      res.send(self.getConfig({ path }))
     }
   }
 

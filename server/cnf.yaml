@@ -15,23 +15,38 @@ prj:
     proj: letopis
     rootid : p_sr
     config:
-       bld : 
+       bld :
           cols : 'bid buuid plan duration target status'
-       ui : 
-          tab : {}
-          page : 
-             'auth' : 
+       ui :
+          tab :
+            saved:
+              iframe:
+                sandbox : ''
+                width : ''
+                height : ''
+              radioList:
+              - { id : 'orig', name : 'Orig' }
+              - { id : 'view', name : 'View' }
+              - { id : 'unwrap', name : 'Unwrap' }
+              - { id : 'parse', name : 'Parse' }
+              - { id : 'content', name : 'Content' }
+              - { id : 'article', name : 'Article' }
+              - { id : 'comments', name : 'Comments' }
+              - { id : 'cmttex', name : 'Comments (TeX)' }
+
+          page :
+             'auth' :
                 tabs : [ 'html' ]
-             
-             'sec@date' : 
+
+             'sec@date' :
                 tabs : [ 'html' ]
-             
-             'sec@post' : 
-                tabs : 
+
+             'sec@post' :
+                tabs :
                 - 'html'
                 - 'pics'
                 - 'fs'
-                #- 'saved'
+                - 'saved'
                 - 'pdf'
                 - 'tex'
                 - 'log'
