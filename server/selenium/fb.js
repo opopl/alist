@@ -8,7 +8,7 @@ const express = require('express');
 const app = express();
 
 app.get('/', function (req, res) {
-	res.send("Welocme to GeeksforGeeks!");
+  res.send("Welocme to GeeksforGeeks!");
 });
 
 const path = require('path')
@@ -22,41 +22,50 @@ const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const user = process.env.FB_LOGIN
 const pass = process.env.FB_PASS
 
+var webdriver = require('selenium-webdriver');
+var firefox   = require('selenium-webdriver/firefox');
+
+//var profile   = new firefox.Profile();
+//profile.setAcceptUntrustedCerts(true);
+//profile.setAssumeUntrustedCertIssuer(false); // `true` didn't work too
+//var browser   = new firefox.Driver(new firefox.Options().setProfile(profile));
+
 async function run() {
-	let driver = await new Builder()
-			.forBrowser(Browser.FIREFOX)
-			.setFirefoxOptions({ 'geo.enabled' : false })
-			.build()
+  let driver = await new Builder()
+      .forBrowser(Browser.FIREFOX)
+      //.setPreference({ 'geo.enabled' : false })
+      //.setFirefoxOptions({ geoEnabled : false })
+      .build()
 
   try {
-		const file = 'cookies.json'
-		const jsonData = await readFile(file,'utf8')
-		const data = JSON.parse(jsonData)
-		const cookieJoin = data.cookie
-		const cookieList = cookieJoin.split(';')
+    const file = 'cookies.json'
+    const jsonData = await readFile(file,'utf8')
+    const data = JSON.parse(jsonData)
+    const cookieJoin = data.cookie
+    const cookieList = cookieJoin.split(';')
 
-		const cookies = {}
-		cookieList.forEach((x) => {
-			const [ name, value ] = x.split('=')
-			cookies[name] = value
-		})
-		console.log(cookies);
+    const cookies = {}
+    cookieList.forEach((x) => {
+      const [ name, value ] = x.split('=')
+      cookies[name] = value
+    })
+    console.log(cookies);
 
-		//await driver.get('https://m.facebook.com');
-		//for (let [name, value] of Object.entries(cookies)) {
-			//driver.manage().addCookie({ name, value })
-		//}
+    //await driver.get('https://m.facebook.com');
+    //for (let [name, value] of Object.entries(cookies)) {
+      //driver.manage().addCookie({ name, value })
+    //}
 
-		app.listen(5000)
+    app.listen(5000)
 
     //await driver.findElement(By.name('q')).sendKeys('webdriver', Key.RETURN);
     //await driver.wait(until.titleIs('webdriver - Google Search'), 1000);
-		//
+    //
     //const username = await driver.findElement(By.xpath("//input[@name='email']"));
     //username.sendKeys(user);
 
-		//const cookies = await driver.manage().getCookies()
-		//while(1){}
+    //const cookies = await driver.manage().getCookies()
+    //while(1){}
   } finally {
     //await driver.quit();
   }
