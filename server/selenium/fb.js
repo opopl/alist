@@ -24,6 +24,7 @@ const pass = process.env.FB_PASS
 const firefox = require("selenium-webdriver/firefox");
 
 let driver, cookies = {}
+let originalWindow
 
 const options = new firefox.Options()
   .setPreference('geo.enabled', false)
@@ -42,7 +43,7 @@ app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'html');
 
 app.get('/', function (req, res) {
-  res.send("Welcome to GeeksforGeeks!");
+  res.render('index');
 });
 
 app.get('/search', async (req, res) => {
@@ -87,6 +88,9 @@ async function run() {
     app.listen(5000)
 
     await driver.get('http://localhost:5000');
+
+    originalWindow = await driver.getWindowHandle()
+
     await driver.switchTo().newWindow('tab');
   } finally {
     //await driver.quit();
