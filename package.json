@@ -55,6 +55,7 @@
     "consolidate": "^0.16.0",
     "cors": "2.8.5",
     "crass": "^0.12.3",
+    "cucumber": "^6.0.7",
     "express": "4.17.1",
     "express-fileupload": "^1.4.0",
     "findit": "^2.0.0",

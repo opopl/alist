@@ -22,6 +22,11 @@ const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
 
 const argv = require('yargs').argv;
 
+/*const{ Builder, By, Key, until, xpath } = require("selenium-webdriver");*/
+//const{ Given, When, Then } = require('cucumber');
+//const { get } = require("selenium-webdriver/http");
+/*const firefoxDriver = new Builder().forBrowser("firefox").build();*/
+
 // Import routes
 const { routerFactory } = require('./route')
 
@@ -55,6 +60,7 @@ class Alist {
     self.c_Auth = new c_AuthClass(optsAuth)
     self.c_Img  = new c_ImgClass(optsImg)
     self.c_Prj  = new c_PrjClass(optsPrj)
+    //self.firefoxDriver  = firefoxDriver 
 
     return self
   }
