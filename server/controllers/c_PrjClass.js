@@ -18,6 +18,7 @@ const fs = require('fs')
 const fse = require('fs-extra')
 
 const select = db.sql.select
+const distinct = db.sql.distinct
 const insert = db.sql.insert
 const update = db.sql.update
 
@@ -62,6 +63,23 @@ const c_PrjClass = class {
       const stat = await self.prj.act({ act, proj, cnf, target })
 
       res.json(stat)
+    }
+  }
+
+//@@ jsonAuthAll
+  jsonAuthAll () {
+    const self = this
+
+    return async (req, res) => {
+      const q = select('author_id')
+              .distinct('author_id')
+              .from('_info_projs_author_id')
+              .orderBy('author_id')
+              .toString()
+
+      var data = await dbProc.all(self.dbc, q, [])
+      data = data.map((x) => { return x.author_id })
+      res.json(data)
     }
   }
 
@@ -423,8 +441,45 @@ const c_PrjClass = class {
     }
   }
 
-//@@ htmlAuthView
-  htmlAuthView  ()  {
+//@@ tmplAuthSecs
+// GET /prj/auth/secs/tmpl
+  tmplAuthSecs ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const author_id = _.get(query, 'id', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const q = `
+        SELECT * FROM projs
+        INNER JOIN _info_projs_author_id AS info
+        ON projs.file = info.file
+        WHERE info.author_id = ?
+      `
+      const p = [author_id]
+
+      const { author } = await self.prj.auth.dbAuth({ author_id })
+
+      const secRows = await dbProc.all(self.dbc, q, p)
+      const _get = _.get
+      const cols = [ 'date', 'title' ]
+
+      return res.render('auth/secs.html',{ secRows, cols, author, _get })
+    }
+  }
+
+//@@ tmplAuthInfo
+  tmplAuthInfo ()  {
+    const self = this
+
+    return async (req, res) => {
+    }
+  }
+
+//@@ htmlAuthSecs
+  htmlAuthSecs ()  {
     const self = this
 
     return async (req, res) => {

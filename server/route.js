@@ -114,7 +114,11 @@ class routerFactory {
     router.get(/^\/prj\/sec\/asset\/(.*)$/, self.c_Prj.secAsset())
 
 //@@ Authors
-    router.get('/prj/auth/html', self.c_Prj.htmlAuthView())
+    router.get('/prj/auth/html', self.c_Prj.htmlAuthSecs())
+    router.get('/prj/auth/all', self.c_Prj.jsonAuthAll())
+
+    router.get('/prj/auth/secs/tmpl', self.c_Prj.tmplAuthSecs())
+    router.get('/prj/auth/info/tmpl', self.c_Prj.tmplAuthInfo())
 
 //@@ Builds
     router.get('/prj/bld/data', self.c_Prj.jsonBldData())

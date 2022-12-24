@@ -121,7 +121,6 @@ class routerFactory {
             const eh =  await elem.getAttribute('outerHTML')
             html = html + '\n' + eh
           }
-          //console.log(html);
           html = pretty(html)
         }
       }catch(e){

@@ -1,0 +1,33 @@
+
+{% extends "layout.html" %} 
+
+{% block content %}
+  <h1>{{author.plain}}</h1>
+
+  <table id="table_auth_secs" border="0">
+    <thead>
+      {% for col in cols %}
+        <!--<th>{{ _get(header, col) }}</th>-->
+        <th>{{ col }}</th>
+      {% endfor %}
+    </thead>
+    <tbody>
+      {% for row in secRows %}
+      <tr>
+        {% for col in cols %}
+          {% if col == 'date' %}
+            {% set date = _get(row, col) %}
+            {% set href = "/prj/sec/html?sec=" + date %}
+            <td class="prj-sec-{{ col }}" ><a href="{{ href }}">{{ date }}</a></td>
+          {% elif col == 'title' %}
+          {% else %}
+            <td class="prj-sec-{{ col }}" >{{ _get(row, col) }}</td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+<!---->
+{% endblock %}
