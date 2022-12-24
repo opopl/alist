@@ -25,6 +25,10 @@ prj:
              - title
              - sec
              - tags
+             header:
+               _html : 'html'
+               _pdf : 'pdf'
+               _check : ''
 
        bld :
           cols : 'bid buuid plan duration target status'
@@ -46,6 +50,9 @@ prj:
               - { id : 'cmttex', name : 'Comments (TeX)' }
 
           page :
+             'tag' :
+                tabs : [ 'html' ]
+
              'auth' :
                 tabs : [ 'html' ]
 

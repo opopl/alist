@@ -4,7 +4,7 @@
 {% block content %}
   <h1>{{author.plain}}</h1>
 
-  <table id="table_auth_secs" border="0" class="prj-link-table">
+  <table class="prj-link-table">
     <thead>
       {% for col in cols %}
         {% if col == '_check' %}
@@ -48,7 +48,7 @@
               {% else %}
                 <select>
                    {% for tag in tags %}
-                      {% set hrefTag = "/prj/tag/secs/html?tag=" + tag %}
+                      {% set hrefTag = "/prj/tag/html?tag=" + tag %}
                       <option class="prj-link" value="{{ tag }}" href="{{ hrefTag }}">
                         {{ tag }}
                       </option>

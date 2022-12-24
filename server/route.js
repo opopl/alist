@@ -121,6 +121,9 @@ class routerFactory {
     router.get('/prj/auth/secs/tmpl', self.c_Prj.tmplAuthSecs())
     router.get('/prj/auth/info/tmpl', self.c_Prj.tmplAuthInfo())
 
+//@@ Tags
+    router.get('/prj/tag/html', self.c_Prj.htmlTagSecs())
+
 //@@ Builds
     router.get('/prj/bld/data', self.c_Prj.jsonBldData())
 

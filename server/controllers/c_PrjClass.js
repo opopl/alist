@@ -441,6 +441,29 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlTagSecs
+// GET /prj/tag/html
+  htmlTagSecs ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const tag = _.get(query, 'tag', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const q = ` SELECT p.* FROM _info_projs_tags AS it
+                   INNER JOIN projs AS p 
+                   ON it.file = p.file
+                   WHERE it.tag = ? AND proj = ?
+                 `
+      const p = [ tag, proj ]
+      const secRows = await dbProc.all(self.dbc, q, p)
+      console.log({ secRows });
+
+    }
+  }
+
 //@@ tmplAuthSecs
 // GET /prj/auth/secs/tmpl
   tmplAuthSecs ()  {
@@ -466,11 +489,7 @@ const c_PrjClass = class {
       const secRows = await dbProc.all(self.dbc, q, p)
       const _get = _.get
       const cols = self.getConfig({ path : 'methods.tmplAuthSecs.cols' }) || []
-      const header = {
-        _html : 'html',
-        _pdf : 'pdf',
-        _check : ''
-      }
+      const header = self.getConfig({ path : 'methods.tmplAuthSecs.header' }) || {}
 
       for(let row of secRows ){
         const sec = row.sec
