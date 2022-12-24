@@ -89,6 +89,22 @@ function AppUi(){
             });
         }
     )
+    .register_on_enter('#input_selector',
+        function(e){
+            const selector = $(this).val();
+            $.ajax({
+              method  : 'POST',
+              data    : { selector },
+              dataType : 'json',
+              url     : `/page/src`,
+              success : function(data){
+                const src = data.src
+                $('#page_src').text(src)
+              },
+              error   : function(data){},
+            });
+        }
+    )
 
     return this
   }

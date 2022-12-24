@@ -152,6 +152,3 @@ new Scraper().run()
     //password.sendKeys(pass, Key.ENTER);
 /*});*/
 
-//*[contains(@class,"story_body_container")]/div//p
-//*[data-sigil="comment"]
-

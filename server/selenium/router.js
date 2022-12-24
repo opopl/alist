@@ -104,11 +104,16 @@ class routerFactory {
 
     router.post('/page/src', async (req, res) => {
       const xpath = req.body.xpath
+      const selector = req.body.selector
 
       var elems, html = '', ok = true
       try {
         //elem = await driver.wait(until.elementLocated(By.xpath(xpath)), 1000)
-        elems = await driver.findElements(By.xpath(xpath))
+        if (xpath) {
+          elems = await driver.findElements(By.xpath(xpath))
+        }else if(selector){
+          elems = await driver.findElements(By.css(selector))
+        }
         ok = ok && elems
 
         if (elems) {
