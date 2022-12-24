@@ -10,7 +10,7 @@
         {% if col == '_check' %}
           <th><input type="checkbox" id="ckb_secs_all" value="all" /></th>
         {% else %}
-	        <th>{{ _get(header, col, col) }}</th>
+          <th>{{ _get(header, col, col) }}</th>
         {% endif %}
         <!--<th>{{ col }}</th>-->
       {% endfor %}
@@ -41,20 +41,20 @@
 
           {% elif col == 'tags' %}
             <td class="prj-sec-{{ col }}" >
-	            {% set tags = _get(row, col, []) %}
-	            {% if tags.length == 0 %}
-	            {% elif tags.length == 1 %}
+              {% set tags = _get(row, col, []) %}
+              {% if tags.length == 0 %}
+              {% elif tags.length == 1 %}
                 {{ tags[0] }}
-	            {% else %}
+              {% else %}
                 <select>
                    {% for tag in tags %}
-	                    {% set hrefTag = "/prj/tag/secs/html?tag=" + tag %}
-	                    <option class="prj-link" value="{{ tag }}" href="{{ hrefTag }}">
-	                      {{ tag }}
-	                    </option>
+                      {% set hrefTag = "/prj/tag/secs/html?tag=" + tag %}
+                      <option class="prj-link" value="{{ tag }}" href="{{ hrefTag }}">
+                        {{ tag }}
+                      </option>
                    {% endfor %}
                 </select>
-	            {% endif %}
+              {% endif %}
             </td>
 
           {% else %}

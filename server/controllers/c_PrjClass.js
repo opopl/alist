@@ -475,15 +475,22 @@ const c_PrjClass = class {
       for(let row of secRows ){
         const sec = row.sec
         const file = row.file
+
+        const target = `_buf.${sec}`
+        const htmlFile = self.prj.htmlFileTarget({ proj, target })
+        const htmlEx  = fs.existsSync(htmlFile) ? 1 : 0
+        const pdfFile = self.prj.pdfFileTarget({ proj, target })
+        const pdfEx  = fs.existsSync(pdfFile) ? 1 : 0
+
         row._pdf = {
             href : `/prj/sec/html?sec=${sec}&tab=pdf`,
             target_ext : 'pdf',
-            output_ex : 1,
+            output_ex : pdfEx,
         }
         row._html = {
             href : `/prj/sec/html?sec=${sec}`,
             target_ext : 'html',
-            output_ex : 1,
+            output_ex : htmlEx,
         }
 
         const qt = ` SELECT tag FROM _info_projs_tags AS it
