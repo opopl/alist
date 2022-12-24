@@ -70,6 +70,7 @@
     "morgan": "^1.10.0",
     "nunjucks": "^3.2.3",
     "parse5": "^7.1.2",
+    "pretty": "^2.0.0",
     "promised-sqlite3": "^1.2.0",
     "react": "18.0.0",
     "react-autocomplete-input": "^1.0.19",
@@ -79,6 +80,7 @@
     "selenium-webdriver": "^4.7.1",
     "sql-bricks": "^3.0.0",
     "sql-bricks-sqlite": "^1.0.0",
+    "webpack-jquery-ui": "^2.0.1",
     "xregexp": "^5.1.1",
     "yargs": "^17.6.2"
   },
@@ -90,6 +92,15 @@
     "nodemon": "2.0.3",
     "react-scripts": "3.4.1",
     "sqlite3": "4.1.1",
-    "typescript": "3.8.3"
+    "typescript": "3.8.3",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "sass": "^1.56.2",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.20.1",
+    "webpack-cli": "^4.5.0"
   }
 }
