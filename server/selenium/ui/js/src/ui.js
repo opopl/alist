@@ -27,6 +27,17 @@ function AppUi(){
 
   const app = this
 
+  $('#btn_facebook').on('click',function(){
+     $.ajax({
+       method  : 'GET',
+       data    : {},
+       dataType : 'json',
+       url     : `/goto/fb`,
+       success : function(data){},
+       error   : function(data){},
+     });
+  })
+
   this
     .register_on_enter('#input_go',function(e){
         const url = $(this).val();
@@ -43,7 +54,6 @@ function AppUi(){
           success : function(data){},
           error   : function(data){},
         });
-
     })
     .register_on_enter('#input_search',
         function(e){

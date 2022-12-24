@@ -98,6 +98,8 @@ class routerFactory {
       for (let [name, value] of Object.entries(cookies)) {
         await driver.manage().addCookie({ name, value })
       }
+
+      return res.status(200)
     });
 
     router.post('/page/src', async (req, res) => {

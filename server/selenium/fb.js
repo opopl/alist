@@ -151,3 +151,7 @@ new Scraper().run()
     //const password = await driver.findElement(By.xpath("//input[@name='pass']"));
     //password.sendKeys(pass, Key.ENTER);
 /*});*/
+
+//*[contains(@class,"story_body_container")]/div//p
+//*[data-sigil="comment"]
+
