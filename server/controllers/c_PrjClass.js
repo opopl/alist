@@ -464,9 +464,16 @@ const c_PrjClass = class {
 
       const secRows = await dbProc.all(self.dbc, q, p)
       const _get = _.get
-      const cols = [ 'date', 'title' ]
+      const cols = [ 'html', 'pdf', 'date', 'title' ]
+      const header = {}
 
-      return res.render('auth/secs.html',{ secRows, cols, author, _get })
+      _.map(secRows, (row) => {
+        const sec = row.sec
+        row.pdf = `/prj/sec/pdf?sec=${sec}`
+        row.html = `/prj/sec/html?sec=${sec}`
+      })
+
+      return res.render('auth/secs.html',{ secRows, header, cols, author, _get })
     }
   }
 

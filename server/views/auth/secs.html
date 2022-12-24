@@ -7,8 +7,8 @@
   <table id="table_auth_secs" border="0">
     <thead>
       {% for col in cols %}
-        <!--<th>{{ _get(header, col) }}</th>-->
-        <th>{{ col }}</th>
+        <th>{{ _get(header, col, col) }}</th>
+        <!--<th>{{ col }}</th>-->
       {% endfor %}
     </thead>
     <tbody>
@@ -19,7 +19,11 @@
             {% set date = _get(row, col) %}
             {% set href = "/prj/sec/html?sec=" + date %}
             <td class="prj-sec-{{ col }}" ><a href="{{ href }}">{{ date }}</a></td>
-          {% elif col == 'title' %}
+
+          {% elif ['html','pdf'].includes(col) %}
+            {% set href = _get(row, col) %}
+            <td class="prj-sec-{{ col }}" > <a href="{{ href }}">{{ col }}</a> </td>
+
           {% else %}
             <td class="prj-sec-{{ col }}" >{{ _get(row, col) }}</td>
           {% endif %}
