@@ -28,21 +28,55 @@ function AppUi(){
   const app = this
 
   this
-    .register_on_enter('#input_go',function(e){})
+    .register_on_enter('#input_go',function(e){
+        const url = $(this).val();
+        var uri
+        try { uri = new URL(url) }catch(e){}
+        $(this).val('');
+        if (!uri) { return }
+
+        $.ajax({
+          method  : 'POST',
+          data    : { url },
+          dataType : 'json',
+          url     : `/goto`,
+          success : function(data){},
+          error   : function(data){},
+        });
+
+    })
     .register_on_enter('#input_search',
         function(e){
             const word = $(this).val();
-						const url = `https://duckduckgo.com/?q=${word}`
-						$.ajax({
-						  method  : 'POST',
-						  data    : { url },
-         		  dataType : 'json',
-						  url     : `/goto`,
-						  success : function(data){
-						  },
-						  error   : function(data){},
-						});
+            const url = `https://duckduckgo.com/?q=${word}`
+            $.ajax({
+              method  : 'POST',
+              data    : { url },
+              dataType : 'json',
+              url     : `/goto`,
+              success : function(data){
+                //$('#input_go').val(url)
+                $('#page_url').attr({ href : url }).text(url)
+              },
+              error   : function(data){},
+            });
 
+        }
+    )
+    .register_on_enter('#input_xpath',
+        function(e){
+            const xpath = $(this).val();
+            $.ajax({
+              method  : 'POST',
+              data    : { xpath },
+              dataType : 'json',
+              url     : `/page/src`,
+              success : function(data){
+                const src = data.src
+                $('#page_src').text(src)
+              },
+              error   : function(data){},
+            });
         }
     )
 

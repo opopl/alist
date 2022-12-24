@@ -7,20 +7,25 @@
   width: 50%;
 }
 
+table.form  {
+  width: 100%;
+}
+
 table tr {
   padding: .5em;
 }
 
 table input {
   padding: .5em;
+  width: 100%;
 }
 
 table .col-1 {
-  width: 20%;
+  width: 10%;
 }
 
 table .col-2 {
-  width: 50%;
+  width: 40%;
 }
 
 table .col-3 {

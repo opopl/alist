@@ -3,8 +3,17 @@ const express = require('express')
 const _ = require('lodash')
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 
+const pretty = require('pretty')
+
 const path = require('path')
 const fs = require('fs')
+const axios = require('axios')
+
+axios.defaults.headers = {
+  'Cache-Control': 'no-cache',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+};
 
 //@@ _class.routerFactory
 class routerFactory {
@@ -60,12 +69,27 @@ class routerFactory {
     })
 
     router.post('/goto', async (req, res) => {
-      console.log(req.body);
+      const thisHost = req.get('host')
+      const thisProto = req.protocol
 
       const url = req.body.url
       await driver.get(url);
 
-      return res.status(200)
+ /*     const opts =  {*/
+        //headers: {
+          //'Cache-Control': 'no-cache',
+          //'Pragma': 'no-cache',
+          //'Expires': '0',
+        //},
+      /*}*/
+
+      axios.get(`${thisProto}://${thisHost}/page/src`).then((data) => {
+        const src = data.src
+        res.status(200).send({ url, src })
+      }).catch((err) => {
+        console.log(err.response.status);
+      })
+
     })
 
     router.get('/goto/fb', async (req, res) => {
@@ -76,9 +100,39 @@ class routerFactory {
       }
     });
 
+    router.post('/page/src', async (req, res) => {
+      const xpath = req.body.xpath
+
+      var elems, html = '', ok = true
+      try {
+        //elem = await driver.wait(until.elementLocated(By.xpath(xpath)), 1000)
+        elems = await driver.findElements(By.xpath(xpath))
+        ok = ok && elems
+
+        if (elems) {
+          for(var elem of elems){
+            const eh =  await elem.getAttribute('outerHTML')
+            html = html + '\n' + eh
+          }
+          //console.log(html);
+          html = pretty(html)
+        }
+      }catch(e){
+        ok = false
+        console.log(e);
+      }
+
+      ok = ok && html
+      if (ok) {
+        return res.send({ src : html })
+      }else{
+        return res.status(404).send({ msg : 'not found by xpath' })
+      }
+    })
+
     router.get('/page/src', async (req, res) => {
       const pageSource = await driver.wait(until.elementLocated(By.css('body')), 1000).getAttribute('innerHTML');
-      return res.send(pageSource)
+      return res.status(200).send({ src : pageSource })
     })
 
     return router
