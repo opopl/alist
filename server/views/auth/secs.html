@@ -7,22 +7,49 @@
   <table id="table_auth_secs" border="0">
     <thead>
       {% for col in cols %}
-        <th>{{ _get(header, col, col) }}</th>
+        {% if col == '_check' %}
+          <th><input type="checkbox" id="ckb_secs_all" value="all" /></th>
+        {% else %}
+	        <th>{{ _get(header, col, col) }}</th>
+        {% endif %}
         <!--<th>{{ col }}</th>-->
       {% endfor %}
     </thead>
     <tbody>
       {% for row in secRows %}
       <tr>
+        {% set sec = row.sec %}
+
         {% for col in cols %}
           {% if col == 'date' %}
             {% set date = _get(row, col) %}
             {% set href = "/prj/sec/html?sec=" + date %}
             <td class="prj-sec-{{ col }}" ><a href="{{ href }}">{{ date }}</a></td>
 
-          {% elif ['html','pdf'].includes(col) %}
+          {% elif [ '_html', '_pdf' ].includes(col) %}
             {% set href = _get(row, col) %}
-            <td class="prj-sec-{{ col }}" > <a href="{{ href }}">{{ col }}</a> </td>
+            <td class="prj-sec-{{ col }}" > <button href="{{ href }}">{{ _get(header, col, col) }}</button> </td>
+
+          {% elif col == '_check' %}
+            <td class="prj-sec-{{ col }}" ><input type="checkbox" value="{{ sec }}" /></td>
+
+          {% elif col == 'tags' %}
+            <td class="prj-sec-{{ col }}" >
+	            {% set tags = _get(row, col, []) %}
+	            {% if tags.length == 0 %}
+	            {% elif tags.length == 1 %}
+                {{ tags[0] }}
+	            {% else %}
+                <select>
+                   {% for tag in tags %}
+	                    {% set hrefTag = "/prj/tag/secs/html?tag=" + tag %}
+	                    <option class="prj-link" value="{{ tag }}" href="{{ hrefTag }}">
+	                      {{ tag }}
+	                    </option>
+                   {% endfor %}
+                </select>
+	            {% endif %}
+            </td>
 
           {% else %}
             <td class="prj-sec-{{ col }}" >{{ _get(row, col) }}</td>

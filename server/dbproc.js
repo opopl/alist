@@ -6,6 +6,11 @@
 //
 
 
+//@@ getOne
+//exports.getOne = async function(db, query, params) {
+	//const rw = await get(db, query, params)
+//}
+
 
 //@@ get
 exports.get = function(db, query, params) {

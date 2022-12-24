@@ -15,6 +15,17 @@ prj:
     proj: letopis
     rootid : p_sr
     config:
+       methods:
+          tmplAuthSecs:
+             cols: 
+             - _check
+             - _html
+             - _pdf
+             - date
+             - title
+             - sec
+             - tags
+
        bld :
           cols : 'bid buuid plan duration target status'
        ui :

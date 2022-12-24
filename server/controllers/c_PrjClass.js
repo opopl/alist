@@ -453,25 +453,45 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       const q = `
-        SELECT * FROM projs
-        INNER JOIN _info_projs_author_id AS info
-        ON projs.file = info.file
-        WHERE info.author_id = ?
+        SELECT * FROM projs AS p
+        INNER JOIN _info_projs_author_id AS ia
+        ON p.file = ia.file
+        WHERE ia.author_id = ? AND p.proj = ?
       `
-      const p = [author_id]
+
+      const p = [ author_id, proj ]
 
       const { author } = await self.prj.auth.dbAuth({ author_id })
 
       const secRows = await dbProc.all(self.dbc, q, p)
       const _get = _.get
-      const cols = [ 'html', 'pdf', 'date', 'title' ]
-      const header = {}
+      const cols = self.getConfig({ path : 'methods.tmplAuthSecs.cols' }) || []
+      const header = {
+        _html : 'html',
+        _pdf : 'pdf',
+        _check : ''
+      }
 
-      _.map(secRows, (row) => {
+      for(let row of secRows ){
         const sec = row.sec
-        row.pdf = `/prj/sec/pdf?sec=${sec}`
-        row.html = `/prj/sec/html?sec=${sec}`
-      })
+        const file = row.file
+        row._pdf = `/prj/sec/pdf?sec=${sec}`
+        row._html = `/prj/sec/html?sec=${sec}`
+
+	      const qt = ` SELECT tag FROM _info_projs_tags AS it
+	                   WHERE it.file = ?
+	                  `
+        const pt = [ file ] 
+        const tags = (await dbProc.all(self.dbc, qt, pt)).map((x) => { return x.tag })
+        row.tags = tags || []
+        console.log(tags);
+      }
+
+      //_.map(secRows, (row) => {
+        //const sec = row.sec
+        //row._pdf = `/prj/sec/pdf?sec=${sec}`
+        //row._html = `/prj/sec/html?sec=${sec}`
+      //})
 
       return res.render('auth/secs.html',{ secRows, header, cols, author, _get })
     }
