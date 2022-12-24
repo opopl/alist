@@ -1,10 +1,10 @@
 
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 
 {% block content %}
   <h1>{{author.plain}}</h1>
 
-  <table id="table_auth_secs" border="0">
+  <table id="table_auth_secs" border="0" class="prj-link-table">
     <thead>
       {% for col in cols %}
         {% if col == '_check' %}
@@ -27,8 +27,14 @@
             <td class="prj-sec-{{ col }}" ><a href="{{ href }}">{{ date }}</a></td>
 
           {% elif [ '_html', '_pdf' ].includes(col) %}
-            {% set href = _get(row, col) %}
-            <td class="prj-sec-{{ col }}" > <button href="{{ href }}">{{ _get(header, col, col) }}</button> </td>
+            {% set data = _get(row, col) %}
+            {% set href = _get(data, 'href') %}
+            {% set output_ex = _get(data, 'output_ex') %}
+            <td class="prj-sec-{{ col }}" >
+               <button class="prj-link" href="{{ href }}" type="sec" output_ex={{ output_ex }} >
+                 {{ _get(header, col, col) }}
+               </button>
+            </td>
 
           {% elif col == '_check' %}
             <td class="prj-sec-{{ col }}" ><input type="checkbox" value="{{ sec }}" /></td>

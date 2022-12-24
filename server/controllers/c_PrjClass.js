@@ -475,16 +475,23 @@ const c_PrjClass = class {
       for(let row of secRows ){
         const sec = row.sec
         const file = row.file
-        row._pdf = `/prj/sec/pdf?sec=${sec}`
-        row._html = `/prj/sec/html?sec=${sec}`
+        row._pdf = {
+            href : `/prj/sec/html?sec=${sec}&tab=pdf`,
+            target_ext : 'pdf',
+            output_ex : 1,
+        }
+        row._html = {
+            href : `/prj/sec/html?sec=${sec}`,
+            target_ext : 'html',
+            output_ex : 1,
+        }
 
-	      const qt = ` SELECT tag FROM _info_projs_tags AS it
-	                   WHERE it.file = ?
-	                  `
-        const pt = [ file ] 
+        const qt = ` SELECT tag FROM _info_projs_tags AS it
+                     WHERE it.file = ?
+                    `
+        const pt = [ file ]
         const tags = (await dbProc.all(self.dbc, qt, pt)).map((x) => { return x.tag })
         row.tags = tags || []
-        console.log(tags);
       }
 
       //_.map(secRows, (row) => {
