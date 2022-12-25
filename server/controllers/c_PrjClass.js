@@ -491,7 +491,6 @@ const c_PrjClass = class {
         ON p.file = ia.file
         WHERE ia.author_id = ? AND p.proj = ?
       `
-
       const p = [ author_id, proj ]
 
       const { author } = await self.prj.auth.dbAuth({ author_id })

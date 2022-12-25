@@ -22,9 +22,9 @@ prj:
              - _html
              - _pdf
              - date
+             - tags
              - title
              - sec
-             - tags
              header:
                _html : 'html'
                _pdf : 'pdf'
@@ -41,6 +41,8 @@ prj:
                - _html
                - _pdf
                - date
+               - author_id
+               - tags
                - title
                - sec
              header:
