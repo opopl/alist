@@ -1,4 +1,13 @@
 
+
+{% macro authHref(author={}) %}
+/prj/auth/html?id={{ author.id }}
+{% endmacro %}
+
+{% macro authLink(author={}) %}
+<a class="prj-link" href="{{ authHref(author) }}">{{ author.plain }}</a>
+{% endmacro %}
+
 {% macro tRow(row = {}, cols=[], header={}) %}
 <tr>
   {% set sec = row.sec %}
@@ -21,6 +30,24 @@
 
     {% elif col == '_check' %}
       <td class="prj-sec-{{ col }}" ><input type="checkbox" value="{{ sec }}" /></td>
+
+    {% elif col == 'authors' %}
+      <td class="prj-sec-{{ col }}" >
+        {% set authors = _get(row, col, []) %}
+        {% if authors.length == 0 %}
+        {% elif authors.length == 1 %}
+          {% set author = authors[0] %}
+          {{ authLink(author) }} 
+        {% else %}
+          <select>
+             {% for author in authors %}
+                <option class="prj-link" value="{{ author.id }}" href="{{ authHref(author) }}">
+                  {{ author.plain }}
+                </option>
+             {% endfor %}
+          </select>
+        {% endif %}
+      </td>
 
     {% elif col == 'tags' %}
       <td class="prj-sec-{{ col }}" >

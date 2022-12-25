@@ -553,8 +553,9 @@ const PrjClass = class {
      const tags = (await dbProc.all(self.dbc, qt, pf)).map((x) => { return x.tag })
      row.tags = tags || []
 
-     const author_id = (await dbProc.all(self.dbc, qa, pf)).map((x) => { return x.author_id })
-     row.author_id = author_id || []
+     const author_ids = (await dbProc.all(self.dbc, qa, pf)).map((x) => { return x.author_id })
+     const { authors } = await self.auth.dbAuth({ author_ids })
+     row.authors = authors || []
 
      return self
   }

@@ -466,7 +466,7 @@ const c_PrjClass = class {
                  `
       const p = [ tag, proj ]
       const secRows = await dbProc.all(self.dbc, q, p)
-      for(let row of secRows ){
+      for(let row of secRows){
         await self.prj.secRowUpdate({ row })
       }
 

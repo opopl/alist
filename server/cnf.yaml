@@ -41,7 +41,7 @@ prj:
                - _html
                - _pdf
                - date
-               - author_id
+               - authors
                - tags
                - title
                - sec
