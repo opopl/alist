@@ -3,8 +3,8 @@
 {% import "import/sec_list_table.html" as slt with context %}
 
 {% block content %}
-  <h1>{{date}}</h1>
+  <h1>{{pageTitle}}</h1>
   {{ slt.table(secRows, cols, header) }}
- 
+
 <!---->
 {% endblock %}

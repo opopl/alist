@@ -289,7 +289,6 @@ const c_PrjClass = class {
 
       const proj = _.get(query, 'proj', self.proj)
 
-      //const html = await self.prj.htmlTargetOutput({ proj, target })
       const title = 'Create new section'
       return res.render('sec/new', { title })
     }
@@ -305,12 +304,33 @@ const c_PrjClass = class {
       const sec = _.get(query, 'sec', '')
       const proj = _.get(query, 'proj', self.proj)
 
-      const target = '_buf.' + sec
+      let m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/.exec(sec)
+      if (m) {
+         const sd = await self.prj.dbSecData({ proj, sec })
+         const secRows = []
 
+         const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
+         const pageTitle = `${day}-${month}-${year}`
+
+         const cols = self.getConfig({ path : 'methods.htmlSecView.cols' }) || []
+         const header = self.getConfig({ path : 'methods.htmlSecView.header' }) || {}
+
+         if (sd) {
+           const children = sd.children
+
+           for(let child of children){
+             const row = await self.prj.dbSecData({ sec : child, proj })
+             await self.prj.secRowUpdate({ row })
+             secRows.push(row)
+           }
+         }
+         return res.render('sec/date.html',{ secRows, header, cols, pageTitle, _get })
+      }
+
+      const target = `_buf.${sec}`
       const html = await self.prj.htmlTargetOutput({ proj, target })
-      res.send(html)
+      return res.send(html)
 
-      //res.redirect(`/prj/target/html?target=${target}`)
     }
   }
 
@@ -460,7 +480,7 @@ const c_PrjClass = class {
 
       const p_cols = cols_db.map((x) => { return `p.${x}` }).join(',')
       const q = ` SELECT ${p_cols} FROM _info_projs_tags AS it
-                   INNER JOIN projs AS p 
+                   INNER JOIN projs AS p
                    ON it.file = p.file
                    WHERE it.tag = ? AND proj = ?
                  `
