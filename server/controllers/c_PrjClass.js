@@ -22,6 +22,8 @@ const distinct = db.sql.distinct
 const insert = db.sql.insert
 const update = db.sql.update
 
+const _get = _.get
+
 const c_PrjClass = class {
 //@@ new
   constructor(ref={}){
@@ -449,24 +451,32 @@ const c_PrjClass = class {
     return async (req, res) => {
       const query = req.query
 
+      const cols_db = self.getConfig({ path : 'methods.htmlTagSecs.cols.db' }) || []
+      const cols = self.getConfig({ path : 'methods.htmlTagSecs.cols.html' }) || []
+      const header = self.getConfig({ path : 'methods.htmlTagSecs.header' }) || {}
+
       const tag = _.get(query, 'tag', '')
       const proj = _.get(query, 'proj', self.proj)
 
-      const q = ` SELECT p.* FROM _info_projs_tags AS it
+      const p_cols = cols_db.map((x) => { return `p.${x}` }).join(',')
+      const q = ` SELECT ${p_cols} FROM _info_projs_tags AS it
                    INNER JOIN projs AS p 
                    ON it.file = p.file
                    WHERE it.tag = ? AND proj = ?
                  `
       const p = [ tag, proj ]
       const secRows = await dbProc.all(self.dbc, q, p)
-      console.log({ secRows });
+      for(let row of secRows ){
+        await self.prj.secRowUpdate({ row })
+      }
 
+      return res.render('tag_secs.html',{ secRows, header, cols, tag, _get })
     }
   }
 
-//@@ tmplAuthSecs
-// GET /prj/auth/secs/tmpl
-  tmplAuthSecs ()  {
+//@@ htmlAuthSecs
+// GET /prj/auth/html
+  htmlAuthSecs ()  {
     const self = this
 
     return async (req, res) => {
@@ -487,46 +497,14 @@ const c_PrjClass = class {
       const { author } = await self.prj.auth.dbAuth({ author_id })
 
       const secRows = await dbProc.all(self.dbc, q, p)
-      const _get = _.get
-      const cols = self.getConfig({ path : 'methods.tmplAuthSecs.cols' }) || []
-      const header = self.getConfig({ path : 'methods.tmplAuthSecs.header' }) || {}
+      const cols = self.getConfig({ path : 'methods.htmlAuthSecs.cols' }) || []
+      const header = self.getConfig({ path : 'methods.htmlAuthSecs.header' }) || {}
 
       for(let row of secRows ){
-        const sec = row.sec
-        const file = row.file
-
-        const target = `_buf.${sec}`
-        const htmlFile = self.prj.htmlFileTarget({ proj, target })
-        const htmlEx  = fs.existsSync(htmlFile) ? 1 : 0
-        const pdfFile = self.prj.pdfFileTarget({ proj, target })
-        const pdfEx  = fs.existsSync(pdfFile) ? 1 : 0
-
-        row._pdf = {
-            href : `/prj/sec/html?sec=${sec}&tab=pdf`,
-            target_ext : 'pdf',
-            output_ex : pdfEx,
-        }
-        row._html = {
-            href : `/prj/sec/html?sec=${sec}`,
-            target_ext : 'html',
-            output_ex : htmlEx,
-        }
-
-        const qt = ` SELECT tag FROM _info_projs_tags AS it
-                     WHERE it.file = ?
-                    `
-        const pt = [ file ]
-        const tags = (await dbProc.all(self.dbc, qt, pt)).map((x) => { return x.tag })
-        row.tags = tags || []
+        await self.prj.secRowUpdate({ row })
       }
 
-      //_.map(secRows, (row) => {
-        //const sec = row.sec
-        //row._pdf = `/prj/sec/pdf?sec=${sec}`
-        //row._html = `/prj/sec/html?sec=${sec}`
-      //})
-
-      return res.render('auth/secs.html',{ secRows, header, cols, author, _get })
+      return res.render('auth_secs.html',{ secRows, header, cols, author, _get })
     }
   }
 
@@ -535,25 +513,6 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
-    }
-  }
-
-//@@ htmlAuthSecs
-  htmlAuthSecs ()  {
-    const self = this
-
-    return async (req, res) => {
-      const query = req.query
-
-      const author_id = _.get(query, 'id', '')
-      const proj = _.get(query, 'proj', self.proj)
-
-      const target = '_auth.' + author_id
-
-      const html = await self.prj.htmlTargetOutput({ proj, target })
-      res.send(html)
-
-      //res.redirect(`/prj/target/html?target=${target}`)
     }
   }
 

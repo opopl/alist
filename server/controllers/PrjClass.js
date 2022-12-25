@@ -516,6 +516,49 @@ const PrjClass = class {
     return secData
   }
 
+//@@ secRowUpdate
+  async secRowUpdate ({ row, proj }) {
+     const self = this
+
+     const sec  = row.sec
+     const file = row.file
+
+     proj = proj ? proj : self.proj
+
+     const target = `_buf.${sec}`
+     const htmlFile = self.htmlFileTarget({ proj, target })
+     const htmlEx  = fs.existsSync(htmlFile) ? 1 : 0
+     const pdfFile = self.pdfFileTarget({ proj, target })
+     const pdfEx  = fs.existsSync(pdfFile) ? 1 : 0
+
+     row._pdf = {
+         href : `/prj/sec/html?sec=${sec}&tab=pdf`,
+         target_ext : 'pdf',
+         output_ex : pdfEx,
+     }
+     row._html = {
+         href : `/prj/sec/html?sec=${sec}`,
+         target_ext : 'html',
+         output_ex : htmlEx,
+     }
+
+     const qt = ` SELECT tag FROM _info_projs_tags AS it
+                  WHERE it.file = ?`
+
+     const qa = ` SELECT author_id FROM _info_projs_author_id AS ia
+                  WHERE ia.file = ?`
+
+     const pf = [ row.file ]
+
+     const tags = (await dbProc.all(self.dbc, qt, pf)).map((x) => { return x.tag })
+     row.tags = tags || []
+
+     const author_id = (await dbProc.all(self.dbc, qa, pf)).map((x) => { return x.author_id })
+     row.author_id = author_id || []
+
+     return self
+  }
+
 
 //@@ act
   async act (ref = {}) {

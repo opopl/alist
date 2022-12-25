@@ -1,9 +1,9 @@
 
 {% extends "layout.html" %}
-{% import "sec_list_table.html" as slt with context %}
+{% import "import/sec_list_table.html" as slt with context %}
 
 {% block content %}
-  <h1>{{author.plain}}</h1>
+  <h1>{{tag}}</h1>
   {{ slt.table(secRows, cols, header) }}
  
 <!---->

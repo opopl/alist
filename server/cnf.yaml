@@ -16,7 +16,7 @@ prj:
     rootid : p_sr
     config:
        methods:
-          tmplAuthSecs:
+          htmlAuthSecs:
              cols: 
              - _check
              - _html
@@ -25,6 +25,24 @@ prj:
              - title
              - sec
              - tags
+             header:
+               _html : 'html'
+               _pdf : 'pdf'
+               _check : ''
+          htmlTagSecs:
+             cols: 
+               db:
+               - sec
+               - file
+               - date
+               - title
+               html:
+               - _check
+               - _html
+               - _pdf
+               - date
+               - title
+               - sec
              header:
                _html : 'html'
                _pdf : 'pdf'
