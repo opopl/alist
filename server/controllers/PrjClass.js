@@ -363,7 +363,7 @@ const PrjClass = class {
        const sdc = await self.dbSecData({ proj, sec: child })
        if (!sdc) { continue }
 
-       const q = select('sec, url').from('imgs')
+       const q = select('sec, url, caption, name').from('imgs')
                 .where({ proj, sec: child })
                 .orderBy('inum')
                 .toParams({placeholder: '?%d'})

@@ -93,6 +93,41 @@ const c_ImgClass = class {
     }
   }
 
+//@@ jsonImgDataUpdate
+// post /img/data/update
+  jsonImgDataUpdate(){
+    const self = this
+
+    return async (req, res) => {
+      const jsonData = req.body.data
+      const data = JSON.parse(jsonData)
+
+      const whr = _.get(data,'where',{})
+      const upd = _.get(data,'update',{})
+
+      const canUpdate = [ 'caption', 'name', 'name_orig', 'tags' ]
+      for(var key in upd){
+        if (!canUpdate.includes(key)) {
+          delete upd[key]
+        }
+      }
+
+      const q = update('imgs',upd)
+                  .where(whr)
+                  .toParams({ placeholder: '?%d' })
+
+      console.log(q.text);
+      console.log(q.values);
+
+      try {
+        await dbProc.run(self.dbc, q.text, q.values)
+        return res.status(200).send({ 'msg' : 'update ok'})
+      } catch(e) {
+        return res.status(404).send({ 'msg' : 'update fail'})
+      }
+    }
+  }
+
 //@@ jsonImgDataUrl
   jsonImgDataUrl(){
     const self = this
