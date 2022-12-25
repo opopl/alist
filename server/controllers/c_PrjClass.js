@@ -538,6 +538,8 @@ const c_PrjClass = class {
          const url  = _.get(pic,'url')
          if (!url) { return }
 
+         let caption = _.get(pic,'caption','')
+
          const tagsA = _.get(pic,'tags',[]) || []
          const tags = tagsA.join(',')
 
@@ -549,6 +551,7 @@ const c_PrjClass = class {
          args.push('--uri', `${url}` )
 
          if (tags) { args.push('--uri_tags', `${tags}` ) }
+         if (caption) { args.push('--uri_caption', `${caption}` ) }
 
          const cmd = [ exe, ...args ].join(' ')
          //execSync(cmd, { stdio: 'inherit' })
