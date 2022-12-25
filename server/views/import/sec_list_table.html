@@ -1,0 +1,69 @@
+
+{% macro tRow(row = {}, cols=[], header={}) %}
+<tr>
+  {% set sec = row.sec %}
+
+  {% for col in cols %}
+    {% if col == 'date' %}
+      {% set date = _get(row, col) %}
+      {% set href = "/prj/sec/html?sec=" + date %}
+      <td class="prj-sec-{{ col }}" ><a href="{{ href }}">{{ date }}</a></td>
+
+    {% elif [ '_html', '_pdf' ].includes(col) %}
+      {% set data = _get(row, col) %}
+      {% set href = _get(data, 'href') %}
+      {% set output_ex = _get(data, 'output_ex') %}
+      <td class="prj-sec-{{ col }}" >
+         <button class="prj-link" href="{{ href }}" type="sec" output_ex={{ output_ex }} >
+           {{ _get(header, col, col) }}
+         </button>
+      </td>
+
+    {% elif col == '_check' %}
+      <td class="prj-sec-{{ col }}" ><input type="checkbox" value="{{ sec }}" /></td>
+
+    {% elif col == 'tags' %}
+      <td class="prj-sec-{{ col }}" >
+        {% set tags = _get(row, col, []) %}
+        {% if tags.length == 0 %}
+        {% elif tags.length == 1 %}
+          {{ tags[0] }}
+        {% else %}
+          <select>
+             {% for tag in tags %}
+                {% set hrefTag = "/prj/tag/html?tag=" + tag %}
+                <option class="prj-link" value="{{ tag }}" href="{{ hrefTag }}">
+                  {{ tag }}
+                </option>
+             {% endfor %}
+          </select>
+        {% endif %}
+      </td>
+
+    {% else %}
+      <td class="prj-sec-{{ col }}" >{{ _get(row, col) }}</td>
+    {% endif %}
+  {% endfor %}
+</tr>
+{% endmacro %}
+
+{% macro table(secRows = [], cols=[], header={}) %}
+ <table class="prj-link-table">
+    <thead>
+      {% for col in cols %}
+        {% if col == '_check' %}
+          <th><input type="checkbox" id="ckb_secs_all" value="all" /></th>
+        {% else %}
+          <th>{{ _get(header, col, col) }}</th>
+        {% endif %}
+        <!--<th>{{ col }}</th>-->
+      {% endfor %}
+    </thead>
+    <tbody>
+      {% for row in secRows %}
+        {{ tRow(row, cols, header) }}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}
+
