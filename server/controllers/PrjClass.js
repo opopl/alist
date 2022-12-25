@@ -542,7 +542,9 @@ const PrjClass = class {
          output_ex : htmlEx,
      }
 
-     const qt = ` SELECT tag FROM _info_projs_tags AS it
+     const qt = ` SELECT td.tag, td.name FROM _info_projs_tags AS it
+                  INNER JOIN tag_details AS td 
+                  ON it.tag = td.tag
                   WHERE it.file = ?`
 
      const qa = ` SELECT author_id FROM _info_projs_author_id AS ia
@@ -550,7 +552,7 @@ const PrjClass = class {
 
      const pf = [ row.file ]
 
-     const tags = (await dbProc.all(self.dbc, qt, pf)).map((x) => { return x.tag })
+     const tags = (await dbProc.all(self.dbc, qt, pf))
      row.tags = tags || []
 
      const author_ids = (await dbProc.all(self.dbc, qa, pf)).map((x) => { return x.author_id })

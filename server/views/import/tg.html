@@ -1,0 +1,19 @@
+
+{%- macro tagHref(tag={}) -%}
+/prj/tag/html?tag={{ tag.tag }}
+{%- endmacro -%}
+
+{%- macro tagLink(tag={}) -%}
+<a class="prj-link" href="{{ tagHref(tag) }}">{{ tag.name }}</a>
+{%- endmacro -%}
+
+{%- macro tagSelect(tags=[]) -%}
+<select>
+   {% for tag in tags %}
+      <option class="prj-link" value="{{ tag.tag }}" href="{{ tagHref(tag) }}">
+        {{ tag.name if tag.name else tag.tag }}
+      </option>
+   {% endfor %}
+</select>
+{%- endmacro -%}
+

@@ -1,0 +1,18 @@
+
+{%- macro authHref(author={}) -%}
+/prj/auth/html?id={{ author.id }}
+{%- endmacro -%}
+
+{% macro authLink(author={}) -%}
+<a class="prj-link" href="{{ authHref(author) }}">{{ author.plain }}</a>
+{%- endmacro %}
+
+{% macro authSelect(authors=[]) -%}
+<select>
+   {% for author in authors %}
+      <option class="prj-link" value="{{ author.id }}" href="{{ authHref(author) }}">
+        {{ author.plain }}
+      </option>
+   {% endfor %}
+</select>
+{%- endmacro %}

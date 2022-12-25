@@ -1,24 +1,8 @@
 
+{%- import "import/auth.html" as auth -%}
+{%- import "import/tg.html" as tg -%}
 
-{% macro authHref(author={}) %}
-/prj/auth/html?id={{ author.id }}
-{% endmacro %}
-
-{% macro authLink(author={}) %}
-<a class="prj-link" href="{{ authHref(author) }}">{{ author.plain }}</a>
-{% endmacro %}
-
-{% macro authSelect(authors=[]) %}
-<select>
-   {% for author in authors %}
-      <option class="prj-link" value="{{ author.id }}" href="{{ authHref(author) }}">
-        {{ author.plain }}
-      </option>
-   {% endfor %}
-</select>
-{% endmacro %}
-
-{% macro tRow(row = {}, cols=[], header={}) %}
+{% macro tRow(row = {}, cols=[], header={}) -%}
 <tr>
   {% set sec = row.sec %}
 
@@ -48,9 +32,9 @@
         {% if authors.length == 0 %}
         {% elif authors.length == 1 %}
           {% set author = authors[0] %}
-          {{ authLink(author) }}
+          {{ auth.authLink(author) }}
         {% else %}
-          {{ authSelect(authors) }}
+          {{ auth.authSelect(authors) }}
         {% endif %}
       </td>
 
@@ -59,16 +43,10 @@
         {% set tags = _get(row, col, []) %}
         {% if tags.length == 0 %}
         {% elif tags.length == 1 %}
-          {{ tags[0] }}
+          {% set tag = tags[0] %}
+          {{ tg.tagLink(tag) }}
         {% else %}
-          <select>
-             {% for tag in tags %}
-                {% set hrefTag = "/prj/tag/html?tag=" + tag %}
-                <option class="prj-link" value="{{ tag }}" href="{{ hrefTag }}">
-                  {{ tag }}
-                </option>
-             {% endfor %}
-          </select>
+          {{ tg.tagSelect(tags) }}
         {% endif %}
       </td>
 
@@ -77,7 +55,7 @@
     {% endif %}
   {% endfor %}
 </tr>
-{% endmacro %}
+{%- endmacro %}
 
 {% macro table(secRows = [], cols=[], header={}) %}
  <table class="prj-link-table">
