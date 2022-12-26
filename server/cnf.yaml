@@ -16,13 +16,20 @@ prj:
     rootid : p_sr
     config:
        templates:
-          formRows:
+          forms:
             form_sec_new:
-            - [ 'label@@ URL:'     , '', 'input text@ id=input_sec_new_url name=url' ]
-            - [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title' ]
-            - [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec' ]
-            - [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date' ]
-            - [ 'button submit@@Submit', '', '' ]
+              cols:
+              - { width : '10%' }
+              - { width : '5%' }
+              - { width : '50%' }
+              - { width : '20%' }
+              rows:
+              - [ 'label@@ URL:'     , '', 'input text@ id=input_sec_new_url name=url', '' ]
+              - [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
+              - [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]
+              - [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
+              - [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
+              - [ 'button submit@@Submit', '', '' ]
        methods:
           htmlSecView:
              cols:

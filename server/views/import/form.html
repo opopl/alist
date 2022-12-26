@@ -1,0 +1,60 @@
+
+{% macro cellRaw(key, attr, content) %}
+  {% if key %}
+    {% set akey = key.split(' ') %}
+    {% set tag  = akey.shift() %}
+    {% set opt  = akey.shift() %}
+
+    {% if opt %}
+      {% set attr = "type=" + opt + " " + attr %}
+    {% endif %}
+
+    {% if content %}
+      <{{ tag }} {{ attr }}>{{ content }}</{{ tag }}>
+    {% else %}
+      <{{ tag }} {{ attr }} />
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{%- macro colAttr(colCnf={}) -%}
+  {%- if colCnf -%}
+     {%- for key, value in colCnf -%}
+       {%- if key == 'width' -%}
+style='width: {{ value }}'
+       {%- endif -%}
+     {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}
+
+{% macro formRaw(formId, formRows=[], formCols=[]) %}
+<form id="{{ formId }}">
+  <div class="prj-form">
+    {% for row in formRows %}
+      {% if row.length %}
+        <div class="prj-form-row">
+           {% for cell in row %}
+             {% set colCnf = formCols[loop.index0] %}
+
+             {% set m = r/^\s*(?<key>[\w\s]+)\@(?<attr>[^@]*)(|\@(?<content>[^@]*))$/g.exec(cell) %}
+
+             {% if m %}
+               {% set key = m.groups.key %}
+               {% set attr = m.groups.attr %}
+               {% set content = m.groups.content %}
+               {% set cellCode = cellRaw(key, attr, content) %}
+               <div class="prj-form-col" col={{ loop.index }} {{ colAttr(colCnf) | safe }}> {{ cellCode }} </div>
+             {% else %}
+               <div class="prj-form-col" col={{ loop.index }} {{ colAttr(colCnf) | safe }}>  </div>
+             {% endif %}
+
+           {% endfor %}
+        </div>
+
+      {% endif %}
+    {% endfor %}
+  </div>
+</form>
+{% endmacro %}
+
+
