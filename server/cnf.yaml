@@ -18,10 +18,11 @@ prj:
        templates:
           formRows:
             form_sec_new:
-            - [ 'label@ URL:', '', 'input@ id="input_sec_new_url" name="url"' ]
-            - [ 'label@ Title:', '', 'input@ id="input_sec_new_title" name="title"' ]
-            - [ 'label@ Section:', '', 'input@ id="input_sec_new_name" name="sec"' ]
-            - [ 'label@ Date:', '', 'input date@ id="input_sec_new_date" name="date"' ]
+            - [ 'label@@ URL:'     , '', 'input text@ id=input_sec_new_url name=url' ]
+            - [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title' ]
+            - [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec' ]
+            - [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date' ]
+            - [ 'button submit@@Submit', '', '' ]
        methods:
           htmlSecView:
              cols:
