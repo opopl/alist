@@ -4,7 +4,7 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const _ = require('lodash')
 
-const util = require('./../srv-util')
+const srvUtil = require('./../srv-util')
 
 const cheerio = require("cheerio");
 
@@ -153,6 +153,21 @@ const c_ImgClass = class {
       }else{
         res.status(404).send({ 'msg' : 'no img!' })
       }
+    }
+  }
+
+//@@ jsonImgNew
+//  POST
+  jsonImgNew () {
+    const self = this
+
+    return async (req, res) => {
+       const body = req.body
+
+       const data = JSON.parse(body.data)
+       const { sec, proj, url  } = srvUtil.dictGet(data,'sec proj url')
+
+       res.send({ sec, proj, url })
     }
   }
 
