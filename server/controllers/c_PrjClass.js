@@ -554,15 +554,19 @@ const c_PrjClass = class {
 
        var ok = true
 
+       const cbi = function({ code, stdout }){
+          if (code) { ok = false }
+       }
+
        const p_pics = pics.map(async (pic) => {
-         const url  = _.get(pic,'url')
+         const url  = _.get(pic, 'url')
          if (!url) { return }
 
-         await self.prj.secPicImport({ sec, proj, pic })
-
+         await self.prj.secPicImport({ sec, proj, pic, cbi })
        })
 
        await Promise.all(p_pics)
+
        if (ok) {
           const msg = `pic fetch ok`
           res.status(200).send({ msg })

@@ -517,7 +517,7 @@ const PrjClass = class {
   }
 
 //@@ secPicImport
-  async secPicImport ({ proj, sec, pic }) {
+  async secPicImport ({ proj, sec, pic, cbi }) {
     const self = this
 
     proj = proj ? proj : self.proj
@@ -558,9 +558,10 @@ const PrjClass = class {
     }
 
     const { code, stdout } = await ff()
-    if (code) { ok = false }
 
-		return self
+    if (cbi) { cbi({ code, stdout }) }
+
+    return self
   }
 
 //@@ secRowUpdate
