@@ -4,7 +4,25 @@
 {% block content %}
   <h1>{{title}}</h1>
 
-{{ form.formRaw(formId, formRows, formCols) }}
+<div id="tabs" class="prj-tabs">
+  <ul>
+    <li><a href="#tab_sec_new">Section</a></li>
+    <li><a href="#tab_img_new">Image</a></li>
+  </ul>
+
+{% for f in forms %}
+  {% set formId = f.id %}
+  {% set formRows = f.rows %}
+  {% set formCols = f.cols %}
+  {% set formPre = f.pre %}
+  {% set formTab = f.tab %}
+  {{ formPre | safe }}
+  <div class="prj-tab" {{ formTab.attr | safe }}>
+    {{ form.formRaw(formId, formRows, formCols) }}
+  </div>
+{% endfor %}
+
+</div>
 
 <!---->
 {% endblock %}

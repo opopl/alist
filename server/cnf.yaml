@@ -17,7 +17,11 @@ prj:
     config:
        templates:
           forms:
-            form_sec_new:
+            'sec_new':
+            - id: 'form_sec_new'
+              #pre: '<h2>Section</h2>'
+              tab:
+                attr: 'id=tab_sec_new'
               cols:
               - { width : '10%' }
               - { width : '5%' }
