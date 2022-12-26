@@ -15,6 +15,8 @@ prj:
     proj: letopis
     rootid : p_sr
     config:
+       templates:
+          'sec/new':
        methods:
           htmlSecView:
              cols:
