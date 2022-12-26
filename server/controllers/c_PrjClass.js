@@ -558,43 +558,8 @@ const c_PrjClass = class {
          const url  = _.get(pic,'url')
          if (!url) { return }
 
-         let caption = _.get(pic,'caption','')
+         await self.prj.secPicImport({ sec, proj, pic })
 
-         const tagsA = _.get(pic,'tags',[]) || []
-         const tags = tagsA.join(',')
-
-         const exe = `prj-get-img`
-         const args = []
-         args.push('-c', 'fetch_uri' )
-         args.push('-p', `${proj}` )
-         args.push('-s', `${sec}` )
-         args.push('--uri', `${url}` )
-
-         if (tags) { args.push('--uri_tags', `${tags}` ) }
-         if (caption) { args.push('--uri_caption', `${caption}` ) }
-
-         const cmd = [ exe, ...args ].join(' ')
-         //execSync(cmd, { stdio: 'inherit' })
-
-         const ff = () =>  {
-            return new Promise(async (resolve, reject) => {
-              const spawned = spawn(exe, args, {})
-              var stdout = []
-
-              spawned.on('exit', (code) => {
-                resolve({ code, stdout })
-              })
-
-              for await (const data of spawned.stdout) {
-                console.log(`${data}`);
-                const a = `${data}`.split('\n')
-                a.map((x) => { stdout.push(x) })
-              }
-            })
-         }
-
-         const { code, stdout } = await ff()
-         if (code) { ok = false }
        })
 
        await Promise.all(p_pics)

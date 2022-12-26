@@ -484,7 +484,7 @@ const PrjClass = class {
     secData['children'] = children
 
     const b2info = { tags : 'tag' }
-    const bcols = ['author_id','tags']
+    const bcols = [ 'author_id', 'tags' ]
 
     const p_info = bcols.map(async (bcol) => {
        const icol = _.get(b2info, bcol, bcol)
@@ -514,6 +514,53 @@ const PrjClass = class {
     secData = { ...secData, output }
 
     return secData
+  }
+
+//@@ secPicImport
+  async secPicImport ({ proj, sec, pic }) {
+    const self = this
+
+    proj = proj ? proj : self.proj
+
+    let caption = _.get(pic,'caption','')
+
+    const tagsA = _.get(pic,'tags',[]) || []
+    const tags = tagsA.join(',')
+
+    const exe = `prj-get-img`
+    const args = []
+    args.push('-c', 'fetch_uri' )
+    args.push('-p', `${proj}` )
+    args.push('-s', `${sec}` )
+    args.push('--uri', `${url}` )
+
+    if (tags) { args.push('--uri_tags', `${tags}` ) }
+    if (caption) { args.push('--uri_caption', `${caption}` ) }
+
+    const cmd = [ exe, ...args ].join(' ')
+    //execSync(cmd, { stdio: 'inherit' })
+
+    const ff = () =>  {
+       return new Promise(async (resolve, reject) => {
+         const spawned = spawn(exe, args, {})
+         var stdout = []
+
+         spawned.on('exit', (code) => {
+           resolve({ code, stdout })
+         })
+
+         for await (const data of spawned.stdout) {
+           console.log(`${data}`);
+           const a = `${data}`.split('\n')
+           a.map((x) => { stdout.push(x) })
+         }
+       })
+    }
+
+    const { code, stdout } = await ff()
+    if (code) { ok = false }
+
+		return self
   }
 
 //@@ secRowUpdate
