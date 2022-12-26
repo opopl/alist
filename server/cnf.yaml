@@ -18,6 +18,7 @@ prj:
        templates:
           forms:
             'sec_new':
+###form_sec_new
             - id: 'form_sec_new'
               #pre: '<h2>Section</h2>'
               tab:
@@ -28,12 +29,29 @@ prj:
               - { width : '50%' }
               - { width : '20%' }
               rows:
-              - [ 'label@@ URL:'     , '', 'input text@ id=input_sec_new_url name=url', '' ]
-              - [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
-              - [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]
-              - [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
-              - [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
+              - [ 'label@@ URL:'     , '', 'input text@ class=prj-input-url name=url', '' ]
+              - [ 'label@@ Title:'   , '', 'input text@ name=title', '' ]
+              - [ 'label@@ Section:' , '', 'input text@ name=sec', '' ]
+              - [ 'label@@ Tags:'    , '', 'input text@ name=tags', '' ]
+              - [ 'label@@ Date:'    , '', 'input date@ name=date', '' ]
               - [ 'button submit@@Submit', '', '' ]
+###form_img_new
+            - id: 'form_img_new'
+              tab:
+                attr: 'id=tab_img_new'
+              cols:
+              - { width : '10%' }
+              - { width : '5%' }
+              - { width : '50%' }
+              - { width : '20%' }
+              rows:
+              - [ 'label@@ URL:'     , '', 'input text@ class=prj-input-url name=url', '' ]
+              #- [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
+              #- [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]
+              #- [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
+              #- [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
+              #- [ 'button submit@@Submit', '', '' ]
+
        methods:
           htmlSecView:
              cols:
