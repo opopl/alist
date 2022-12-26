@@ -293,7 +293,7 @@ const c_PrjClass = class {
       const formRows = self.getConfig({ path : `templates.formRows.${formId}` }) || []
 
       const title = 'Create new section'
-      return res.render('sec/new', { title, formRows })
+      return res.render('sec/new', { title, formId, formRows })
     }
   }
 

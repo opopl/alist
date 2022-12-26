@@ -3,7 +3,6 @@
 {% block content %}
   <h1>{{title}}</h1>
 
-
 {% macro cellRaw(key, attr, content) %}
   {% if key %}
     {% set akey = key.split(' ') %}
@@ -22,7 +21,8 @@
   {% endif %}
 {% endmacro %}
 
-<form id="form_sec_new">
+{% macro formRaw(formId, formRows) %}
+<form id="{{ formId }}">
   <div class="prj-form">
     {% for row in formRows %}
       {% if row.length %}
@@ -44,39 +44,11 @@
         </div>
       {% endif %}
     {% endfor %}
-
- <!--   <div class="prj-form-row">-->
-      <!--<div class="prj-form-col" col=1> <label>URL: </label> </div>-->
-      <!--<div class="prj-form-col" col=2> </div>-->
-      <!--<div class="prj-form-col" col=3> <input type="text" id="input_sec_new_url" name="url" /> </div>-->
-    <!--</div>-->
-    <!--<div class="prj-form-row">-->
-      <!--<div class="prj-form-col" col=1><label>Title</label></div>-->
-      <!--<div class="prj-form-col" col=2></div>-->
-      <!--<div class="prj-form-col" col=3>-->
-        <!--<input type="text" id="input_sec_new_title" name="title" />-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="prj-form-row">-->
-      <!--<div class="prj-form-col" col=1><label>Section:</label></div>-->
-      <!--<div class="prj-form-col" col=2></div>-->
-      <!--<div class="prj-form-col" col=3>-->
-        <!--<input type="text" id="input_sec_new_name" name="sec" />-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="prj-form-row">-->
-      <!--<div class="prj-form-col" col=1><label>Date:</label></div>-->
-      <!--<div class="prj-form-col" col=2></div>-->
-      <!--<div class="prj-form-col" col=3>-->
-        <!--<input type="date" id="input_sec_new_date" name="date" />-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="prj-form-row">-->
-      <!--<button type="submit">Create</button>-->
-    <!--</div>-->
-
   </div>
 </form>
+{% endmacro %}
+
+formRaw(formId, formRows)
 
 <!---->
 {% endblock %}
