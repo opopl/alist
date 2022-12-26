@@ -289,8 +289,11 @@ const c_PrjClass = class {
 
       const proj = _.get(query, 'proj', self.proj)
 
+      const formId = 'form_sec_new'
+      const formRows = self.getConfig({ path : `templates.formRows.${formId}` }) || []
+
       const title = 'Create new section'
-      return res.render('sec/new', { title })
+      return res.render('sec/new', { title, formRows })
     }
   }
 

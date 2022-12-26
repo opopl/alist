@@ -16,7 +16,12 @@ prj:
     rootid : p_sr
     config:
        templates:
-          'sec/new':
+          formRows:
+            form_sec_new:
+            - [ 'label@ URL:', '', 'input@ id="input_sec_new_url" name="url"' ]
+            - [ 'label@ Title:', '', 'input@ id="input_sec_new_title" name="title"' ]
+            - [ 'label@ Section:', '', 'input@ id="input_sec_new_name" name="sec"' ]
+            - [ 'label@ Date:', '', 'input date@ id="input_sec_new_date" name="date"' ]
        methods:
           htmlSecView:
              cols:

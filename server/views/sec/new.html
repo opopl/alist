@@ -3,8 +3,28 @@
 {% block content %}
   <h1>{{title}}</h1>
 
+
+{% macro cellRaw(key, content) %}
+  {% if key | trim == 'label' %}
+    <label>{{ content }} </label>
+  {% endif %}
+{% endmacro %}
+
 <form id="form_sec_new">
   <div class="prj-form">
+    {% for row in formRows %}
+      {% if row.length %}
+        <div class="prj-form-row">
+           {% for cell in row %}
+              {% set m = r/^\s*(?<key>[\w\s]+)\@(?<content>.*)/.exec(cell) %}
+              {% set key = m.groups.key %}
+              {% set content = m.groups.content %}
+              <div class="prj-form-col" col={{ loop.index }}> {{ cellRaw(key,content) }} </div>
+           {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <div class="prj-form-row">
       <div class="prj-form-col" col=1> <label>URL: </label> </div>
       <div class="prj-form-col" col=2> </div>
