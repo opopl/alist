@@ -172,6 +172,7 @@ const c_ImgClass = class {
        const data = JSON.parse(body.data)
        const { sec, proj, url  } = srvUtil.dictGet(data,'sec proj url')
 
+			 self.imgman.dbImgStore({ url })
        res.send({ sec, proj, url })
     }
   }

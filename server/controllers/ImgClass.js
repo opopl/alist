@@ -5,6 +5,7 @@ const dbProc = require('./../dbproc')
 const md5file = require('md5-file')
 
 const path = require('path')
+const srvUtil = require('./../srv-util')
 
 const select = db.sql.select
 
@@ -12,8 +13,8 @@ const ImgClass = class {
 
 //@@ new
   constructor(ref={}){
-    this.dbc = db.img
 
+    this.dbc = db.img
     this.imgRoot  = path.join(process.env.IMG_ROOT)
 
     Object.assign(this,ref)
@@ -68,21 +69,27 @@ const ImgClass = class {
     const rw = await self.dbImgData({ url })
     if (rw) {
       console.log(rw);
-      return
+      return self
     }
 
     const inum = await self.dbImgInumFree()
-    console.log({ inum });
 
-    const local = path.join(self.imgRoot, `${inum}.jpg`)
+    const { buf, info, headers } = await srvUtil.fetchImg({ url })
+    if (!info) { return self }
 
-    await srvUtil.fetchImg({ url, local })
-         .then((data) => {
-             if(!fs.existsSync(local)){ return }
+    const mimeType = info.mimeType
+    const format = info.format
+    const ext = format.toLowerCase()
 
-             var href = bLocal
-          })
-          .catch((err) => { console.log(err) })
+    const local = path.join(self.imgRoot, `${inum}.${ext}`)
+
+
+    /*     .then((data) => {*/
+             //if(!fs.existsSync(local)){ return }
+
+             //var href = bLocal
+          //})
+          /*.catch((err) => { console.log(err) })*/
 
     return self
   }

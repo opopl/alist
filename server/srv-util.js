@@ -5,6 +5,7 @@ const _ = require('lodash')
 
 const path = require('path')
 const axios = require('axios')
+const imageinfo = require('imageinfo')
 
 //import { createHash } from 'node:crypto'
 const crypto = require('crypto')
@@ -47,7 +48,37 @@ const fetchFile = async ({ url, local }) => {
   })
 }
 
-const md5 = (content) => {  
+//@@ fetchImg
+const fetchImg = async ({ url }) => {
+
+ /* const response = await axios({*/
+    //url,
+    //method: 'GET',
+    //responseType: 'stream'
+  /*})*/
+
+  //const writer = fs.createWriteStream(buffer)
+  //response.data.pipe(writer)
+
+  //return new Promise((resolve, reject) => {
+    //writer.on('finish', resolve)
+    //writer.on('error', reject)
+  //})
+
+	const response = await axios.get(url, { responseType: 'arraybuffer' })
+  const buf = Buffer.from(response.data, 'binary')
+	const headers = response.headers
+
+	const info = imageinfo(buf)
+
+	return new Promise((resolve, reject) => {
+		//resolve({ buf64, info, headers })
+		resolve({ buf, info, headers })
+	})
+
+}
+
+const md5 = (content) => {
   return crypto.createHash('md5').update(content).digest('hex')
 }
 
@@ -116,5 +147,6 @@ module.exports = {
   fsRead,
   fsWrite,
   dictGet,
-  fetchFile
+  fetchFile,
+  fetchImg
 }
