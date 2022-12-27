@@ -46,12 +46,10 @@ prj:
               - { width : '50%' }
               - { width : '20%' }
               rows:
-              - [ 'label@@ URL:'     , '', 'input text@ class=prj-input-url name=url', '' ]
-              - [ 'button submit@@Submit', '', '' ]
-              - [ [
-                    'button reset@@Clear',
-                    'button button@@Other',
-                  ], '', '' ]
+              - [ 'label@@ URL:',
+                  'button button@class=prj-input-url-clear@Clear',
+                  'input text@ class=prj-input-url name=url', '' ]
+              - [ 'button submit@@Submit', '', 'button reset@@Clear Form' ]
               #- [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
               #- [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]
               #- [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
