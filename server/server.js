@@ -82,10 +82,13 @@ class Alist {
     // added and the same instance will be used inside the render method
 
     const viewsDir = path.resolve(__dirname, 'views')
-    cons.requires.nunjucks = nunjucks.configure(viewsDir, {
+    const noon = nunjucks.configure(viewsDir, {
       autoescape: true,
       express   : srv
     });
+    cons.requires.nunjucks = noon
+    noon.addFilter('isArr', x => Array.isArray(x))
+    noon.addFilter('isObj', x => _.isPlainObject(x))
 
     // view engine setup
     srv.engine('html', cons.nunjucks);

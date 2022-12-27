@@ -37,6 +37,7 @@ prj:
               - [ 'button submit@@Submit', '', '' ]
 ###form_img_new
             - id: 'form_img_new'
+              #pre: '<button value="clear">Clear</button>'
               tab:
                 attr: 'id=tab_img_new'
               cols:
@@ -46,6 +47,11 @@ prj:
               - { width : '20%' }
               rows:
               - [ 'label@@ URL:'     , '', 'input text@ class=prj-input-url name=url', '' ]
+              - [ 'button submit@@Submit', '', '' ]
+              - [ [
+                    'button reset@@Clear',
+                    'button button@@Other',
+                  ], '', '' ]
               #- [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
               #- [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]
               #- [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
@@ -102,7 +108,9 @@ prj:
 
        bld :
           cols : 'bid buuid plan duration target status'
+###ui
        ui :
+###ui.tab
           tab :
             saved:
               iframe:
@@ -119,6 +127,7 @@ prj:
               - { id : 'comments', name : 'Comments' }
               - { id : 'cmttex', name : 'Comments (TeX)' }
 
+###ui.page
           page :
              'tag' :
                 tabs : [ 'html' ]
@@ -139,3 +148,34 @@ prj:
                 - 'tex'
                 - 'log'
                 - 'bld'
+
+###ui.forms
+          forms:
+             '@common':
+                validate:
+                  messages:
+                    url:
+                      required: 'URL REQUIRED'
+                      url: 'MUST BE URL'
+                      url_img_db : 'ALREADY IN DB'
+
+             form_sec_new:
+                url: "/prj/sec/new"
+                validate :
+                  rules:
+                    url:
+                      required: true
+                      url: true
+             form_img_new:
+                url: "/img/new"
+                validate :
+                  rules:
+                    url:
+                      required: true
+                      url: true
+                      url_img_db: true
+                  messages:
+                    url:
+                      required: 'URL REQUIRED'
+                      url: 'MUST BE URL'
+                      url_img_db : 'IMAGE ALREADY SAVED'

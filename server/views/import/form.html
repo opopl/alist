@@ -27,6 +27,29 @@ style='width: {{ value }}'
   {%- endif -%}
 {%- endmacro -%}
 
+{%- macro cellCode(cell, colCnf, index) -%}
+
+  {% if cell | isArr %}
+    {% for item in cell %}
+      {{ cellCode(item, colCnf, index) }}
+    {% endfor %}
+  {% else %}
+    {%- set m = r/^\s*(?<key>[\w\s]+)\@(?<attr>[^@]*)(|\@(?<content>[^@]*))$/g.exec(cell) -%}
+
+    {%- if m -%}
+      {%- set key = m.groups.key -%}
+      {%- set attr = m.groups.attr -%}
+      {%- set content = m.groups.content -%}
+      {{ cellRaw(key, attr, content) }}
+    {%- endif -%}
+  {% endif %}
+
+{%- endmacro -%}
+
+{%- macro cellDiv(cell, colCnf, index) -%}
+<div class="prj-form-col" col={{ index }} {{ colAttr(colCnf) | safe }}> {{ cellCode(cell, colCnf, index) | safe }} </div>
+{%- endmacro -%}
+
 {% macro formRaw(formId, formRows=[], formCols=[]) %}
 <form id="{{ formId }}">
   <div class="prj-form">
@@ -36,18 +59,7 @@ style='width: {{ value }}'
            {%- for cell in row -%}
              {%- set colCnf = formCols[loop.index0] -%}
 
-             {%- set m = r/^\s*(?<key>[\w\s]+)\@(?<attr>[^@]*)(|\@(?<content>[^@]*))$/g.exec(cell) -%}
-
-             {%- if m -%}
-               {%- set key = m.groups.key -%}
-               {%- set attr = m.groups.attr -%}
-               {%- set content = m.groups.content -%}
-               {%- set cellCode = cellRaw(key, attr, content) -%}
-               <div class="prj-form-col" col={{ loop.index }} {{ colAttr(colCnf) | safe }}> {{ cellCode }} </div>
-             {%- else -%}
-               <div class="prj-form-col" col={{ loop.index }} {{ colAttr(colCnf) | safe }}>  </div>
-             {%- endif -%}
-
+             {{ cellDiv(cell, colCnf, loop.index) }}
            {%- endfor -%}
         </div>
 

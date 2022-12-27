@@ -30,9 +30,7 @@ const c_PrjClass = class {
     this.dbc = db.prj
 
     Object.assign(this, ref)
-
     this.prj = new PrjClass(ref)
-
   }
 
 //@@ getConfig

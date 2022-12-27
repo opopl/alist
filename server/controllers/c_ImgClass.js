@@ -8,6 +8,8 @@ const srvUtil = require('./../srv-util')
 
 const cheerio = require("cheerio");
 
+const { ImgClass } = require('./ImgClass')
+
 const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
@@ -17,9 +19,12 @@ const insert = db.sql.insert
 const update = db.sql.update
 
 const c_ImgClass = class {
-  constructor(){
+  constructor(ref={}){
     this.dbc = db.img
     this.imgRoot = path.join(process.env.IMG_ROOT)
+
+    Object.assign(this, ref)
+    this.imgman = new ImgClass(ref)
   }
 
 //@@ jsonCount
