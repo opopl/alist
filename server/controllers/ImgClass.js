@@ -5,6 +5,7 @@ const dbProc = require('./../dbproc')
 const md5file = require('md5-file')
 
 const path = require('path')
+const fs = require('fs')
 const srvUtil = require('./../srv-util')
 
 const select = db.sql.select
@@ -83,6 +84,10 @@ const ImgClass = class {
 
     const local = path.join(self.imgRoot, `${inum}.${ext}`)
 
+    console.log({ local, info });
+
+    const writer = fs.createWriteStream(local)
+    writer.write(buf)
 
     /*     .then((data) => {*/
              //if(!fs.existsSync(local)){ return }
