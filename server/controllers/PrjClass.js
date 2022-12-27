@@ -457,7 +457,8 @@ const PrjClass = class {
   async dbSecData (whr={})  {
     const self = this
 
-    const { proj, sec } = srvUtil.dictGet(whr,'sec proj')
+    let { proj, sec } = srvUtil.dictGet(whr,'sec proj')
+    if (!proj) { proj = self.proj }
 
     const q_sec = select('*')
                 .from('projs')
@@ -466,6 +467,8 @@ const PrjClass = class {
 
     var secData = await dbProc.get(self.dbc, q_sec.text, q_sec.values)
     if (!secData) { return }
+
+    if (!sec) { sec = secData.sec }
 
     var sec_file = secData.file
 

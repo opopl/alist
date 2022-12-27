@@ -3,8 +3,8 @@
 {%- import "import/tg.html" as tg -%}
 
 {% macro tRow(row = {}, cols=[], header={}) -%}
-<tr>
   {% set sec = row.sec %}
+<tr sec="{{ sec }}" class="prj-sec-row">
 
   {% for col in cols %}
     {% if col == 'date' %}

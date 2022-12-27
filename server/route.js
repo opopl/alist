@@ -8,22 +8,20 @@ const { c_ImgClass }  = require('./controllers/c_ImgClass.js')
 const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
 
 
-class A {
-  constructor(cnf={}){
-    const self = this
+/*class A {*/
+  //constructor(cnf={}){
+    //const self = this
 
-    Object.assign(this, cnf)
+    //Object.assign(this, cnf)
 
-    Object.keys(cnf).forEach(function(x){
-      console.log(_.get(self,x));
-    })
+    //Object.keys(cnf).forEach(function(x){
+    //})
 
-    console.log(Object.keys(this));
-  }
+  //}
 
-  run(){
-  }
-}
+  //run(){
+  //}
+/*}*/
 
 //new A('2').run()
 //new A().run()

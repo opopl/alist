@@ -29,12 +29,14 @@ prj:
               - { width : '50%' }
               - { width : '20%' }
               rows:
-              - [ 'label@@ URL:'     , '', 'input text@ class=prj-input-url name=url', '' ]
+              - [ 'label@@ URL:',
+                  'button button@class=prj-input-url-clear@Clear',
+                  'input text@ class=prj-input-url name=url', '' ]
               - [ 'label@@ Title:'   , '', 'input text@ name=title', '' ]
               - [ 'label@@ Section:' , '', 'input text@ name=sec', '' ]
               - [ 'label@@ Tags:'    , '', 'input text@ name=tags', '' ]
               - [ 'label@@ Date:'    , '', 'input date@ name=date', '' ]
-              - [ 'button submit@@Submit', '', '' ]
+              - [ 'button submit@@Submit', '', 'button reset@@Clear Form' ]
 ###form_img_new
             - id: 'form_img_new'
               #pre: '<button value="clear">Clear</button>'
@@ -148,6 +150,22 @@ prj:
                 - 'tex'
                 - 'log'
                 - 'bld'
+
+###ui.tables
+          tables:
+             '@common':
+                dataTable:
+###ui.tables.@common.dataTable
+                   paging  : true
+                   autoWidth: false
+                   columnDefs:
+                   - { "width" : "5%" }
+                   - { "width" : "5%" }
+                   - { "width" : "5%" }
+                   fixedHeader:
+                     header: true
+                     footer: true
+                   buttons: [ 'copy', 'excel', 'pdf' ]
 
 ###ui.forms
           forms:

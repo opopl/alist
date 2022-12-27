@@ -121,18 +121,18 @@ const c_PrjClass = class {
     return async (req, res) => {
       const query = req.query
 
-      let whr, data
+      let whr, row
       if (req.method == 'GET') {
         whr = req.query
       } else if (req.method == 'POST') {
         whr = JSON.parse(req.body.data)
       }
 
-      data = await self.prj.dbSecData(whr)
-      console.log({ data });
+      row = await self.prj.dbSecData(whr)
+      await self.prj.secRowUpdate({ row })
 
-      if (data) {
-        res.json(data)
+      if (row) {
+        res.json(row)
       }else{
         res.status(500).send({ 'msg' : 'no section data!' })
       }
