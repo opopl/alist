@@ -6,27 +6,7 @@ const _ = require('lodash')
 const { c_AuthClass } = require('./controllers/c_AuthClass.js')
 const { c_ImgClass }  = require('./controllers/c_ImgClass.js')
 const { c_PrjClass }  = require('./controllers/c_PrjClass.js')
-
-
-/*class A {*/
-  //constructor(cnf={}){
-    //const self = this
-
-    //Object.assign(this, cnf)
-
-    //Object.keys(cnf).forEach(function(x){
-    //})
-
-  //}
-
-  //run(){
-  //}
-/*}*/
-
-//new A('2').run()
-//new A().run()
-//new A('2','3').run()
-//new A({ '2' : 'v1', 'a' : 'v2' }).run()
+const { c_LogClass }  = require('./controllers/c_LogClass.js')
 
 //@@ _class.routerFactory
 class routerFactory {
@@ -84,6 +64,9 @@ class routerFactory {
 
     router.get('/prj/sec/new/html' , self.c_Prj.htmlSecNew())
     router.post('/prj/sec/new'     , self.c_Prj.jsonSecNew())
+
+//@@ Log
+    //router.get('/log' , self.c_Log.jsonLog())
 
 //@@ Sec
 

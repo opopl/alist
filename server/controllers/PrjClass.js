@@ -526,6 +526,9 @@ const PrjClass = class {
 
     let caption = _.get(pic,'caption','')
 
+    const url = _.get(pic,'url')
+    if (!url) { return self }
+
     const tagsA = _.get(pic,'tags',[]) || []
     const tags = tagsA.join(',')
 

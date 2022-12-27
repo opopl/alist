@@ -51,6 +51,9 @@ prj:
               - [ 'label@@ URL:',
                   'button button@class=prj-input-url-clear@Clear',
                   'input text@ class=prj-input-url name=url', '' ]
+              - [ 'label@@File:' ,
+                  'button button@class=prj-input-file-clear@Clear',
+                  'input file@ class=prj-input-file name=file', '' ]
               - [ 'label@@Caption:' , '', 'input text@ name=caption', '' ]
               - [ 'label@@Tags:' , '', 'input text@ name=tags', '' ]
               - [ 'button submit@@Submit', '', 'button reset@@Clear Form' ]
