@@ -2,13 +2,17 @@
 
 const db = require('./../db')
 const dbProc = require('./../dbproc')
-const md5file = require('md5-file')
 
 const path = require('path')
 const fs = require('fs')
 const srvUtil = require('./../srv-util')
 
+const md5file = require('md5-file')
+const exifReader = require('exifreader')
+
 const select = db.sql.select
+const insert = db.sql.insert
+const update = db.sql.update
 
 const ImgClass = class {
 
@@ -82,12 +86,30 @@ const ImgClass = class {
     const format = info.format
     const ext = format.toLowerCase()
 
-    const local = path.join(self.imgRoot, `${inum}.${ext}`)
+    const { width, height } = srvUtil.dictGet(info,'width height')
 
-    console.log({ local, info });
+    const img =`${inum}.${ext}`
+    const local = path.join(self.imgRoot, img)
 
     const writer = fs.createWriteStream(local)
     writer.write(buf)
+
+    //const e = exifReader.load(buf,{expanded: true, includeUnknown: true})
+
+    const md5 = srvUtil.md5hex(buf)
+    const size = buf.length
+    const mtime = Math.trunc(Date.now()/1000)
+
+    const ins = {
+      url, url_parent, tags, caption, name,
+      proj, sec, rootid,
+      inum, img, ext, width, height,
+      md5, size, mtime
+    }
+    const q = insert('imgs',ins)
+                .toParams({placeholder: '?%d'})
+
+    console.log({ ins });
 
     /*     .then((data) => {*/
              //if(!fs.existsSync(local)){ return }

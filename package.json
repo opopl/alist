@@ -57,6 +57,7 @@
     "cors": "2.8.5",
     "crass": "^0.12.3",
     "cucumber": "^6.0.7",
+    "exifreader": "^4.9.1",
     "express": "4.17.1",
     "express-fileupload": "^1.4.0",
     "findit": "^2.0.0",

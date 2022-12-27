@@ -51,34 +51,19 @@ const fetchFile = async ({ url, local }) => {
 //@@ fetchImg
 const fetchImg = async ({ url }) => {
 
- /* const response = await axios({*/
-    //url,
-    //method: 'GET',
-    //responseType: 'stream'
-  /*})*/
-
-  //const writer = fs.createWriteStream(buffer)
-  //response.data.pipe(writer)
-
-  //return new Promise((resolve, reject) => {
-    //writer.on('finish', resolve)
-    //writer.on('error', reject)
-  //})
-
-	const response = await axios.get(url, { responseType: 'arraybuffer' })
+  const response = await axios.get(url, { responseType: 'arraybuffer' })
   const buf = Buffer.from(response.data, 'binary')
-	const headers = response.headers
+  const headers = response.headers
 
-	const info = imageinfo(buf)
+  const info = imageinfo(buf)
 
-	return new Promise((resolve, reject) => {
-		//resolve({ buf64, info, headers })
-		resolve({ buf, info, headers })
-	})
+  return new Promise((resolve, reject) => {
+    resolve({ buf, info, headers })
+  })
 
 }
 
-const md5 = (content) => {
+const md5hex = (content) => {
   return crypto.createHash('md5').update(content).digest('hex')
 }
 
@@ -143,6 +128,7 @@ const fsFind = async ({ dir, cb_file, cb_dir }) => {
 }
 
 module.exports = {
+  md5hex,
   fsFind,
   fsRead,
   fsWrite,
