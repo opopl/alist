@@ -166,6 +166,9 @@ prj:
                     url:
                       required: true
                       url: true
+                      url_prj_db: true
+
+###ui.forms.form_img_new
              form_img_new:
                 url: "/img/new"
                 validate :
@@ -178,4 +181,4 @@ prj:
                     url:
                       required: 'URL REQUIRED'
                       url: 'MUST BE URL'
-                      url_img_db : 'IMAGE ALREADY SAVED'
+                      url_img_db : 'IMAGE ALREADY IN DATABASE'

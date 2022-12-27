@@ -170,10 +170,10 @@ const c_ImgClass = class {
        const body = req.body
 
        const data = JSON.parse(body.data)
-       const { sec, proj, url  } = srvUtil.dictGet(data,'sec proj url')
+       const { url, caption, tags } = srvUtil.dictGet(data,'url caption tags')
 
-			 self.imgman.dbImgStore({ url })
-       res.send({ sec, proj, url })
+       self.imgman.dbImgStore({ url, caption, tags })
+       res.send({ url })
     }
   }
 

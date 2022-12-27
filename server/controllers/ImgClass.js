@@ -109,14 +109,7 @@ const ImgClass = class {
     const q = insert('imgs',ins)
                 .toParams({placeholder: '?%d'})
 
-    console.log({ ins });
-
-    /*     .then((data) => {*/
-             //if(!fs.existsSync(local)){ return }
-
-             //var href = bLocal
-          //})
-          /*.catch((err) => { console.log(err) })*/
+    await dbProc.run(self.dbc, q.text, q.values)
 
     return self
   }

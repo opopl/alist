@@ -454,15 +454,14 @@ const PrjClass = class {
   }
 
 //@@ dbSecData
-  async dbSecData (ref={})  {
+  async dbSecData ({ sec, proj })  {
     const self = this
 
-    const sec = ref.sec || ''
-    const proj = ref.proj || self.proj
+    proj = proj ? proj : self.proj
 
     const q_sec = select('*')
                 .from('projs')
-                .where({ 'sec' : sec })
+                .where({ sec, proj })
                 .toParams({placeholder: '?%d'})
 
     var secData = await dbProc.get(self.dbc, q_sec.text, q_sec.values)
