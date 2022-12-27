@@ -64,7 +64,18 @@ const ImgClass = class {
   }
 
 //@@ dbImgStore
-  async dbImgStore ({
+  async dbImgStore ({ iUrl, iFile, iBuf,  ...ref } = {}){
+    const self = this
+
+    if (iUrl) {
+      await self.dbImgStoreUrl({ url : iUrl, ...ref })
+    }
+
+    return self
+  }
+
+//@@ dbImgStoreUrl
+  async dbImgStoreUrl ({
     url,
     url_parent, tags, caption, name,
     proj, sec, rootid,
@@ -72,14 +83,11 @@ const ImgClass = class {
     const self = this
 
     const rw = await self.dbImgData({ url })
-    if (rw) {
-      console.log(rw);
-      return self
-    }
+    if (rw) { console.log(rw); return self }
 
     const inum = await self.dbImgInumFree()
 
-    const { buf, info, headers } = await srvUtil.fetchImg({ url })
+    const { buf, info, headers } = await srvUtil.fetchImg({ url : iUrl })
     if (!info) { return self }
 
     const mimeType = info.mimeType
