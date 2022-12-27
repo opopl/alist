@@ -223,6 +223,24 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonTagList
+  jsonTagList () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+      const { regex } = srvUtil.dictGet(query,'regex')
+
+      let cond = ''
+      if (regex) { cond = `WHERE SEARCH("${regex}",tag)` }
+
+      const q = `SELECT DISTINCT tag FROM _info_projs_tags ${cond} ORDER BY tag ASC`
+      const p = []
+      const tagList = (await dbProc.all(self.dbc, q, p)).map(x => x.tag)
+      res.send(tagList)
+    }
+  }
+
 //@@ jsonSecNew
 //  POST
   jsonSecNew () {

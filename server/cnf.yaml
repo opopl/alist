@@ -34,7 +34,7 @@ prj:
                   'input text@ class=prj-input-url name=url', '' ]
               - [ 'label@@ Title:'   , '', 'input text@ name=title', '' ]
               - [ 'label@@ Section:' , '', 'input text@ name=sec', '' ]
-              - [ 'label@@ Tags:'    , '', 'input text@ name=tags', '' ]
+              - [ 'label@@ Tags:'    , '', 'input text@ name=tags class=prj-input-tags', '' ]
               - [ 'label@@ Date:'    , '', 'input date@ name=date', '' ]
               - [ 'button submit@@Submit', '', 'button reset@@Clear Form' ]
 ###form_img_new
@@ -53,9 +53,9 @@ prj:
                   'input text@ class=prj-input-url name=url', '' ]
               - [ 'label@@File:' ,
                   'button button@class=prj-input-file-clear@Clear',
-                  'input file@ class=prj-input-file name=file', '' ]
+                  'input file@ name=file class=prj-input-file', '' ]
               - [ 'label@@Caption:' , '', 'input text@ name=caption', '' ]
-              - [ 'label@@Tags:' , '', 'input text@ name=tags', '' ]
+              - [ 'label@@Tags:' , '', 'input text@ class=prj-input-tags name=tags', '' ]
               - [ 'button submit@@Submit', '', 'button reset@@Clear Form' ]
               #- [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
               #- [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]

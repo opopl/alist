@@ -107,6 +107,7 @@ class routerFactory {
 
 //@@ Tags
     router.get('/prj/tag/html', self.c_Prj.htmlTagSecs())
+    router.get('/prj/tag/list', self.c_Prj.jsonTagList())
 
 //@@ Builds
     router.get('/prj/bld/data', self.c_Prj.jsonBldData())
