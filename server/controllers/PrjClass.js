@@ -454,14 +454,14 @@ const PrjClass = class {
   }
 
 //@@ dbSecData
-  async dbSecData ({ sec, proj })  {
+  async dbSecData (whr={})  {
     const self = this
 
-    proj = proj ? proj : self.proj
+    const { proj, sec } = srvUtil.dictGet(whr,'sec proj')
 
     const q_sec = select('*')
                 .from('projs')
-                .where({ sec, proj })
+                .where(whr)
                 .toParams({placeholder: '?%d'})
 
     var secData = await dbProc.get(self.dbc, q_sec.text, q_sec.values)

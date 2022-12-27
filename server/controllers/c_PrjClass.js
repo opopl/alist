@@ -121,7 +121,15 @@ const c_PrjClass = class {
     return async (req, res) => {
       const query = req.query
 
-      var data = await self.prj.dbSecData(query)
+      let whr, data
+      if (req.method == 'GET') {
+        whr = req.query
+      } else if (req.method == 'POST') {
+        whr = JSON.parse(req.body.data)
+      }
+
+      data = await self.prj.dbSecData(whr)
+      console.log({ data });
 
       if (data) {
         res.json(data)
