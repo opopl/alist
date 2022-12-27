@@ -67,8 +67,18 @@ const ImgClass = class {
   async dbImgStore ({ iUrl, iFile, iBuf,  ...ref } = {}){
     const self = this
 
-    if (iUrl) {
-      await self.dbImgStoreUrl({ url : iUrl, ...ref })
+    while (1) {
+      if (iUrl) {
+        await self.dbImgStoreUrl({ iUrl, ...ref })
+        break
+      }
+
+      if (iFile) {
+        await self.dbImgStoreFile({ iFile, ...ref })
+        break
+      }
+
+      break
     }
 
     return self
@@ -76,13 +86,11 @@ const ImgClass = class {
 
 //@@ dbImgStoreUrl
   async dbImgStoreUrl ({
-    url,
-    url_parent, tags, caption, name,
-    proj, sec, rootid,
+    iUrl, ...idb
   }) {
     const self = this
 
-    const rw = await self.dbImgData({ url })
+    const rw = await self.dbImgData({ url : iUrl })
     if (rw) { console.log(rw); return self }
 
     const inum = await self.dbImgInumFree()
@@ -109,8 +117,8 @@ const ImgClass = class {
     const mtime = Math.trunc(Date.now()/1000)
 
     const ins = {
-      url, url_parent, tags, caption, name,
-      proj, sec, rootid,
+      ...idb,
+      url : iUrl,
       inum, img, ext, width, height,
       md5, size, mtime
     }
