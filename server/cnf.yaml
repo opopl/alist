@@ -199,9 +199,12 @@ prj:
                 validate :
                   rules:
                     url:
-                      required: true
+                      #required: true
                       url: true
                       url_img_db: true
+                    file:
+                      accept: "image/jpeg, image/png, image/pjpeg"
+
                   messages:
                     url:
                       required: 'URL REQUIRED'

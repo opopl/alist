@@ -8,7 +8,9 @@ const fs = require('fs')
 const srvUtil = require('./../srv-util')
 
 const md5file = require('md5-file')
+
 const exifReader = require('exifreader')
+const imageinfo = require('imageinfo')
 
 const select = db.sql.select
 const insert = db.sql.insert
@@ -84,10 +86,22 @@ const ImgClass = class {
     return self
   }
 
+//@@ dbImgStoreFile
+  async dbImgStoreFile ({ iFile, ...idb }){
+    const self = this
+
+    console.log({ iFile });
+/*    if(!fs.existsSync(iFile)){ return self }*/
+
+    //const buf = fs.readFileSync(iFile)
+    //const info = imageinfo(buf)
+    /*console.log({ info });*/
+
+    return self
+  }
+
 //@@ dbImgStoreUrl
-  async dbImgStoreUrl ({
-    iUrl, ...idb
-  }) {
+  async dbImgStoreUrl ({ iUrl, ...idb }) {
     const self = this
 
     const rw = await self.dbImgData({ url : iUrl })
