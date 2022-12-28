@@ -129,9 +129,9 @@ const c_PrjClass = class {
       }
 
       row = await self.prj.dbSecData(whr)
-      await self.prj.secRowUpdate({ row })
 
       if (row) {
+        await self.prj.secRowUpdate({ row })
         res.json(row)
       }else{
         res.status(500).send({ 'msg' : 'no section data!' })

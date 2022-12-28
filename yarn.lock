@@ -14603,6 +14603,11 @@ streamsearch@^1.1.0:
   resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-1.1.0.tgz#404dd1e2247ca94af554e841a8ef0eaa238da764"
   integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
 
+strftime@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/strftime/-/strftime-0.10.1.tgz#108af1176a7d5252cfbddbdb2af044dfae538389"
+  integrity sha512-nVvH6JG8KlXFPC0f8lojLgEsPA18lRpLZ+RrJh/NkQV2tqOgZfbas8gcU8SFgnnqR3rWzZPYu6N2A3xzs/8rQg==
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"

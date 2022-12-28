@@ -12,6 +12,10 @@ const md5file = require('md5-file')
 const exifReader = require('exifreader')
 const imageinfo = require('imageinfo')
 
+const imageDataURI = require('image-data-uri')
+
+const strftime = require('strftime')
+
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
@@ -27,13 +31,41 @@ const ImgClass = class {
     Object.assign(this,ref)
   }
 
+//@@ _uriData2buf
+  _uriData2buf({ uri }){
+    const self = this
+
+    if (!uri) { return }
+
+    let buf
+    if (Array.isArray(uri)) {
+      for(let u of uri){
+        const b = self._uriData2buf({ uri : u })
+        if (b) {
+          buf = buf ? buf : []
+          buf.push(b)
+        }
+      }
+    }else{
+      try {
+        const decode = imageDataURI.decode(uri)
+        buf = decode.dataBuffer
+
+      } catch(e) {
+        console.error(e)
+      }
+    }
+
+    return buf
+  }
+
 //@@ dbImgData
-  async dbImgData ({ url }) {
+  async dbImgData (whr={}) {
     const self = this
 
     const q_data = select('*')
                 .from('imgs')
-                .where({ url })
+                .where(whr)
                 .toParams({placeholder: '?%d'})
 
     const rw = await dbProc.get(self.dbc, q_data.text, q_data.values)
@@ -80,7 +112,84 @@ const ImgClass = class {
         break
       }
 
+      if (iBuf) {
+        await self.dbImgStoreBuf({ iBuf, ...ref })
+        break
+      }
+
       break
+    }
+
+    return self
+  }
+
+//@@ dbImgStoreBuf
+  async dbImgStoreBuf ({ iBuf, inum, url, ...idb }){
+    const self = this
+
+    if(Array.isArray(iBuf)){
+      for(let b of iBuf){
+        self.dbImgStoreBuf({ iBuf: b, ...idb })
+      }
+      return self
+    }
+
+    const info = imageinfo(iBuf)
+    if (!info) { return self }
+
+    inum = inum ? inum : await self.dbImgInumFree()
+
+    const md5 = srvUtil.md5hex(iBuf)
+
+    if (!url) {
+      const rw = await self.dbImgData({ md5 })
+      if (rw) { return self }
+    }
+
+    const mtimeJs = Date.now()
+    const mtime = Math.trunc(mtimeJs/1000)
+    const mtimeStr = strftime('%d_%m_%y.%H.%M.%S', new Date(mtimeJs))
+
+    url = url ? url : `tm://${mtimeStr}@${md5}`
+
+    const mimeType = info.mimeType
+    const format   = info.format
+
+    const ext = format.toLowerCase()
+
+    const { width, height } = srvUtil.dictGet(info,'width height')
+
+    const img =`${inum}.${ext}`
+    const local = path.join(self.imgRoot, img)
+
+    const writer = fs.createWriteStream(local)
+    writer.write(iBuf)
+
+    //const e = exifReader.load(buf,{expanded: true, includeUnknown: true})
+
+    const size = iBuf.length
+
+    const ins = {
+      ...idb,
+      url,
+      inum, img, ext, width, height,
+      md5, size, mtime
+    }
+    const q = insert('imgs',ins)
+                .toParams({placeholder: '?%d'})
+
+    await dbProc.run(self.dbc, q.text, q.values)
+
+    const { tags } = srvUtil.dictGet(idb,'tags')
+
+    if (tags) {
+      const tagList = tags.split(',')
+                  .filter(x => x.length)
+                  .map(tag => { return { tag, url } })
+
+      const qt = insert('_info_imgs_tags', tagList)
+                .toParams({placeholder: '?%d'})
+      await dbProc.run(self.dbc, qt.text, qt.values)
     }
 
     return self
@@ -89,13 +198,6 @@ const ImgClass = class {
 //@@ dbImgStoreFile
   async dbImgStoreFile ({ iFile, ...idb }){
     const self = this
-
-    console.log({ iFile });
-/*    if(!fs.existsSync(iFile)){ return self }*/
-
-    //const buf = fs.readFileSync(iFile)
-    //const info = imageinfo(buf)
-    /*console.log({ info });*/
 
     return self
   }
@@ -112,47 +214,7 @@ const ImgClass = class {
     const { buf, info, headers } = await srvUtil.fetchImg({ url : iUrl })
     if (!info) { return self }
 
-    const mimeType = info.mimeType
-    const format = info.format
-    const ext = format.toLowerCase()
-
-    const { width, height } = srvUtil.dictGet(info,'width height')
-
-    const img =`${inum}.${ext}`
-    const local = path.join(self.imgRoot, img)
-
-    const writer = fs.createWriteStream(local)
-    writer.write(buf)
-
-    //const e = exifReader.load(buf,{expanded: true, includeUnknown: true})
-
-    const md5 = srvUtil.md5hex(buf)
-    const size = buf.length
-    const mtime = Math.trunc(Date.now()/1000)
-
-    const ins = {
-      ...idb,
-      url : iUrl,
-      inum, img, ext, width, height,
-      md5, size, mtime
-    }
-    const q = insert('imgs',ins)
-                .toParams({placeholder: '?%d'})
-
-    await dbProc.run(self.dbc, q.text, q.values)
-
-    const { tags } = srvUtil.dictGet(idb,'tags')
-
-    if (tags) {
-      const tagList = tags.split(',')
-                  .filter(x => x.length)
-                  .map(x => { return { tag: x, url : iUrl } })
-
-      const qt = insert('_info_imgs_tags', tagList)
-                .toParams({placeholder: '?%d'})
-      await dbProc.run(self.dbc, qt.text, qt.values)
-    }
-
+    await self.dbImgStoreBuf({ iBuf: buf, url: iUrl, ...idb })
 
     return self
   }

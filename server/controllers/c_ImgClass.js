@@ -176,16 +176,15 @@ const c_ImgClass = class {
        const fields = 'url file caption tags'
        const { url, file, caption, tags } = srvUtil.dictGet(data,fields)
 
-       const decode = imageDataURI.decode(file)
-       const buf = decode.dataBuffer
-       const info = imageinfo(buf)
+       let iBuf
+       if (file) {
+          iBuf = self.imgman._uriData2buf({ uri : file })
+       }
 
-       console.log({ info });
-
-       //self.imgman.dbImgStore({
-          //iUrl: url, iBuf : buf,
-          //caption, tags
-       //})
+       self.imgman.dbImgStore({
+          iUrl: url, iBuf,
+          caption, tags
+       })
        res.send({ url })
     }
   }
@@ -197,14 +196,15 @@ const c_ImgClass = class {
     return async (req, res) => {
       const params = req.params
 
-      const inum = _.get(params,'inum')
+      let whr = {}
+      if (req.method == 'GET') {
+        const inum = _.get(params,'inum')
+        whr = { inum }
+      }else{
+        whr = req.body
+      }
 
-      const q = select('*')
-                  .from('imgs')
-                  .where({ inum })
-                  .toParams({placeholder: '?%d'})
-
-      var rw = await dbProc.get(self.dbc, q.text, q.values)
+      const rw = await self.imgman.dbImgData(whr)
       res.send(rw)
     }
   }

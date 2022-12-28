@@ -44,6 +44,8 @@ class routerFactory {
     router.get('/img/count'         , self.c_Img.jsonCount())
     router.get('/img/raw/:inum'     , self.c_Img.rawImg())
     router.get('/img/raw/url/:url'  , self.c_Img.rawImgUrl())
+
+    router.post('/img/data'         , self.c_Img.jsonImgData())
     router.get('/img/data/:inum'    , self.c_Img.jsonImgData())
     router.get('/img/data/url/:url' , self.c_Img.jsonImgDataUrl())
 

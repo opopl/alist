@@ -83,6 +83,7 @@
     "selenium-webdriver": "^4.7.1",
     "sql-bricks": "^3.0.0",
     "sql-bricks-sqlite": "^1.0.0",
+    "strftime": "^0.10.1",
     "webpack-jquery-ui": "^2.0.1",
     "xregexp": "^5.1.1",
     "yargs": "^17.6.2"

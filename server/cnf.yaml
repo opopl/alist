@@ -210,4 +210,4 @@ prj:
                     url:
                       required: 'URL REQUIRED'
                       url: 'MUST BE URL'
-                      #url_img_db : 'IMAGE ALREADY IN DATABASE'
+                      url_img_db : 'IMAGE ALREADY IN DATABASE'
