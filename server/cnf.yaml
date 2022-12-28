@@ -55,7 +55,7 @@ prj:
                   'input text@ class=prj-input-url name=url', '' ]
               - [ 'label@@File:' ,
                   'button button@class=prj-input-file-clear@Clear',
-                  'input file@ name=file class=prj-input-file', '' ]
+                  'input file@ name=file class=prj-input-file multiple accept="image/*"', '' ]
               - [ 'label@@Caption:' , '', 'input text@ name=caption', '' ]
               - [ 'label@@Tags:' ,
                   'button button@class=prj-input-tags-clear@Clear',
@@ -203,10 +203,11 @@ prj:
                       url: true
                       url_img_db: true
                     file:
-                      accept: "image/jpeg, image/png, image/pjpeg"
+                      #accept: "image/jpeg, image/png, image/pjpeg"
+                      #accept: "image/jpeg"
 
                   messages:
                     url:
                       required: 'URL REQUIRED'
                       url: 'MUST BE URL'
-                      url_img_db : 'IMAGE ALREADY IN DATABASE'
+                      #url_img_db : 'IMAGE ALREADY IN DATABASE'

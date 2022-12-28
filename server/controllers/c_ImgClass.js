@@ -14,6 +14,9 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
+const imageDataURI = require('image-data-uri')
+const imageinfo = require('imageinfo')
+
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
@@ -173,10 +176,16 @@ const c_ImgClass = class {
        const fields = 'url file caption tags'
        const { url, file, caption, tags } = srvUtil.dictGet(data,fields)
 
-       self.imgman.dbImgStore({
-          iUrl: url, iFile : file,
-          caption, tags
-       })
+       const decode = imageDataURI.decode(file)
+       const buf = decode.dataBuffer
+       const info = imageinfo(buf)
+
+       console.log({ info });
+
+       //self.imgman.dbImgStore({
+          //iUrl: url, iBuf : buf,
+          //caption, tags
+       //})
        res.send({ url })
     }
   }

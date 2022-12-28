@@ -102,8 +102,9 @@ class Alist {
     srv.use(cors())
     srv.use(helmet())
     srv.use(compression())
-    srv.use(bodyParser.urlencoded({ extended: false }))
-    srv.use(bodyParser.json())
+    //srv.use(bodyParser.urlencoded({ extended: false }))
+    srv.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }))
+    srv.use(bodyParser.json({ limit: "50mb" }))
     srv.use(fileUpload())
     srv.use(logger('dev'))
 
