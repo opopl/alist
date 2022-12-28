@@ -229,12 +229,20 @@ const c_PrjClass = class {
 
     return async (req, res) => {
       const query = req.query
-      const { regex } = srvUtil.dictGet(query,'regex')
+      const { regex, exclude } = srvUtil.dictGet(query,'regex exclude')
 
-      let cond = ''
-      if (regex) { cond = `WHERE SEARCH("${regex}",tag)` }
+      const condList = []
+      if (regex) { condList.push( `SEARCH("${regex}",tag)` ) }
+      if (exclude) {
+        const excludeList =  exclude.split(',').map(x => `"${x}"`)
+        condList.push( `tag NOT IN (${excludeList.join(',')})` )
+      }
+
+      const cond = (condList.length) ? `WHERE ${condList.join(' AND ')}` : ''
+      console.log({ cond });
 
       const q = `SELECT DISTINCT tag FROM _info_projs_tags ${cond} ORDER BY tag ASC`
+
       const p = []
       const tagList = (await dbProc.all(self.dbc, q, p)).map(x => x.tag)
       res.send(tagList)
