@@ -127,6 +127,19 @@ const ImgClass = class {
 
     await dbProc.run(self.dbc, q.text, q.values)
 
+    const { tags } = srvUtil.dictGet(idb,'tags')
+
+    if (tags) {
+      const tagList = tags.split(',')
+                  .filter(x => x.length)
+                  .map(x => { return { tag: x, url : iUrl } })
+
+      const qt = insert('_info_imgs_tags', tagList)
+                .toParams({placeholder: '?%d'})
+      await dbProc.run(self.dbc, qt.text, qt.values)
+    }
+
+
     return self
   }
 
