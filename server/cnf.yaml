@@ -45,6 +45,13 @@ prj:
               - { width : '50%' }
               - { width : '20%' }
               rows:
+              - [ [
+                    'input radio@name=use id=radio_use_url value=url',
+                    'label@for=radio_use_url@ URL',
+                    'input radio@name=use id=radio_use_file value=file',
+                    'label@for=radio_use_file@ File',
+                  ],
+                  '', '' ]
               - [ 'label@@ URL:',
                   'button button@class=prj-input-url-clear@Clear',
                   'input text@ class=prj-input-url name=url', '' ]
