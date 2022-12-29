@@ -17,12 +17,9 @@ prj:
     config:
        templates:
           forms:
-            'sec_new':
+            'form_sec_new':
 ###form_sec_new
-            - id: 'form_sec_new'
               #pre: '<h2>Section</h2>'
-              tab:
-                attr: 'id=tab_sec_new'
               cols:
               - { width : '10%' }
               - { width : '5%' }
@@ -40,10 +37,8 @@ prj:
               - [ 'label@@ Date:'    , '', 'input date@ name=date', '' ]
               - [ 'button submit@@Submit', '', 'button reset@@Clear Form' ]
 ###form_img_new
-            - id: 'form_img_new'
+            'form_img_new':
               #pre: '<button value="clear">Clear</button>'
-              tab:
-                attr: 'id=tab_img_new'
               cols:
               - { width : '10%' }
               - { width : '5%' }
@@ -66,6 +61,9 @@ prj:
               #- [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
               #- [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
               #- [ 'button submit@@Submit', '', '' ]
+
+###form_pics_upload
+            'form_pics_upload':
 
        methods:
           htmlSecView:

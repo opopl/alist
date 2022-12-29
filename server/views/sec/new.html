@@ -1,4 +1,4 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 {%- import "import/form.html" as form -%}
 
 {% block content %}
@@ -10,17 +10,17 @@
     <li><a href="#tab_img_new">Image</a></li>
   </ul>
 
-{% for f in forms %}
-  {% set formId = f.id %}
-  {% set formRows = f.rows %}
-  {% set formCols = f.cols %}
-  {% set formPre = f.pre %}
-  {% set formTab = f.tab %}
-  {{ formPre | safe }}
-  <div class="prj-tab" {{ formTab.attr | safe }}>
-    {{ form.formRaw(formId, formRows, formCols) }}
-  </div>
-{% endfor %}
+  {% for input in inputList %}
+    {% set formId = input.formId %}
+    {% set tabId  = input.tabId %}
+
+    {% set f = _get(forms, formId) %}
+
+    <div class="prj-tab" id="{{ tabId }}">
+      {{ form.formRaw(formId, formRows = f.rows, formCols = f.cols) }}
+    </div>
+
+  {% endfor %}
 
 </div>
 
