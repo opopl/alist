@@ -129,7 +129,7 @@ const ImgClass = class {
 
     if(Array.isArray(iBuf)){
       for(let b of iBuf){
-        self.dbImgStoreBuf({ iBuf: b, ...idb })
+         self.dbImgStoreBuf({ iBuf: b, ...idb })
       }
       return self
     }
@@ -198,6 +198,20 @@ const ImgClass = class {
 //@@ dbImgStoreFile
   async dbImgStoreFile ({ iFile, ...idb }){
     const self = this
+
+    if(Array.isArray(iFile)){
+      for(let f of iFile){
+         self.dbImgStoreFile({ iFile: f, ...idb })
+      }
+      return self
+    }
+
+    if(!fs.existsSync(iFile)){ return self }
+
+    const iBuf = fs.readFileSync(iFile)
+    const name = path.basename(iFile)
+
+    await self.dbImgStoreBuf({ iBuf, name, ...idb })
 
     return self
   }

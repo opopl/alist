@@ -518,19 +518,11 @@ const PrjClass = class {
     return secData
   }
 
-//@@ secPicImport
-  async secPicImport ({ proj, sec, pic, cbi }) {
+//@@ callPrjGetImg
+  async callPrjGetImg ({
+        proj, sec, url,
+        tags, caption, cbi }) {
     const self = this
-
-    proj = proj ? proj : self.proj
-
-    let caption = _.get(pic,'caption','')
-
-    const url = _.get(pic,'url')
-    if (!url) { return self }
-
-    const tagsA = _.get(pic,'tags',[]) || []
-    const tags = tagsA.join(',')
 
     const exe = `prj-get-img`
     const args = []
@@ -565,6 +557,25 @@ const PrjClass = class {
     const { code, stdout } = await ff()
 
     if (cbi) { cbi({ code, stdout }) }
+
+    return self
+  }
+
+//@@ secPicImport
+  async secPicImport ({ proj, sec, pic, cbi }) {
+    const self = this
+
+    proj = proj ? proj : self.proj
+
+    let caption = _.get(pic,'caption','')
+
+    const url = _.get(pic,'url')
+    if (!url) { return self }
+
+    const tagsA = _.get(pic,'tags',[]) || []
+    const tags = tagsA.join(',')
+
+    self.callPrjGetImg({ proj, sec, url, tags, caption })
 
     return self
   }
