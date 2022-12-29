@@ -221,9 +221,7 @@ const ImgClass = class {
     const self = this
 
     const rw = await self.dbImgData({ url : iUrl })
-    if (rw) { console.log(rw); return self }
-
-    const inum = await self.dbImgInumFree()
+    if (rw) { console.log(`[Img] Image already stored: ${iUrl}`); return self }
 
     const { buf, info, headers } = await srvUtil.fetchImg({ url : iUrl })
     if (!info) { return self }
