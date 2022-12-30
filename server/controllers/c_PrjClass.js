@@ -333,6 +333,20 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlCodeTab
+  htmlCodeTab () {
+    const self = this
+
+    return async (req, res) => {
+
+      const tabId = req.query.id
+      const forms = self.getConfig({ path : `templates.forms` })
+      const formId = 'form_pics_upload'
+
+      return res.render(`include/tab/${tabId}`, { forms, formId, _get })
+    }
+  }
+
 //@@ htmlSecView
   htmlSecView () {
     const self = this

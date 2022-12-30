@@ -62,6 +62,9 @@ class routerFactory {
     router.get('/prj/target/data', self.c_Prj.jsonTargetData())
     router.get('/prj/target/html', self.c_Prj.htmlTargetView())
 
+//@@ Code
+    router.get('/prj/code/tab/html' , self.c_Prj.htmlCodeTab())
+
 //@@ Sec/New
 
     router.get('/prj/sec/new/html' , self.c_Prj.htmlSecNew())

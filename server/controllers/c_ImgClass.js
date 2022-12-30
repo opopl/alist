@@ -205,7 +205,11 @@ const c_ImgClass = class {
       }
 
       const rw = await self.imgman.dbImgData(whr)
-      res.send(rw)
+      if (rw) {
+        res.send(rw)
+      }else{
+        res.status(404).send({ 'msg' : 'no img!' })
+      }
     }
   }
 

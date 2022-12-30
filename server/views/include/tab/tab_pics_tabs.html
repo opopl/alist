@@ -1,4 +1,6 @@
 
+{%- import "import/form.html" as form -%}
+
 <div id="tab_pics_tabs">
 
   <ul>
@@ -22,11 +24,9 @@
     <label for="radio_pics_all">All</label>
   </div>
 
+  {% set f = _get(forms, formId) %}
   <div id="tab_pics_upload">
-     <form id="form_pics_upload">
-       <div class="prj-form">
-       </div>
-
-     </form>
+    {{ form.formRaw(formId, formRows = f.rows, formCols = f.cols) }}
+    <div id="pic_list"></div>
   </div>
 </div>
