@@ -93,6 +93,22 @@ prj:
               rows:
               - [ 'label@@ Caption','','input text@ class=prj-img-caption name=caption' ]
               - [ 'label@@ URL','button button@@Copy','input text@ class=prj-img-url name=url disabled' ]
+###form_img_data
+            'form_img_data':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ url','button button@@copy','input text@ name=url disabled' ]
+              - [ 'label@@ inum','','input text@name=inum disabled' ]
+              - [ 'label@@ caption','','input text@name=caption disabled' ]
+              - [ 'label@@ tags','','input text@name=tags disabled' ]
+              - [ 'label@@ md5','','input text@name=md5 disabled' ]
+              - [ 'label@@ width','','input text@name=width disabled' ]
+              - [ 'label@@ height','','input text@name=height disabled' ]
+              - [ 'label@@ url_parent','','input text@name=url_parent disabled' ]
+              - [ 'label@@ mtime','','input text@name=mtime disabled' ]
 
        methods:
           htmlSecView:
@@ -200,6 +216,23 @@ prj:
                      header: true
                      footer: true
                    buttons: [ 'copy', 'excel', 'pdf' ]
+
+###ui.dialogs
+          dialogs:
+             dialog_img_data:
+                autoOpen: false
+                resizeable: true
+                modal: true
+                title: "Image Database Data"
+                height: 700
+                width: 800
+             dialog_img_edit:
+                autoOpen: false
+                resizeable: true
+                modal: true
+                title: "Image Edit"
+                height: 400
+                width: 800
 
 ###ui.forms
           forms:
