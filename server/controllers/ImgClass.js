@@ -76,6 +76,31 @@ const ImgClass = class {
     return rw
   }
 
+//@@ dbImgDataAll
+  async dbImgDataAll ({ whr, sql }) {
+    const self = this
+
+    let q, p = []
+
+    if (!sql) {
+      const q_data = select('*')
+                  .from('imgs')
+                  .where(whr)
+                  .toParams({placeholder: '?%d'})
+      q = q_data.text
+      p = q_data.values
+    }else{
+      q = sql
+    }
+
+    const rows = await dbProc.all(self.dbc, q, p)
+    if (rows) {
+      //if (rw.url) { rw.md5_url = srvUtil.md5hex(rw.url) }
+    }
+
+    return rows
+  }
+
 //@@ dbImgInum
   async dbImgInum ({ url }) {
     const self = this

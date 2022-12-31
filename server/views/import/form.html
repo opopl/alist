@@ -9,11 +9,7 @@
       {%- set attr = "type=" + opt + " " + attr -%}
     {%- endif -%}
 
-    {% if content -%}
-      <{{ tag }} {{ attr }}>{{ content }}</{{ tag }}>
-    {%- else %}
-      <{{ tag }} {{ attr }} />
-    {%- endif %}
+    <{{ tag }} {{ attr }}>{{ content }}</{{ tag }}>
   {%- endif -%}
 {%- endmacro -%}
 

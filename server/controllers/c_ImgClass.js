@@ -213,6 +213,32 @@ const c_ImgClass = class {
     }
   }
 
+//@@ jsonImgDataAll
+  jsonImgDataAll(){
+    const self = this
+
+    return async (req, res) => {
+      const params = req.params
+
+      const whr = req.body
+      for(let key of Object.keys(whr)){
+        let value = _.get(whr, key)
+        if (value === undefined || value === '') {
+          delete whr[key]
+        }
+      }
+
+      const sql = _.get(whr,'sql')
+
+      const rows = await self.imgman.dbImgDataAll({ whr, sql })
+      if (rows) {
+        res.send(rows)
+      }else{
+        res.status(404).send({ 'msg' : 'no img data!' })
+      }
+    }
+  }
+
 }
 
 
