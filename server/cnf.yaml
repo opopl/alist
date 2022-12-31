@@ -101,6 +101,7 @@ prj:
               - { width : '60%' }
               rows:
               - [ 'label@@ url','button button@@copy','input text@ name=url disabled' ]
+              - [ 'label@@ url md5','','input text@ name=md5_url disabled' ]
               - [ 'label@@ inum','','input text@name=inum disabled' ]
               - [ 'label@@ caption','','input text@name=caption disabled' ]
               - [ 'label@@ tags','','input text@name=tags disabled' ]

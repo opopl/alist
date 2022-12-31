@@ -69,6 +69,10 @@ const ImgClass = class {
                 .toParams({placeholder: '?%d'})
 
     const rw = await dbProc.get(self.dbc, q_data.text, q_data.values)
+    if (rw) {
+      if (rw.url) { rw.md5_url = srvUtil.md5hex(rw.url) }
+    }
+
     return rw
   }
 
