@@ -110,6 +110,14 @@ prj:
               - [ 'label@@ height','','input text@name=height disabled' ]
               - [ 'label@@ url_parent','','input text@name=url_parent disabled' ]
               - [ 'label@@ mtime','','input text@name=mtime disabled' ]
+###form_img_search
+            'form_img_search':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ url','','input text@ name=url class=prj-img-url' ]
 
        methods:
           htmlSecView:
@@ -255,6 +263,15 @@ prj:
                       required: true
                       url: true
                       url_prj_db: true
+
+###ui.forms.form_img_search
+             form_img_search:
+                validate :
+                  rules:
+                    url:
+                      required: true
+                      url: true
+                      url_img_db: true
 
 ###ui.forms.form_img_new
              form_img_new:

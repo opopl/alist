@@ -67,6 +67,7 @@ class Alist {
     cons.requires.nunjucks = noon
     noon.addFilter('isArr', x => Array.isArray(x))
     noon.addFilter('isObj', x => _.isPlainObject(x))
+    noon.addFilter('get', (x, key, def='') => _.get(x, key, def))
 
     self.tmplEnv = noon
 

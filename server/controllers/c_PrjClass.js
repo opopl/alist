@@ -216,6 +216,7 @@ const c_PrjClass = class {
       var data = await self.prj.dbSecPicData(ref)
 
       if (data) {
+        console.log({ data });
         res.status(200).json(data)
       }else{
         res.status(500).send({ 'msg' : 'no pics data!' })
@@ -308,6 +309,17 @@ const c_PrjClass = class {
       }else{
         res.status(500).send({ 'msg' : 'no pics data!' })
       }
+    }
+  }
+
+//@@ htmlImgSearch
+// GET /prj/img/search/html
+  htmlImgSearch () {
+    const self = this
+    return async (req, res) => {
+      const forms = self.getConfig({ path : `templates.forms` })
+      const formId = 'form_img_search'
+      return res.render('img/search', { formId, forms })
     }
   }
 

@@ -54,6 +54,7 @@ class routerFactory {
     router.post('/img/data/update'   , self.c_Img.jsonImgDataUpdate())
 
     router.post('/prj/act', self.c_Prj.jsonAct())
+    router.get('/prj/img/search/html', self.c_Prj.htmlImgSearch())
 
 //@@ Config
     router.get('/prj/config/get', self.c_Prj.jsonConfig())
