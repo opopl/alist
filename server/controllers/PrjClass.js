@@ -576,9 +576,9 @@ const PrjClass = class {
     const tags = tagsA.join(',')
 
     const idb = { proj, sec, tags, caption }
-    self.callPrjGetImg({ url, ...idb, cbi })
+    await self.callPrjGetImg({ url, ...idb, cbi })
 
-    //self.imgman.dbImgStoreUrl({ iUrl: url, ...idb })
+    //await self.imgman.dbImgStoreUrl({ iUrl: url, ...idb })
 
     return self
   }
