@@ -18,10 +18,11 @@ class routerFactory {
 
     const app = _.get(ref,'app')
     this.app = app
+		const tmplEnv = app.tmplEnv
 
-    this.c_Auth = app ? app.c_Auth : new c_AuthClass()
-    this.c_Img = app ? app.c_Img : new c_ImgClass()
-    this.c_Prj = app ? app.c_Prj : new c_PrjClass()
+    this.c_Auth = app ? app.c_Auth : new c_AuthClass({ tmplEnv })
+    this.c_Img = app ? app.c_Img : new c_ImgClass({ tmplEnv })
+    this.c_Prj = app ? app.c_Prj : new c_PrjClass({ tmplEnv })
 
   }
 
@@ -64,6 +65,7 @@ class routerFactory {
 
 //@@ Code
     router.get('/prj/code/tab/html' , self.c_Prj.htmlCodeTab())
+    router.get('/prj/code/form/:formId/html' , self.c_Prj.htmlCodeForm())
 
 //@@ Sec/New
 

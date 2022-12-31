@@ -25,6 +25,15 @@ const fsRead = function(path, encoding) {
 
 }
 
+const objGetMethods = (obj) => {
+  let properties = new Set()
+  let currentObj = obj
+  do {
+    Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+  } while ((currentObj = Object.getPrototypeOf(currentObj)))
+  return [...properties.keys()].filter(item => typeof obj[item] === 'function')
+}
+
 //https://futurestud.io/tutorials/download-files-images-with-axios-in-node-js
 //'use strict'
 
@@ -134,5 +143,6 @@ module.exports = {
   fsWrite,
   dictGet,
   fetchFile,
-  fetchImg
+  fetchImg,
+  objGetMethods
 }

@@ -575,9 +575,9 @@ const PrjClass = class {
     const tagsA = _.get(pic,'tags',[]) || []
     const tags = tagsA.join(',')
 
-    self.callPrjGetImg({ proj, sec, url, tags, caption, cbi })
-
     const idb = { proj, sec, tags, caption }
+    self.callPrjGetImg({ url, ...idb, cbi })
+
     //self.imgman.dbImgStoreUrl({ iUrl: url, ...idb })
 
     return self

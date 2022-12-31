@@ -347,6 +347,27 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlCodeForm
+  htmlCodeForm () {
+    const self = this
+
+    return async (req, res) => {
+      const formId = req.params.formId
+      const forms = self.getConfig({ path : `templates.forms` })
+
+      const form = _.get(forms, formId, {})
+      const formCols = _.get(form,'cols',[])
+      const formRows = _.get(form,'rows',[])
+
+      const formT = `
+          {%- import "import/form.html" as form -%}
+          {{ form.formRaw(formId, formRows, formCols) }}
+      `
+      const html = self.tmplEnv.renderString(formT, { formCols, formRows, formId })
+      return res.send(html)
+    }
+  }
+
 //@@ htmlSecView
   htmlSecView () {
     const self = this

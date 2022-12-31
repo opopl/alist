@@ -50,33 +50,11 @@ class Alist {
     return self
   }
 
-//@@ initClasses
-  initClasses(){
+//@@ initTmpl
+  initTmpl(){
     const self = this
 
-    const optsAuth = _.get(self,'cnf.auth',{})
-    const optsImg  = _.get(self,'cnf.img',{})
-    const optsPrj  = _.get(self,'cnf.prj.controller',{})
-
-    self.c_Auth = new c_AuthClass(optsAuth)
-    self.c_Img  = new c_ImgClass(optsImg)
-    self.c_Prj  = new c_PrjClass(optsPrj)
-    //self.firefoxDriver  = firefoxDriver 
-
-    return self
-  }
-
-//@@ run
-  run(){
-    const self = this
-
-    self
-        .loadYaml()
-        .initClasses()
-
-    // Create express server
-    const srv = express()
-    self.srv = srv
+    const srv = self.srv
 
     // add nunjucks to requires so filters can be
     // added and the same instance will be used inside the render method
@@ -90,10 +68,46 @@ class Alist {
     noon.addFilter('isArr', x => Array.isArray(x))
     noon.addFilter('isObj', x => _.isPlainObject(x))
 
+    self.tmplEnv = noon
+
     // view engine setup
     srv.engine('html', cons.nunjucks);
     srv.set('views', path.resolve(__dirname, 'views'));
     srv.set('view engine', 'html');
+
+    return self
+  }
+
+//@@ initClasses
+  initClasses(){
+    const self = this
+
+    const tmplEnv = self.tmplEnv
+
+    const optsAuth = _.get(self,'cnf.auth',{})
+    const optsImg  = _.get(self,'cnf.img',{})
+    const optsPrj  = _.get(self,'cnf.prj.controller',{})
+
+    self.c_Auth = new c_AuthClass({ ...optsAuth, tmplEnv })
+    self.c_Img  = new c_ImgClass({ ...optsImg, tmplEnv })
+    self.c_Prj  = new c_PrjClass({ ...optsPrj, tmplEnv })
+    //self.firefoxDriver  = firefoxDriver 
+
+    return self
+  }
+
+//@@ run
+  run(){
+    const self = this
+
+    // Create express server
+    const srv = express()
+    self.srv = srv
+
+    self
+        .loadYaml()
+        .initTmpl()
+        .initClasses()
 
     console.log(path.resolve(__dirname, 'views'));
 
