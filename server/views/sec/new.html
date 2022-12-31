@@ -13,11 +13,14 @@
   {% for input in inputList %}
     {% set formId = input.formId %}
     {% set tabId  = input.tabId %}
+    {% set after  = input.after %}
 
     {% set f = _get(forms, formId) %}
 
     <div class="prj-tab" id="{{ tabId }}">
       {{ form.formRaw(formId, formRows = f.rows, formCols = f.cols) }}
+
+			{{ after }}
     </div>
 
   {% endfor %}

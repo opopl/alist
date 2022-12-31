@@ -266,6 +266,9 @@ prj:
 
 ###ui.forms.form_img_search
              form_img_search:
+                submit:
+                  scheme: 'form'
+                  url: "/img/data"
                 validate :
                   rules:
                     url:
