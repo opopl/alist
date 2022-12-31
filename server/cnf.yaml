@@ -269,12 +269,14 @@ prj:
                 submit:
                   scheme: 'form'
                   url: "/img/data"
+                  ajax:
+                    opts:
                 validate :
                   rules:
                     url:
                       required: true
                       url: true
-                      url_img_db: true
+                      #url_img_db: true
 
 ###ui.forms.form_img_new
              form_img_new:
