@@ -347,6 +347,17 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlCodeMenu
+  htmlCodeMenu () {
+    const self = this
+
+    return async (req, res) => {
+      const menuId = req.params.menuId
+
+      return res.render(`include/menu/${menuId}`)
+    }
+  }
+
 //@@ htmlCodeForm
   htmlCodeForm () {
     const self = this

@@ -65,7 +65,9 @@ class routerFactory {
 
 //@@ Code
     router.get('/prj/code/tab/html' , self.c_Prj.htmlCodeTab())
+
     router.get('/prj/code/form/:formId/html' , self.c_Prj.htmlCodeForm())
+    router.get('/prj/code/menu/:menuId/html' , self.c_Prj.htmlCodeMenu())
 
 //@@ Sec/New
 

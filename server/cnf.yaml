@@ -84,6 +84,15 @@ prj:
                     'button button@ id=btn_pic_upload @Upload', '', 
                     'button button@ id=btn_pic_clear  @Clear Pics', '', 
                 ]
+###form_img_edit
+            'form_img_edit':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ Caption','','input text@ class=prj-img-caption name=caption' ]
+              - [ 'label@@ URL','button button@@Copy','input text@ class=prj-img-url name=url disabled' ]
 
        methods:
           htmlSecView:
