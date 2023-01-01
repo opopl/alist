@@ -243,6 +243,12 @@ const c_ImgClass = class {
 
       const sql = _.get(whr,'sql')
 
+      // disable all imgs query if no where params were
+      //  specified
+      if (!Object.keys(whr).length && !sql) {
+        return res.status(404).send({ 'msg' : 'no img data!' })
+      }
+
       const rows = await self.imgman.dbImgDataAll({ whr, sql })
       if (rows) {
         res.send(rows)
