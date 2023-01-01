@@ -271,10 +271,15 @@ prj:
 
 ###ui.forms.form_img_search
              form_img_search:
+                fields:
+                  tags:
+                    autocomplete:
+                      url: '/img/tag/list'
                 submit:
-                  scheme: 'form'
                   url: "/img/data/all"
                   ajax:
+                    data:
+                      scheme: 'form'
                     opts:
                 validate :
                   rules:

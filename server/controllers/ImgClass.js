@@ -92,6 +92,7 @@ const ImgClass = class {
     }else{
       q = sql
     }
+    console.log({ q, p });
 
     const rows = await dbProc.all(self.dbc, q, p)
     if (rows) {
