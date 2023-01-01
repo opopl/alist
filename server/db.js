@@ -18,6 +18,7 @@ const dbDoc  = new sqlite3.Database(dbPathDoc);
 
 const ext = path.join(__dirname,'./sqlite3-extras')
 
+dbImg.loadExtension(ext)
 dbAuth.loadExtension(ext)
 dbPrj.loadExtension(ext)
 dbBld.loadExtension(ext)

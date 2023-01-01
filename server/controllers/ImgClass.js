@@ -77,11 +77,20 @@ const ImgClass = class {
   }
 
 //@@ dbImgTagList
-  async dbImgTagList () {
+  async dbImgTagList ({ regex, exclude }) {
     const self = this
 
+    const condList = []
+    if (regex) { condList.push( `SEARCH("${regex}",tag)` ) }
+    if (exclude) {
+      const excludeList =  exclude.split(',').map(x => `"${x}"`)
+      condList.push( `tag NOT IN (${excludeList.join(',')})` )
+    }
+
+    const cond = (condList.length) ? `WHERE ${condList.join(' AND ')}` : ''
+
     const info = '_info_imgs_tags'
-    const q = `SELECT DISTINCT tag FROM ${info} ORDER BY tag`
+    const q = `SELECT DISTINCT tag FROM ${info} ${cond} ORDER BY tag ASC`
 
     const rows = await dbProc.all(self.dbc, q, [])
     const tagList = rows.map( (x) => x.tag )

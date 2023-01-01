@@ -119,7 +119,13 @@ prj:
               rows:
               - [ 'label@@ inum','','input text@ name=inum' ]
               - [ 'label@@ url','','input text@ name=url class=prj-img-url' ]
+
+              - [ 'label@@Tags:' ,
+                  'button button@class=prj-input-tags-clear@Clear',
+                  'input text@ class=prj-input-tags name=tags', '' ]
+
               - [ 'label@@ sql','','textarea@ name=sql class=prj-input-area@' ]
+
               - [ 'button button@class=prj-btn-form-reset@Clear Form', '', '' ]
               - [ 'input submit@hidden@','','' ]
 

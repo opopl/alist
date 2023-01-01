@@ -218,7 +218,10 @@ const c_ImgClass = class {
     const self = this
 
     return async (req, res) => {
-      const tagList = await self.imgman.dbImgTagList()
+      const query = req.query
+      const { regex, exclude } = srvUtil.dictGet(query,'regex exclude')
+
+      const tagList = await self.imgman.dbImgTagList({ regex, exclude })
       res.send(tagList)
     }
   }
