@@ -110,6 +110,9 @@ prj:
               - [ 'label@@ height','','input text@name=height disabled' ]
               - [ 'label@@ url_parent','','input text@name=url_parent disabled' ]
               - [ 'label@@ mtime','','input text@name=mtime disabled' ]
+              - [ 'label@@ proj','','input text@name=proj disabled' ]
+              - [ 'label@@ sec','','input text@name=sec disabled' ]
+              - [ 'label@@ rootid','','input text@name=rootid disabled' ]
 ###form_img_search
             'form_img_search':
               cols:
