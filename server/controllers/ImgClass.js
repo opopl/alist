@@ -103,15 +103,44 @@ const ImgClass = class {
 
     let q, p = []
 
-    if (!sql) {
-      const q_data = select('*')
-                  .from('imgs')
-                  .where(whr)
-                  .toParams({placeholder: '?%d'})
-      q = q_data.text
-      p = q_data.values
-    }else{
-      q = sql
+    let tagList = []
+    if ('tags' in whr) {
+      const tags = whr.tags
+      const qArr = [], whereArr = []
+      tagList = tags.split(',')
+      delete whr.tags
+      let i = 1, condArr = []
+      qArr.push(`SELECT * FROM imgs`)
+      const info = `_info_imgs_tags`
+      for(let tag of tagList){
+        let tbl = `${info}_${i}`
+        qArr.push(`
+            INNER JOIN ${info} AS ${tbl} ON
+            imgs.url = ${tbl}.url
+        `)
+        whereArr.push(`${tbl}.tag = ?`)
+        p.push(tag)
+
+        i+=1
+      }
+      const condWhere = whereArr.join(' AND ')
+      qArr.push(`WHERE ${condWhere}`)
+      q = qArr.join(' ')
+      q = `${q} limit 10`
+      console.log({ q, p });
+    }
+
+    if (!q) {
+      if (!sql) {
+        const q_data = select('*')
+                    .from('imgs')
+                    .where(whr)
+                    .toParams({placeholder: '?%d'})
+        q = q_data.text
+        p = q_data.values
+      }else{
+        q = sql
+      }
     }
     console.log({ q, p });
 
