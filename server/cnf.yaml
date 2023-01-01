@@ -104,10 +104,15 @@ prj:
               - [ 'label@@ url md5','','input text@ name=md5_url disabled' ]
               - [ 'label@@ inum','','input text@name=inum disabled' ]
               - [ 'label@@ caption','','input text@name=caption disabled' ]
+              - [ 'label@@ name','','input text@name=name disabled' ]
+              - [ 'label@@ name_uniq','','input text@name_uniq=name_uniq disabled' ]
               - [ 'label@@ tags','','input text@name=tags disabled' ]
               - [ 'label@@ md5','','input text@name=md5 disabled' ]
+
               - [ 'label@@ width','','input text@name=width disabled' ]
+              - [ 'label@@ width_tex','','input text@name=width_tex disabled' ]
               - [ 'label@@ height','','input text@name=height disabled' ]
+
               - [ 'label@@ url_parent','','input text@name=url_parent disabled' ]
               - [ 'label@@ mtime','','input text@name=mtime disabled' ]
               - [ 'label@@ proj','','input text@name=proj disabled' ]

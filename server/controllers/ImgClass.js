@@ -130,6 +130,7 @@ const ImgClass = class {
       q = `${q} limit 10`
       console.log({ q, p });
     }
+
 //@a dbImgDataAll.inum
     if ('inum' in whr) {
       const inumArr = whr.inum.split(',')
