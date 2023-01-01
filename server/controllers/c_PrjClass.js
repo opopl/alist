@@ -345,6 +345,17 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlCodePiece
+  htmlCodePiece () {
+    const self = this
+
+    return async (req, res) => {
+      const piece = req.params.piece
+      return res.render(`include/piece/${piece}`, {})
+    }
+
+  }
+
 //@@ htmlCodeTab
   htmlCodeTab () {
     const self = this

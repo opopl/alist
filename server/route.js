@@ -73,6 +73,7 @@ class routerFactory {
 
     router.get('/prj/code/form/:formId/html' , self.c_Prj.htmlCodeForm())
     router.get('/prj/code/menu/:menuId/html' , self.c_Prj.htmlCodeMenu())
+    router.get('/prj/code/piece/:piece/html' , self.c_Prj.htmlCodePiece())
 
 //@@ Sec/New
 
