@@ -62,9 +62,9 @@ prj:
               - [ 'label@@Tags:' ,
                   'button button@class=prj-input-tags-clear@Clear',
                   'input text@ class=prj-input-tags name=tags', '' ]
-              - [ 
-                    'button submit@@Submit', '', 
-                    'button button@class=prj-btn-form-reset@Clear Form' 
+              - [
+                    'button submit@@Submit', '',
+                    'button button@class=prj-btn-form-reset@Clear Form'
                 ]
               #- [ 'label@@ Title:'   , '', 'input text@ id=input_sec_new_title name=title', '' ]
               #- [ 'label@@ Section:' , '', 'input text@ id=input_sec_new_name name=sec', '' ]
@@ -80,9 +80,9 @@ prj:
               - { width : '60%' }
               rows:
               - [ 'label@@ URL:','','input text@ class=prj-input-url id=input_pic_url name=url' ]
-              - [ 
-                    'button button@ id=btn_pic_upload @Upload', '', 
-                    'button button@ id=btn_pic_clear  @Clear Pics', '', 
+              - [
+                    'button button@ id=btn_pic_upload @Upload', '',
+                    'button button@ id=btn_pic_clear  @Clear Pics', '',
                 ]
 ###form_img_edit
             'form_img_edit':
@@ -133,7 +133,13 @@ prj:
                   'input text@ class=prj-input-tags name=tags', '' ]
 
               - [ 'label@@ sql','','textarea@ name=sql class=prj-input-area@' ]
-              - [ 'button@@Submit', 'button button@class=prj-btn-form-reset@Clear Form', '' ]
+              - [
+                  'button@@Submit',
+                  'button button@class=prj-btn-form-reset@Clear Form',
+                  'button@name=last@Last',
+                  ''
+                ]
+
               - [ 'input submit@hidden@','','' ]
 
 
