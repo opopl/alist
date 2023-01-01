@@ -104,6 +104,7 @@ const ImgClass = class {
     let q, p = []
 
     let tagList = []
+//@a dbImgDataAll.tags
     if ('tags' in whr) {
       const tags = whr.tags
       const qArr = [], whereArr = []
@@ -128,6 +129,12 @@ const ImgClass = class {
       q = qArr.join(' ')
       q = `${q} limit 10`
       console.log({ q, p });
+    }
+//@a dbImgDataAll.inum
+    if ('inum' in whr) {
+      const inumArr = whr.inum.split(',')
+      whr.inum = inumArr
+      whr = db.sql.in('inum', inumArr)
     }
 
     if (!q) {
