@@ -213,6 +213,16 @@ const c_ImgClass = class {
     }
   }
 
+//@@ jsonImgTagList
+  jsonImgTagList(){
+    const self = this
+
+    return async (req, res) => {
+      const tagList = await self.imgman.dbImgTagList()
+      res.send(tagList)
+    }
+  }
+
 //@@ jsonImgDataAll
   jsonImgDataAll(){
     const self = this

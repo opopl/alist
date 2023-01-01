@@ -76,6 +76,18 @@ const ImgClass = class {
     return rw
   }
 
+//@@ dbImgTagList
+  async dbImgTagList () {
+    const self = this
+
+    const info = '_info_imgs_tags'
+    const q = `SELECT DISTINCT tag FROM ${info} ORDER BY tag`
+
+    const rows = await dbProc.all(self.dbc, q, [])
+    const tagList = rows.map( (x) => x.tag )
+    return tagList
+  }
+
 //@@ dbImgDataAll
   async dbImgDataAll ({ whr, sql }) {
     const self = this
