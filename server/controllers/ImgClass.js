@@ -217,7 +217,7 @@ const ImgClass = class {
   }
 
 //@@ dbImgStoreBuf
-  async dbImgStoreBuf ({ iBuf, inum, url, force, ...idb }){
+  async dbImgStoreBuf ({ iBuf, force, inum, url, ...idb }){
     const self = this
 
     if(Array.isArray(iBuf)){
@@ -237,7 +237,11 @@ const ImgClass = class {
     let saved
     if (!url) {
       saved = await self.dbImgData({ md5 })
-      if (saved && !force) { return self }
+      if (saved) {
+        if (!force) { return self }
+
+        url = saved.url
+      }
     }
 
     const mtimeJs = Date.now()
@@ -300,7 +304,7 @@ const ImgClass = class {
   }
 
 //@@ dbImgStoreFile
-  async dbImgStoreFile ({ iFile, ...idb }){
+  async dbImgStoreFile ({ iFile, force, ...idb }){
     const self = this
 
     if(Array.isArray(iFile)){
@@ -314,7 +318,7 @@ const ImgClass = class {
 
     const iBuf = fs.readFileSync(iFile)
 
-    await self.dbImgStoreBuf({ iBuf, ...idb })
+    await self.dbImgStoreBuf({ iBuf, force, ...idb })
 
     return self
   }

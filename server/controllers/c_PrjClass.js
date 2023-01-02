@@ -126,8 +126,10 @@ const c_PrjClass = class {
       const proj = body.proj || self.proj
 
       const rootid = self.rootid
-      const sd = self.prj.dbSecData({ sec, proj })
+      const sd = await self.prj.dbSecData({ sec, proj })
       const url_parent = sd.url
+
+      const force = body.force
 
       const { exNew, exDone, secDirNew, secDirDone } = self.prj._secFsData({ sec, proj })
 
@@ -147,8 +149,6 @@ const c_PrjClass = class {
           const xDir = path.join(dir, x)
           if(!fs.existsSync(xDir)){ continue }
 
-          console.log({ xDir })
-
           const finder = findit(xDir);
           const ff = new Promise((resolve, reject) => {
             const found = []
@@ -165,8 +165,7 @@ const c_PrjClass = class {
           for(let iFile of found){
             const bn = path.basename(iFile)
             const name_orig = bn.replace(/\.(\w+)$/g,'','g')
-            console.log({ iFile, tags, name_orig })
-            await self.prj.imgman.dbImgStoreFile({ iFile, name_orig, tags, ...idb })
+            await self.prj.imgman.dbImgStoreFile({ iFile, force, name_orig, tags, ...idb })
           }
         }
       }
