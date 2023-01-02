@@ -126,6 +126,8 @@ const c_PrjClass = class {
       const proj = body.proj || self.proj
 
       const rootid = self.rootid
+      const sd = self.prj.dbSecData({ sec, proj })
+      const urlSec = sd.url
 
       const { exNew, exDone, secDirNew, secDirDone } = self.prj._secFsData({ sec, proj })
 

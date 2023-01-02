@@ -257,17 +257,19 @@ prj:
 
 ###ui.dialogs
           dialogs:
-             dialog_img_data:
+             '@common':
                 autoOpen: false
                 resizeable: true
                 modal: true
+
+             dialog_img_delete:
+                title: "Image Deletion"
+
+             dialog_img_data:
                 title: "Image Database Data"
                 height: 700
                 width: 800
              dialog_img_edit:
-                autoOpen: false
-                resizeable: true
-                modal: true
                 title: "Image Edit"
                 height: 400
                 width: 800
