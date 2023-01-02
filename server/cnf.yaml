@@ -84,6 +84,8 @@ prj:
                     'button button@ id=btn_pic_upload @Upload', '',
                     'button button@ id=btn_pic_clear  @Clear Pics', '',
                 ]
+
+              - [ 'button button@ name=load_scrn_fs @Load Screenshots From Filesystem','','' ]
 ###form_img_edit
             'form_img_edit':
               cols:
@@ -104,8 +106,11 @@ prj:
               - [ 'label@@ url md5','','input text@ name=md5_url disabled' ]
               - [ 'label@@ inum','','input text@name=inum disabled' ]
               - [ 'label@@ caption','','input text@name=caption disabled' ]
+
               - [ 'label@@ name','','input text@name=name disabled' ]
-              - [ 'label@@ name_uniq','','input text@name_uniq=name_uniq disabled' ]
+              - [ 'label@@ name_uniq','','input text@name=name_uniq disabled' ]
+              - [ 'label@@ name_orig','','input text@name=name_orig disabled' ]
+
               - [ 'label@@ tags','','input text@name=tags disabled' ]
               - [ 'label@@ md5','','input text@name=md5 disabled' ]
 

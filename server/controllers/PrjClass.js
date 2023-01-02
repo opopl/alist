@@ -562,12 +562,14 @@ const PrjClass = class {
   }
 
 //@@ secPicImport
-  async secPicImport ({ proj, sec, pic, cbi }) {
+  async secPicImport ({ pic, sec, proj, rootid, cbi }) {
     const self = this
 
     proj = proj ? proj : self.proj
+    rootid = rootid ? rootid : self.rootid
 
-    let caption = _.get(pic,'caption','')
+    const caption = _.get(pic,'caption','')
+    const url_parent = _.get(pic,'url_parent')
 
     const url = _.get(pic,'url')
     if (!url) { return self }
@@ -575,10 +577,10 @@ const PrjClass = class {
     const tagsA = _.get(pic,'tags',[]) || []
     const tags = tagsA.join(',')
 
-    const idb = { proj, sec, tags, caption }
-    await self.callPrjGetImg({ url, ...idb, cbi })
+    const idb = { rootid, proj, sec, tags, caption, url_parent }
+    //await self.callPrjGetImg({ url, ...idb, cbi })
 
-    //await self.imgman.dbImgStoreUrl({ iUrl: url, ...idb })
+    await self.imgman.dbImgStoreUrl({ iUrl: url, ...idb })
 
     return self
   }

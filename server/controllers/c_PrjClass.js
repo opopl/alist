@@ -114,6 +114,19 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecFsLoadScrn
+  jsonSecFsLoadScrn () {
+    const self = this
+
+    return async (req, res) => {
+      const body = req.body
+      const sec = body.sec
+      const proj = body.proj || self.proj
+
+      const { exNew, exDone, secDirNew, secDirDone } = self.prj._secFsData({ sec, proj })
+    }
+  }
+
 //@@ jsonSecData
   jsonSecData () {
     const self = this
@@ -653,6 +666,7 @@ const c_PrjClass = class {
 
        const data = JSON.parse(body.data)
        const { sec, proj, pics } = srvUtil.dictGet(data,'sec proj pics')
+       const rootid = self.rootid
 
        if (!pics || !pics.length) {
           return res.status(400).send({ 'msg' : 'no input pics!'});
@@ -666,14 +680,14 @@ const c_PrjClass = class {
           if (code) { ok = false }
        }
 
-       const p_pics = pics.map(async (pic) => {
+       for(let pic of pics){
          const url  = _.get(pic, 'url')
          if (!url) { return }
 
-         await self.prj.secPicImport({ sec, proj, pic, cbi })
-       })
+         console.log({ pic });
 
-       await Promise.all(p_pics)
+         await self.prj.secPicImport({ pic, sec, proj, rootid, cbi })
+       }
 
        if (ok) {
           const msg = `pic fetch ok`
