@@ -217,7 +217,7 @@ const ImgClass = class {
   }
 
 //@@ dbImgStoreBuf
-  async dbImgStoreBuf ({ iBuf, inum, url, ...idb }){
+  async dbImgStoreBuf ({ iBuf, inum, url, force, ...idb }){
     const self = this
 
     if(Array.isArray(iBuf)){
@@ -234,9 +234,10 @@ const ImgClass = class {
 
     const md5 = srvUtil.md5hex(iBuf)
 
+    let saved
     if (!url) {
-      const rw = await self.dbImgData({ md5 })
-      if (rw) { return self }
+      saved = await self.dbImgData({ md5 })
+      if (saved && !force) { return self }
     }
 
     const mtimeJs = Date.now()
@@ -262,19 +263,29 @@ const ImgClass = class {
 
     const size = iBuf.length
 
-    const ins = {
-      ...idb,
-      url,
-      inum, img, ext, width, height,
-      md5, size, mtime
-    }
-    const q = insert('imgs',ins)
-                .toParams({placeholder: '?%d'})
+    if (!saved) {
+      const ins = {
+        ...idb,
+        url,
+        inum, img, ext, width, height,
+        md5, size, mtime
+      }
 
-    await dbProc.run(self.dbc, q.text, q.values)
+      const q = insert('imgs',ins)
+                  .toParams({placeholder: '?%d'})
+
+      await dbProc.run(self.dbc, q.text, q.values)
+
+    }else{
+      const upd = { ...idb }
+      const q = update('imgs',upd)
+                  .where({ md5 })
+                  .toParams({placeholder: '?%d'})
+
+      await dbProc.run(self.dbc, q.text, q.values)
+    }
 
     const { tags } = srvUtil.dictGet(idb,'tags')
-
     if (tags) {
       const tagList = tags.split(',')
                   .filter(x => x.length)
