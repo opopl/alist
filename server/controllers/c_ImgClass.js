@@ -135,9 +135,6 @@ const c_ImgClass = class {
                   .where(whr)
                   .toParams({ placeholder: '?%d' })
 
-      console.log(q.text);
-      console.log(q.values);
-
       try {
         await dbProc.run(self.dbc, q.text, q.values)
         return res.status(200).send({ 'msg' : 'update ok'})

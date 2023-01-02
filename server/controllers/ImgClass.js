@@ -112,11 +112,11 @@ const ImgClass = class {
       delete whr.tags
       let i = 1, condArr = []
       qArr.push(`SELECT * FROM imgs`)
-      const info = `_info_imgs_tags`
+      const tInfo = `_info_imgs_tags`
       for(let tag of tagList){
-        let tbl = `${info}_${i}`
+        let tbl = `${tInfo}_${i}`
         qArr.push(`
-            INNER JOIN ${info} AS ${tbl} ON
+            INNER JOIN ${tInfo} AS ${tbl} ON
             imgs.url = ${tbl}.url
         `)
         whereArr.push(`${tbl}.tag = ?`)
@@ -128,7 +128,6 @@ const ImgClass = class {
       qArr.push(`WHERE ${condWhere}`)
       q = qArr.join(' ')
       q = `${q} limit 10`
-      console.log({ q, p });
     }
 
 //@a dbImgDataAll.inum
@@ -150,7 +149,6 @@ const ImgClass = class {
         q = sql
       }
     }
-    console.log({ q, p });
 
     const rows = await dbProc.all(self.dbc, q, p)
     if (rows) {
@@ -219,12 +217,12 @@ const ImgClass = class {
 //@@ dbImgStoreBuf
 // url given - storing buffer from remote URL
 // url undefined - buffer from file
-  async dbImgStoreBuf ({ iBuf, force, inum, url, ...idb }){
+  async dbImgStoreBuf ({ iBuf, force, inum, url, mtime, ...idb }){
     const self = this
 
     if(Array.isArray(iBuf)){
       for(let b of iBuf){
-         self.dbImgStoreBuf({ iBuf: b, ...idb })
+         self.dbImgStoreBuf({ iBuf: b, force, ...idb })
       }
       return self
     }
@@ -236,8 +234,7 @@ const ImgClass = class {
 
     const md5 = srvUtil.md5hex(iBuf)
 
-    let saved, mtime
-    if ('mtime' in idb) { mtime = idb.mtime }
+    let saved
 
     if (!url) {
       saved = await self.dbImgData({ md5 })
@@ -275,6 +272,7 @@ const ImgClass = class {
 
     const size = iBuf.length
 
+    const tInfo = '_info_imgs_tags'
     if (!saved) {
       const ins = {
         ...idb,
@@ -289,24 +287,27 @@ const ImgClass = class {
       await dbProc.run(self.dbc, q.text, q.values)
 
     }else{
-      const upd = { ...idb }
+      const upd = { mtime, ...idb }
       const q = update('imgs',upd)
                   .where({ md5 })
                   .toParams({placeholder: '?%d'})
 
       await dbProc.run(self.dbc, q.text, q.values)
+
+      await dbProc.run(self.dbc, `delete from ${tInfo} where url = ?`, [url])
+
     }
 
-/*    const { tags } = srvUtil.dictGet(idb,'tags')*/
-    //if (tags) {
-      //const tagList = tags.split(',')
-                  //.filter(x => x.length)
-                  //.map(tag => { return { tag, url } })
+    const { tags } = srvUtil.dictGet(idb,'tags')
+    if (tags) {
+      const tagList = tags.split(',')
+                  .filter(x => x.length)
+                  .map(tag => { return { tag, url } })
 
-      //const qt = insert('_info_imgs_tags', tagList)
-                //.toParams({placeholder: '?%d'})
-      //await dbProc.run(self.dbc, qt.text, qt.values)
-    /*}*/
+      const qt = insert(tInfo, tagList)
+                .toParams({placeholder: '?%d'})
+      await dbProc.run(self.dbc, qt.text, qt.values)
+    }
 
     return self
   }
@@ -326,13 +327,16 @@ const ImgClass = class {
 
     const iBuf = fs.readFileSync(iFile)
 
-    await self.dbImgStoreBuf({ iBuf, force, ...idb })
+    const stats = fs.statSync(iFile)
+    const mtime = Math.trunc(stats.mtimeMs/1000)
+
+    await self.dbImgStoreBuf({ iBuf, force, mtime, ...idb })
 
     return self
   }
 
 //@@ dbImgStoreUrl
-  async dbImgStoreUrl ({ iUrl, ...idb }) {
+  async dbImgStoreUrl ({ iUrl, force, ...idb }) {
     const self = this
 
     const rw = await self.dbImgData({ url : iUrl })
@@ -348,6 +352,7 @@ const ImgClass = class {
         iBuf  : buf,
         url   : iUrl,
         mtime : mtimeNow,
+        force,
         ...idb
     })
 
