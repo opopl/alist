@@ -165,7 +165,11 @@ const c_PrjClass = class {
           for(let iFile of found){
             const bn = path.basename(iFile)
             const name_orig = bn.replace(/\.(\w+)$/g,'','g')
-            await self.prj.imgman.dbImgStoreFile({ iFile, force, name_orig, tags, ...idb })
+
+            const stats = fs.statSync(iFile)
+            const mtime = Math.trunc(stats.mtimeMs/1000)
+
+            await self.prj.imgman.dbImgStoreFile({ iFile, force, name_orig, mtime, tags, ...idb })
           }
         }
       }

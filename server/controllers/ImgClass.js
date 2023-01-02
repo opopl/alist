@@ -217,6 +217,8 @@ const ImgClass = class {
   }
 
 //@@ dbImgStoreBuf
+// url given - storing buffer from remote URL
+// url undefined - buffer from file
   async dbImgStoreBuf ({ iBuf, force, inum, url, ...idb }){
     const self = this
 
@@ -234,7 +236,9 @@ const ImgClass = class {
 
     const md5 = srvUtil.md5hex(iBuf)
 
-    let saved
+    let saved, mtime
+    if ('mtime' in idb) { mtime = idb.mtime }
+
     if (!url) {
       saved = await self.dbImgData({ md5 })
       if (saved) {
@@ -244,11 +248,15 @@ const ImgClass = class {
       }
     }
 
-    const mtimeJs = Date.now()
-    const mtime = Math.trunc(mtimeJs/1000)
-    const mtimeStr = strftime('%d_%m_%y.%H.%M.%S', new Date(mtimeJs))
+    if (!url) {
+      const mtimeNowJs = Date.now()
+      const mtimeNow = Math.trunc(mtimeNowJs/1000)
+      const mtimeStr = strftime('%d_%m_%y.%H.%M.%S', new Date(mtimeNowJs))
 
-    url = url ? url : `tm://${mtimeStr}@${md5}`
+      url = `tm://${mtimeStr}@${md5}`
+
+      mtime = mtime ? mtime : mtimeNow
+    }
 
     const mimeType = info.mimeType
     const format   = info.format
@@ -289,16 +297,16 @@ const ImgClass = class {
       await dbProc.run(self.dbc, q.text, q.values)
     }
 
-    const { tags } = srvUtil.dictGet(idb,'tags')
-    if (tags) {
-      const tagList = tags.split(',')
-                  .filter(x => x.length)
-                  .map(tag => { return { tag, url } })
+/*    const { tags } = srvUtil.dictGet(idb,'tags')*/
+    //if (tags) {
+      //const tagList = tags.split(',')
+                  //.filter(x => x.length)
+                  //.map(tag => { return { tag, url } })
 
-      const qt = insert('_info_imgs_tags', tagList)
-                .toParams({placeholder: '?%d'})
-      await dbProc.run(self.dbc, qt.text, qt.values)
-    }
+      //const qt = insert('_info_imgs_tags', tagList)
+                //.toParams({placeholder: '?%d'})
+      //await dbProc.run(self.dbc, qt.text, qt.values)
+    /*}*/
 
     return self
   }
@@ -333,7 +341,15 @@ const ImgClass = class {
     const { buf, info, headers } = await srvUtil.fetchImg({ url : iUrl })
     if (!info) { return self }
 
-    await self.dbImgStoreBuf({ iBuf: buf, url: iUrl, ...idb })
+    const mtimeNowJs = Date.now()
+    const mtimeNow = Math.trunc(mtimeNowJs/1000)
+
+    await self.dbImgStoreBuf({
+        iBuf  : buf,
+        url   : iUrl,
+        mtime : mtimeNow,
+        ...idb
+    })
 
     return self
   }
