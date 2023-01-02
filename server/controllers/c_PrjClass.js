@@ -139,7 +139,7 @@ const c_PrjClass = class {
         orig : [ 'scrn', 'orig.post' ],
         cmt : [ 'scrn', 'orig.cmt' ],
       }
-      const xKeys = [ 'orig' ]
+      const xKeys = [ 'orig', 'cmt' ]
 
       for(let dir of [ secDirDone, secDirNew ]){
         for(let x of xKeys){
@@ -162,8 +162,15 @@ const c_PrjClass = class {
           })
           const found = await ff
 
+          let i = 0
           for(let iFile of found){
             const bn = path.basename(iFile)
+
+            i+=1
+            //if (i == 5) { break}
+
+            console.log(`[jsonSecFsLoadScrn] Processing file: ${bn}`)
+
             const name_orig = bn.replace(/\.(\w+)$/g,'','g')
 
             const stats = fs.statSync(iFile)
