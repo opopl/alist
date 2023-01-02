@@ -443,7 +443,7 @@ const c_PrjClass = class {
 
     return async (req, res) => {
 
-      const tabId = req.query.id
+      const tabId = req.params.tabId
       const forms = self.getConfig({ path : `templates.forms` })
       const formId = 'form_pics_upload'
 

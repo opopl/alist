@@ -1,0 +1,24 @@
+
+{% import "import/sec_list_table.html" as slt with context %}
+
+
+<div class='prj-radio-group'>
+  <input type="radio" id="radio_fs_new" name="selector">
+  <label for="radio_fs_new">New</label>
+
+  <input type="radio" id="radio_fs_done" name="selector">
+  <label for="radio_fs_done">Done</label>
+</div>
+
+{% set tabId = "tab_fs" %}
+{% set c = prjConfig | get("templates.tabs.{{ tabId }}.secFsNewList") %}
+{% set c = prjConfig | get("templates.tabs." + tabId + ".secFsNewList") %}
+{{ c | dump }}
+
+{% if secFsNewList | length %}
+
+  <div id="sec_fs_new_list">
+    <h3>Sections in 'new' directory</h3>
+    {{ slt.table(secFsNewList, cols, header) }}
+  </div>
+{% endif %}

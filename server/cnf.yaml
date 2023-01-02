@@ -16,6 +16,24 @@ prj:
     rootid : p_sr
     config:
        templates:
+###templates.tabs
+          tabs:
+            tab_fs:
+               'secFsNewList':
+                   cols:
+                   - _check
+                   - _html
+                   - _pdf
+                   - authors
+                   - tags
+                   - title
+                   - sec
+                   header:
+                     _html : 'html'
+                     _pdf : 'pdf'
+                     _check : ''
+
+###templates.forms
           forms:
             'form_sec_new':
 ###form_sec_new
@@ -196,6 +214,7 @@ prj:
                _pdf : 'pdf'
                _check : ''
 
+###bld
        bld :
           cols : 'bid buuid plan duration target status'
 ###ui

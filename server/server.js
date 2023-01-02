@@ -89,6 +89,8 @@ class Alist {
     const optsImg  = _.get(self,'cnf.img',{})
     const optsPrj  = _.get(self,'cnf.prj.controller',{})
 
+    tmplEnv.addGlobal('prjConfig',_.get(optsPrj,'config',{}))
+
     self.c_Auth = new c_AuthClass({ ...optsAuth, tmplEnv })
     self.c_Img  = new c_ImgClass({ ...optsImg, tmplEnv })
     self.c_Prj  = new c_PrjClass({ ...optsPrj, tmplEnv })
