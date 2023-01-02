@@ -14,6 +14,8 @@ const db = require('./../db')
 const dbProc = require('./../dbproc')
 const srvUtil = require('./../srv-util')
 
+const findit = require('findit')
+
 const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
@@ -403,17 +405,25 @@ const PrjClass = class {
 
     const finder = findit(dirNew)
     const ff = new Promise((resolve, reject) => {
-       const found = []
+       const found = {}
        finder.on('directory', function (dir, stat, stop) {
          const sec = path.basename(dir)
-         found.push(sec)
+         const rel = path.relative(dirNew, dir)
+         if (! /^[^\/]+$/.test(rel)) { return }
+
+         found[sec] = 1
        })
 
        finder.on('end', () => { resolve(found) })
     })
-    const found = await ff
 
-    return found
+    const found = await ff
+    for(let sec in found){
+      const sd = await self.dbSecData({ sec, proj  })
+      if (!sd) { delete found[sec] }
+    }
+
+    return Object.keys(found)
   }
 
 //@@ secFsNew
