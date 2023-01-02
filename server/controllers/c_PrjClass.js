@@ -17,6 +17,8 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
+const find = require('find')
+
 const select = db.sql.select
 const distinct = db.sql.distinct
 const insert = db.sql.insert
@@ -124,6 +126,26 @@ const c_PrjClass = class {
       const proj = body.proj || self.proj
 
       const { exNew, exDone, secDirNew, secDirDone } = self.prj._secFsData({ sec, proj })
+      console.log({ exNew, exDone });
+
+      const xMap = {
+        orig : [ 'scrn', 'orig.post' ],
+        cmt : [ 'scrn', 'orig.cmt' ],
+      }
+      const xKeys = [ 'orig', 'cmt' ]
+
+      for(let dir of [ secDirDone, secDirNew ]){
+        for(let x of xKeys){
+          const xDir = path.join(dir, x)
+          if(!fs.existsSync(xDir)){ continue }
+
+          find.file(/\.(png|jpg|jpeg)$/, xDir, function(files){
+            console.log(files)
+          })
+        }
+      }
+
+      return res.send({ exNew, exDone });
     }
   }
 

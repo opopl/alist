@@ -60,6 +60,7 @@
     "exifreader": "^4.9.1",
     "express": "4.17.1",
     "express-fileupload": "^1.4.0",
+    "find": "^0.3.0",
     "findit": "^2.0.0",
     "helmet": "3.22.0",
     "htmlparser2": "^8.0.1",
