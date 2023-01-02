@@ -392,6 +392,30 @@ const PrjClass = class {
     return picData;
   }
 
+//@@ getSecFsNewList
+  async getSecFsNewList ({ proj, rootid } = {}) {
+    const self = this
+
+    proj   = proj ? proj : self.proj
+    rootid = rootid ? rootid : self.rootid
+
+    const dirNew = path.join(self.picDataDir, rootid, proj, 'new')
+
+    const finder = findit(dirNew)
+    const ff = new Promise((resolve, reject) => {
+       const found = []
+       finder.on('directory', function (dir, stat, stop) {
+         const sec = path.basename(dir)
+         found.push(sec)
+       })
+
+       finder.on('end', () => { resolve(found) })
+    })
+    const found = await ff
+
+    return found
+  }
+
 //@@ secFsNew
   async secFsNew ({ sec, proj })  {
     const self = this

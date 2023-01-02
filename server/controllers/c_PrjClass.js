@@ -227,6 +227,16 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecFsNewList
+  jsonSecFsNewList () {
+    const self = this
+
+    return async (req, res) => {
+      const list = await self.prj.getSecFsNewList()
+      return res.send(list)
+    }
+  }
+
 //@@ jsonSecFsNew
   jsonSecFsNew () {
     const self = this

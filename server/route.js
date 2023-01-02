@@ -18,7 +18,7 @@ class routerFactory {
 
     const app = _.get(ref,'app')
     this.app = app
-		const tmplEnv = app.tmplEnv
+    const tmplEnv = app.tmplEnv
 
     this.c_Auth = app ? app.c_Auth : new c_AuthClass({ tmplEnv })
     this.c_Img = app ? app.c_Img : new c_ImgClass({ tmplEnv })
@@ -95,6 +95,9 @@ class routerFactory {
 
     router.get('/prj/sec/fs/new' , self.c_Prj.jsonSecFsNew())
     router.get('/prj/sec/fs/done' , self.c_Prj.jsonSecFsDone())
+
+    // list sections in 'new' folder
+    router.get('/prj/sec/fs/new/list' , self.c_Prj.jsonSecFsNewList())
 
     router.post('/prj/sec/fs/load/scrn' , self.c_Prj.jsonSecFsLoadScrn())
 
