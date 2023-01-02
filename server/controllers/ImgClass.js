@@ -185,6 +185,11 @@ const ImgClass = class {
     return inum
   }
 
+//@@ imgDelete
+  async imgDelete ({ ...args } = {}){
+    const self = this
+  }
+
 //@@ dbImgStore
   async dbImgStore ({ iUrl, iFile, iBuf,  ...ref } = {}){
     const self = this

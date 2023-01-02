@@ -127,11 +127,11 @@ const c_PrjClass = class {
 
       const rootid = self.rootid
       const sd = self.prj.dbSecData({ sec, proj })
-      const urlSec = sd.url
+      const url_parent = sd.url
 
       const { exNew, exDone, secDirNew, secDirDone } = self.prj._secFsData({ sec, proj })
 
-      const idb = { sec, proj, rootid }
+      const idb = { sec, proj, rootid, url_parent }
 
       const xMap = {
         orig : [ 'scrn', 'orig.post' ],

@@ -101,6 +101,17 @@ const c_ImgClass = class {
     }
   }
 
+//@@ jsonImgDelete
+// post /img/delete
+  jsonImgDelete(){
+    const self = this
+
+    return async (req, res) => {
+      const jsonData = req.body.data
+      const data = JSON.parse(jsonData)
+    }
+  }
+
 //@@ jsonImgDataUpdate
 // post /img/data/update
   jsonImgDataUpdate(){

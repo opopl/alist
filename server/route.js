@@ -55,6 +55,7 @@ class routerFactory {
     router.get('/img/data/url/:url' , self.c_Img.jsonImgDataUrl())
 
     router.post('/img/new'           , self.c_Img.jsonImgNew())
+    router.post('/img/delete'        , self.c_Img.jsonImgDelete())
     router.post('/img/data/update'   , self.c_Img.jsonImgDataUpdate())
 
     router.post('/prj/act', self.c_Prj.jsonAct())
