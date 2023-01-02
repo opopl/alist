@@ -297,9 +297,8 @@ const ImgClass = class {
     if(!fs.existsSync(iFile)){ return self }
 
     const iBuf = fs.readFileSync(iFile)
-    const name_orig = path.basename(iFile)
 
-    await self.dbImgStoreBuf({ iBuf, name_orig, ...idb })
+    await self.dbImgStoreBuf({ iBuf, ...idb })
 
     return self
   }

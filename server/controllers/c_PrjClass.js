@@ -17,7 +17,7 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 
-const find = require('find')
+const findit = require('findit')
 
 const select = db.sql.select
 const distinct = db.sql.distinct
@@ -125,23 +125,47 @@ const c_PrjClass = class {
       const sec = body.sec
       const proj = body.proj || self.proj
 
+      const rootid = self.rootid
+
       const { exNew, exDone, secDirNew, secDirDone } = self.prj._secFsData({ sec, proj })
-      console.log({ exNew, exDone });
+
+      const idb = { sec, proj, rootid }
 
       const xMap = {
         orig : [ 'scrn', 'orig.post' ],
         cmt : [ 'scrn', 'orig.cmt' ],
       }
-      const xKeys = [ 'orig', 'cmt' ]
+      const xKeys = [ 'orig' ]
 
       for(let dir of [ secDirDone, secDirNew ]){
         for(let x of xKeys){
+          const tagList = _.get(xMap,x,[])
+          const tags = tagList.join(',')
+
           const xDir = path.join(dir, x)
           if(!fs.existsSync(xDir)){ continue }
 
-          find.file(/\.(png|jpg|jpeg)$/, xDir, function(files){
-            console.log(files)
+          console.log({ xDir })
+
+          const finder = findit(xDir);
+          const ff = new Promise((resolve, reject) => {
+            const found = []
+            finder.on('file', function(file, stat){
+              if (! /\.(png|jpg|jpeg)$/g.test(file)) { return }
+
+              found.push(file)
+            })
+
+            finder.on('end', () => { resolve(found) })
           })
+          const found = await ff
+
+          for(let iFile of found){
+            const bn = path.basename(iFile)
+            const name_orig = bn.replace(/\.(\w+)$/g,'','g')
+            console.log({ iFile, tags, name_orig })
+            await self.prj.imgman.dbImgStoreFile({ iFile, name_orig, tags, ...idb })
+          }
         }
       }
 
