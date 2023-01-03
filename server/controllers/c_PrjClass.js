@@ -445,9 +445,21 @@ const c_PrjClass = class {
 
       const tabId = req.params.tabId
       const forms = self.getConfig({ path : `templates.forms` })
-      const formId = 'form_pics_upload'
+      const tmplEnv = self.tmplEnv
 
-      return res.render(`include/tab/${tabId}`, { forms, formId, _get })
+      let html, args = {}, formId
+      if (tabId == 'tab_pics_tabs') {
+        formId = 'form_pics_upload'
+        args = { forms, formId }
+      }
+      else if (tabId == 'tab_fs') {
+        const secFsNewList = await self.prj.getSecFsNewList()
+        args = { secFsNewList }
+        console.log({ args })
+      }
+
+      html = tmplEnv.render(`include/tab/${tabId}.html`, args)
+      return res.send(html)
     }
   }
 

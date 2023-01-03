@@ -8,17 +8,17 @@
 
   {% for col in cols %}
     {% if col == 'date' %}
-      {% set date = _get(row, col) %}
+      {% set date = row | get(col) %}
       {% set href = "/prj/sec/html?sec=" + date %}
       <td class="prj-sec-{{ col }}" ><a href="{{ href }}">{{ date }}</a></td>
 
     {% elif [ '_html', '_pdf' ].includes(col) %}
-      {% set data = _get(row, col) %}
-      {% set href = _get(data, 'href') %}
-      {% set output_ex = _get(data, 'output_ex') %}
+      {% set data = row | get(col) %}
+      {% set href = data | get('href') %}
+      {% set output_ex = data | get('output_ex') %}
       <td class="prj-sec-{{ col }}" >
          <button class="prj-link" href="{{ href }}" type="sec" output_ex={{ output_ex }} >
-           {{ _get(header, col, col) }}
+           {{ header | get(col, col) }}
          </button>
       </td>
 
@@ -27,7 +27,7 @@
 
     {% elif col == 'authors' %}
       <td class="prj-sec-{{ col }}" >
-        {% set authors = _get(row, col, []) %}
+        {% set authors = row | get(col, []) %}
 
         {% if authors.length == 0 %}
         {% elif authors.length == 1 %}
@@ -40,7 +40,7 @@
 
     {% elif col == 'tags' %}
       <td class="prj-sec-{{ col }}" >
-        {% set tags = _get(row, col, []) %}
+        {% set tags = row | get(col, []) %}
         {% if tags.length == 0 %}
         {% elif tags.length == 1 %}
           {% set tag = tags[0] %}
@@ -51,7 +51,7 @@
       </td>
 
     {% else %}
-      <td class="prj-sec-{{ col }}" >{{ _get(row, col) }}</td>
+      <td class="prj-sec-{{ col }}" >{{ row | get(col) }}</td>
     {% endif %}
   {% endfor %}
 </tr>
@@ -64,7 +64,7 @@
         {% if col == '_check' %}
           <th><input type="checkbox" id="ckb_secs_all" value="all" /></th>
         {% else %}
-          <th>{{ _get(header, col, col) }}</th>
+          <th>{{ header | get(col, col) }}</th>
         {% endif %}
         <!--<th>{{ col }}</th>-->
       {% endfor %}

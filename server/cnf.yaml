@@ -19,19 +19,20 @@ prj:
 ###templates.tabs
           tabs:
             tab_fs:
-               'secFsNewList':
-                   cols:
-                   - _check
-                   - _html
-                   - _pdf
-                   - authors
-                   - tags
-                   - title
-                   - sec
-                   header:
-                     _html : 'html'
-                     _pdf : 'pdf'
-                     _check : ''
+              secFsNewList:
+                table:
+                  cols:
+                  - _check
+                  - _html
+                  - _pdf
+                  - authors
+                  - tags
+                  - title
+                  - sec
+                  header:
+                  _html : 'html'
+                  _pdf : 'pdf'
+                  _check : ''
 
 ###templates.forms
           forms:
