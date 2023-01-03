@@ -16,8 +16,8 @@
 {% set header = cnf | get('table.header') %}
 
 <div id="sec_fs_new_list">
-{% if secFsNewList | length %}
+{% if secFsNewRows | length %}
     <h3>Sections in 'new' directory</h3>
-    {{ slt.table(secFsNewList, cols, header) }}
+    {{ slt.table(secFsNewRows, cols, header) }}
 {% endif %}
 </div>

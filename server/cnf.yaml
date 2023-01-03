@@ -30,9 +30,9 @@ prj:
                   - title
                   - sec
                   header:
-                  _html : 'html'
-                  _pdf : 'pdf'
-                  _check : ''
+                    _html : 'html'
+                    _pdf : 'pdf'
+                    _check : ''
 
 ###templates.forms
           forms:

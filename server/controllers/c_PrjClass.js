@@ -454,12 +454,17 @@ const c_PrjClass = class {
       }
       else if (tabId == 'tab_fs') {
         const secFsNewList = await self.prj.getSecFsNewList()
-        args = { secFsNewList }
-        console.log({ args })
+        const secFsNewRows = []
+        for(let sec of secFsNewList){
+          const row = await self.prj.dbSecData({ sec })
+          await self.prj.secRowUpdate({ row })
+          secFsNewRows.push(row)
+        }
+        args = { secFsNewRows }
       }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)
-      return res.send(html)
+      return res.status(200).send(html)
     }
   }
 
