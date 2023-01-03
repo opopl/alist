@@ -7,6 +7,10 @@ const path = require('path')
 const fs = require('fs')
 const srvUtil = require('./../srv-util')
 
+const util = require('util')
+
+const fsFileRemove = util.promisify(fs.unlink)
+
 const md5file = require('md5-file')
 
 const exifReader = require('exifreader')
@@ -184,8 +188,27 @@ const ImgClass = class {
   }
 
 //@@ imgDelete
-  async imgDelete ({ ...args } = {}){
+  async imgDelete ({ url } = {}){
     const self = this
+
+    let imgData, imgFile, imgFileEx
+    if (url) {
+      imgData = await self.dbImgData({ url })
+      if (imgData) {
+        const img = imgData.img
+        imgFile =  path.join(self.imgRoot, img)
+        imgFileEx = fs.existsSync(imgFile)
+      }
+    }
+
+    if (url && imgData && imgFile && imgFileEx) {
+      await fsFileRemove(imgFile)
+
+      const q = `DELETE FROM imgs WHERE url = ?`
+      await dbProc.run(self.dbc, q, [ url ])
+    }
+
+    return self
   }
 
 //@@ dbImgStore

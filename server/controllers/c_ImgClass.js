@@ -110,7 +110,7 @@ const c_ImgClass = class {
       const jsonData = req.body.data
       const data = JSON.parse(jsonData)
 
-      console.log({ data })
+      self.imgman.imgDelete(data)
       return res.send({})
     }
   }
