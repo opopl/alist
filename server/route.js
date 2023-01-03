@@ -58,6 +58,8 @@ class routerFactory {
     router.post('/img/delete'        , self.c_Img.jsonImgDelete())
     router.post('/img/data/update'   , self.c_Img.jsonImgDataUpdate())
 
+    router.post('/img/fetch/html'    , self.c_Img.htmlImgFetch())
+
     router.post('/prj/act', self.c_Prj.jsonAct())
     router.get('/prj/img/search/html', self.c_Prj.htmlImgSearch())
 

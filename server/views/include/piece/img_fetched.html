@@ -1,0 +1,15 @@
+
+<div id="img_fetched">
+  {% for url in picUrlList %}
+    {% set pic = picDone | get(url) %}
+
+    {% set src = pic.src %}
+    {% set caption = pic.caption %}
+  
+    <figure class="prj-img-figure">
+      <img class="prj-img prj-img-small prj-img-fetched" src={{ src }} url = {{ url }} />
+  
+      <figcaption> {{ caption }} </figcaption>
+    </figure>
+  {% endfor %}
+</div>

@@ -66,8 +66,11 @@ const fetchImg = async ({ url }) => {
 
   const info = imageinfo(buf)
 
+  const type = headers["content-type"]
+  const src = buf && buf.length && type ? `data:${type};base64,` + buf.toString('base64') : ''
+
   return new Promise((resolve, reject) => {
-    resolve({ buf, info, headers })
+    resolve({ buf, src, info, headers })
   })
 
 }

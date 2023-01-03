@@ -175,6 +175,36 @@ const c_ImgClass = class {
     }
   }
 
+//@@ htmlImgFetch
+//  POST
+  htmlImgFetch () {
+    const self = this
+
+    return async (req, res) => {
+       const body = req.body
+
+       const dataJson = body.data
+       const data = JSON.parse(dataJson)
+       const pics = data.pics
+       const picUrlList = pics.map((x) => x.url)
+       const picDone = {}
+
+       const p_pics = pics.map(async(pic) => {
+          const url = pic.url
+          const { buf, src, info, headers } = await srvUtil.fetchImg({ url })
+
+          picDone[url] = { ...pic, src }
+       })
+       await Promise.all(p_pics)
+
+       console.log({ pics })
+
+       const tmplEnv = self.tmplEnv
+       const html = tmplEnv.render('include/piece/img_fetched.html',{ picUrlList, picDone })
+       return res.send(html)
+    }
+  }
+
 //@@ jsonImgNew
 //  POST
   jsonImgNew () {
