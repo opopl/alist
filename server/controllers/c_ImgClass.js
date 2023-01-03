@@ -109,6 +109,9 @@ const c_ImgClass = class {
     return async (req, res) => {
       const jsonData = req.body.data
       const data = JSON.parse(jsonData)
+
+      console.log({ data })
+      return res.send({})
     }
   }
 
