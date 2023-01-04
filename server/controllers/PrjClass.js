@@ -124,16 +124,8 @@ const PrjClass = class {
   async iiDataFromUrl ({ url }) {
     const self = this
 
-    const u = new URL(url)
-    const params = {}
-    u.searchParams.forEach(function(value, key){
-      params[key] = value
-    })
-
     const iiData = {}
 
-    const host = u.hostname
-    const path = u.pathname
 
     const { site, prefii } = self.getSiteFromUrl({ url })
 
@@ -143,13 +135,34 @@ const PrjClass = class {
       //let fb_data   = projs#url#fb#data({
       const fbData = self.getUrlFacebookData({ url })
 
+
     }
 
     return iiData
   }
 
+//@@ getUrlFacebookData
   getUrlFacebookData({ url }){
     const self = this
+
+    const u = new URL(url)
+
+    const host = u.hostname
+    const path = u.pathname
+
+    const query = {}
+    u.searchParams.forEach(function(value, key){
+      query[key] = value
+    })
+    const pathArr = path.split('/')
+    const pathFront = pathArr[0]
+
+    let fbAuthId
+    if (pathFront == 'permalink.php'){
+      const postId = query.story_fbid
+      if (postId) { fbAuthId = query.id }
+    }
+
   }
 
 
