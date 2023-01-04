@@ -340,9 +340,11 @@ const c_PrjClass = class {
        const body = req.body
 
        const data = JSON.parse(body.data)
-       const { sec, proj, url, title, date  } = srvUtil.dictGet(data,'sec proj')
 
-       console.log(data);
+       const { sec, proj, url, title, date  } = srvUtil.dictGet(data,'sec proj url title date')
+
+			 const iiData = await self.prj.iiDataFromUrl({ url })
+
        res.send({ sec, proj })
     }
   }

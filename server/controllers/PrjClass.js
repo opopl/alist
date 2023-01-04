@@ -74,6 +74,101 @@ const PrjClass = class {
      return this
   }
 
+//@@ getSiteHostData
+// projs#url#site#hosts_data
+  getSiteHostData () {
+    const self = this
+
+    const yFileHosts = path.join(self.prjRoot, 'scrape', 'bs', 'in', 'hosts.yaml')
+
+    const yEx = fs.existsSync(yFileHosts)
+    const shData = yEx ? yaml.load(fs.readFileSync(yFileHosts)) : {}
+
+    return shData
+  }
+
+//@@ getSiteFromUrl
+  async getSiteFromUrl ({ url }) {
+    const self = this
+
+    const u = new URL(url)
+    const host = u.hostname
+
+    if (!host) { return {} }
+
+    const shData = self.getSiteHostData()
+    //console.log({ shData })
+
+    let site, prefii
+    for (let [hostPatternStr, hostDict] of Object.entries(shData)) {
+      console.log({ hostPatternStr})
+      console.log({ hostDict })
+
+      const hostPatterns = hostPatternStr.split(',').map(x => x.trim())
+      for(let hostPattern of hostPatterns ){
+        const re = new RegExp(hostPattern)
+        if (/facebook/.test(host)) {
+          site = hostDict.site
+          if (!site) { continue }
+
+          const sitePref = hostDict.prefii
+          prefii = sitePref ? sitePref : `stz.${site}`
+          break
+        }
+      }
+
+      if (site) { break }
+    }
+
+  //let site = ''
+  //let prefii = ''
+
+/*  for [ host_pats_s, host_struct ] in items(data)*/
+    //let host_pats = base#string#split_trim(host_pats_s,{ 'sep' : ',' })
+    //for host_pat in host_pats
+
+      //if matchstr(host, host_pat) != ''
+        //let site = get(host_struct,'site','')
+        //let site_pref = get(host_struct,'prefii','')
+        //let prefii = len(site_pref) ? site_pref : 'stz.' . site
+        //break
+      //endif
+
+      //if site | break | endif
+    //endfor
+  //endfor
+
+    return { site, prefii }
+  }
+
+//@@ iiDataFromUrl
+  async iiDataFromUrl ({ url }) {
+    const self = this
+
+    const u = new URL(url)
+    const iiData = {}
+
+    const host = u.hostname
+    const path = u.pathname
+
+    //let [ site, pref ] = projs#url#site#get({ 'url' : url })
+    const { site, pref } = self.getSiteFromUrl({ url })
+
+    console.log({ site, pref })
+
+    return iiData
+
+    //let params = {}
+     //hrefUrl.searchParams.forEach(function(value, key){
+        //params[key] = value
+     //})
+  }
+
+  //let ii_data = projs#util#ii_data_from_url({
+    //\ 'url'    : url,
+    //\ 'prompt' : 1,
+    //\ })
+
 //@@ dbBldData
   async dbBldData (w={}) {
     const self = this
