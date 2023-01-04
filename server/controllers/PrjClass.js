@@ -88,7 +88,7 @@ const PrjClass = class {
   }
 
 //@@ getSiteFromUrl
-  async getSiteFromUrl ({ url }) {
+  getSiteFromUrl ({ url }) {
     const self = this
 
     const u = new URL(url)
@@ -97,17 +97,14 @@ const PrjClass = class {
     if (!host) { return {} }
 
     const shData = self.getSiteHostData()
-    //console.log({ shData })
 
     let site, prefii
     for (let [hostPatternStr, hostDict] of Object.entries(shData)) {
-      console.log({ hostPatternStr})
-      console.log({ hostDict })
 
       const hostPatterns = hostPatternStr.split(',').map(x => x.trim())
       for(let hostPattern of hostPatterns ){
         const re = new RegExp(hostPattern)
-        if (/facebook/.test(host)) {
+        if (re.test(host)) {
           site = hostDict.site
           if (!site) { continue }
 
@@ -120,24 +117,6 @@ const PrjClass = class {
       if (site) { break }
     }
 
-  //let site = ''
-  //let prefii = ''
-
-/*  for [ host_pats_s, host_struct ] in items(data)*/
-    //let host_pats = base#string#split_trim(host_pats_s,{ 'sep' : ',' })
-    //for host_pat in host_pats
-
-      //if matchstr(host, host_pat) != ''
-        //let site = get(host_struct,'site','')
-        //let site_pref = get(host_struct,'prefii','')
-        //let prefii = len(site_pref) ? site_pref : 'stz.' . site
-        //break
-      //endif
-
-      //if site | break | endif
-    //endfor
-  //endfor
-
     return { site, prefii }
   }
 
@@ -146,28 +125,33 @@ const PrjClass = class {
     const self = this
 
     const u = new URL(url)
+    const params = {}
+    u.searchParams.forEach(function(value, key){
+      params[key] = value
+    })
+
     const iiData = {}
 
     const host = u.hostname
     const path = u.pathname
 
-    //let [ site, pref ] = projs#url#site#get({ 'url' : url })
-    const { site, pref } = self.getSiteFromUrl({ url })
+    const { site, prefii } = self.getSiteFromUrl({ url })
 
-    console.log({ site, pref })
+    console.log({ site, prefii })
+
+    if (site == 'com.us.facebook'){
+      //let fb_data   = projs#url#fb#data({
+      const fbData = self.getUrlFacebookData({ url })
+
+    }
 
     return iiData
-
-    //let params = {}
-     //hrefUrl.searchParams.forEach(function(value, key){
-        //params[key] = value
-     //})
   }
 
-  //let ii_data = projs#util#ii_data_from_url({
-    //\ 'url'    : url,
-    //\ 'prompt' : 1,
-    //\ })
+  getUrlFacebookData({ url }){
+    const self = this
+  }
+
 
 //@@ dbBldData
   async dbBldData (w={}) {
