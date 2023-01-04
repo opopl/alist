@@ -1,4 +1,13 @@
 
+{% macro attrStr(obj={}, attrNames=[]) %}
+  {% for attrName in attrNames %}
+    {% set attrVal = obj | get(attrName) %}
+    {% if attrVal %}
+      {{ attrName }} = {{ attrVal }}
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
 <div id="img_fetched">
   {% for url in picUrlList %}
     {% set pic = picDone | get(url) %}
@@ -7,7 +16,8 @@
     {% set caption = pic.caption %}
   
     <figure class="prj-img-figure">
-      <img class="prj-img prj-img-small prj-img-fetched" src={{ src }} url = {{ url }} />
+      {% set attrs = attrStr(pic, [ 'src', 'url', 'md5' ]) %}
+      <img class="prj-img-small prj-img-fetched" {{ attrs | safe }} />
   
       <figcaption> {{ caption }} </figcaption>
     </figure>

@@ -160,6 +160,12 @@ const c_ImgClass = class {
       }
 
       const url = decodeURIComponent(urlEnc)
+ /*     console.log({ url })*/
+      //saved:
+      //inum 75239
+      //https://scontent-ams2-1.xx.fbcdn.net/v/t39.30808-6/322740431_662461328946722_3777360133708458065_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=730e14&_nc_ohc=cUxtp4kJbh0AX_cyc_G&_nc_ht=scontent-ams2-1.xx&oh=00_AfDM1jze5EDaJ4OQrX-b_SRwskafKcpjWaIT4x0qSnxPTg&oe=63B89C59
+      //orig:
+      /*https://scontent-ams4-1.xx.fbcdn.net/v/t39.30808-6/322740431_662461328946722_3777360133708458065_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=730e14&_nc_ohc=lMdO15igeS0AX8XosY9&_nc_ht=scontent-ams4-1.xx&oh=00_AfCEWMt46d4g3IpxwYUhvQZkRC8XK3RuGQSCvcJMSQA6JA&oe=63BA9699*/
 
       const q = select('*')
                   .from('imgs')
@@ -193,7 +199,9 @@ const c_ImgClass = class {
           const url = pic.url
           const { buf, src, info, headers } = await srvUtil.fetchImg({ url })
 
-          picDone[url] = { ...pic, src }
+          const md5 = srvUtil.md5hex(buf)
+
+          picDone[url] = { ...pic, src, md5 }
        })
        await Promise.all(p_pics)
 
