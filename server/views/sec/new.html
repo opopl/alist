@@ -20,14 +20,16 @@
     <div class="prj-tab" id="{{ tabId }}">
       {{ form.formRaw(formId, formRows = f.rows, formCols = f.cols) }}
 
+      {% if tabId == 'tab_img_new' %}
+        {%- include "include/piece/img_container.html" -%}
+      {% endif %}
+
       {{ after }}
     </div>
 
   {% endfor %}
 
 </div>
-
-{%- include "include/piece/img_container.html" -%}
 
 <!---->
 {% endblock %}
