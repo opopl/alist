@@ -9,6 +9,8 @@ const srvUtil = require('./../srv-util')
 
 const cheerio = require("cheerio")
 
+const cyr2trans = require('cyrillic-to-translit-js')
+
 const { PrjClass } = require('./PrjClass')
 
 const { spawn, execSync } = require('child_process')
@@ -341,16 +343,16 @@ const c_PrjClass = class {
 
        const data = JSON.parse(body.data)
 
+       const ct = new cyr2trans();
+
        const { sec, proj, url, title, date } = srvUtil.dictGet(data,'sec proj url title date')
 
        const { authId, authName, authPlain } = await self.prj.iiDataFromUrl({ url })
-       console.log({ authId, authName, authPlain, date })
-       console.log({ sec, proj, url, title, date, authId })
+
+       const secII = sec ? sec : ct.transform(title, '_').toLowerCase()
 
        const secNum = 1
-       const secFull = `${date}.${authId}.${secNum}.${sec}`
-
-       console.log({ secFull })
+       const secFull = `${date}.${authId}.${secNum}.${secII}`
 
        res.send({ secFull })
     }

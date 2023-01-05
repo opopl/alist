@@ -315,6 +315,10 @@ prj:
                       required: true
                       url: true
                       url_prj_db: true
+                    title:
+                      required: true
+                    date:
+                      required: true
 
 ###ui.forms.form_img_search
              form_img_search:
