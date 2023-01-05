@@ -437,10 +437,12 @@ const PrjClass = class {
     file = self._secFile({ sec })
     filePath = self._secFilePath({ file })
 
-    const lines = self._secNewLines({
+    const secLines = self._secNewLines({
         sec, parent, append, prepend,
+        seccmd, title, tags, author_id
     })
-    srvUtil.fsWrite(filePath, lines)
+    const secTxt = secLines.join('\n') + '\n'
+    srvUtil.fsWrite(filePath, secTxt)
 
     //todo git add
 
@@ -453,7 +455,7 @@ const PrjClass = class {
         const q_ins = insert('projs',ins)
                .toParams({placeholder: '?%d'})
 
-        await dbProc.run(self.dbc, q_ins.text, q_ins.values)
+        //await dbProc.run(self.dbc, q_ins.text, q_ins.values)
     }
 
     return self
