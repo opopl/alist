@@ -352,7 +352,7 @@ const c_PrjClass = class {
 
        console.log({ secFull })
 
-       res.send({ sec, proj })
+       res.send({ secFull })
     }
   }
 
