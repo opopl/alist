@@ -128,15 +128,11 @@ const PrjClass = class {
 
     const { site, prefii } = self.getSiteFromUrl({ url })
 
-    console.log({ site, prefii })
-
     let fbAuthId, fbGroupId, fbPostId
     if (site == 'com.us.facebook'){
       //let fb_data   = projs#url#fb#data({
       ( { fbAuthId, fbGroupId, fbPostId } = self.getUrlFacebookData({ url }) )
     }
-
-    console.log({ fbGroupId })
 
     let rw, authId, authName, authPlain
     if (fbAuthId) {
@@ -417,7 +413,8 @@ const PrjClass = class {
   async secNew ({
           sec, parent, rw, append, prepend,
           seccmd, title, url,
-          author_id, tags
+          author_id, tags,
+          date
     }){
 
     const self = this
@@ -448,14 +445,33 @@ const PrjClass = class {
 
     if (!sd) {
         const ins = {
-          sec, file, proj, rootid,
-          parent, title, tags, author_id
+          url, sec, file, proj, rootid,
+          parent, title, tags, author_id,
+          date
         }
 
         const q_ins = insert('projs',ins)
                .toParams({placeholder: '?%d'})
 
-        //await dbProc.run(self.dbc, q_ins.text, q_ins.values)
+        await dbProc.run(self.dbc, q_ins.text, q_ins.values)
+        if (tags) {
+          const tInfo = `_info_projs_tags`
+          const tagList = tags.split(',').map(x => x.trim()).filter(x => x.length)
+          const insInfo = tagList.map(tag => { return { tag, file } })
+          const qi = insert(tInfo, insInfo)
+                        .toParams({placeholder: '?%d'})
+
+          await dbProc.run(self.dbc, qi.text, qi.values)
+        }
+        if (author_id) {
+          const tInfo = `_info_projs_author_id`
+          const aList = author_id.split(',').map(x => x.trim()).filter(x => x.length)
+          const insInfo = aList.map(id => { return { author_id : id, file } })
+          const qi = insert(tInfo, insInfo)
+                        .toParams({placeholder: '?%d'})
+
+          await dbProc.run(self.dbc, qi.text, qi.values)
+        }
     }
 
     return self

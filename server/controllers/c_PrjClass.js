@@ -358,7 +358,6 @@ const c_PrjClass = class {
        const secPref = `${date}.${prefii}.${authId}`
        const secPrefRe = secPref.replace(/\./g,'\\.')
        const regex = `^${secPrefRe}\\.(\\d+)\\.(\\S+)$`
-       console.log({ prefii, secPref, regex })
 
        const q = `  SELECT MAX(s) max FROM (
                       SELECT SUB("${regex}",'$1',sec) s FROM projs WHERE SEARCH("${regex}",sec)
@@ -372,7 +371,12 @@ const c_PrjClass = class {
        const seccmd = 'subsection'
        const parent = date
 
-       self.prj.secNew({ sec: secFull, seccmd, url, parent, title, tags })
+       await self.prj.secNew({
+            url, date, tags,
+            sec: secFull, url,
+            author_id : authId,
+            seccmd, parent, title
+       })
 
        res.send({ secFull })
     }
