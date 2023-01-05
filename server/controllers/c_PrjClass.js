@@ -343,16 +343,30 @@ const c_PrjClass = class {
 
        const data = JSON.parse(body.data)
 
-       const ct = new cyr2trans();
+       const ct = new cyr2trans()
 
-       const { sec, proj, url, title, date } = srvUtil.dictGet(data,'sec proj url title date')
+       const { proj, url, title, date } = srvUtil.dictGet(data,'proj url title date')
 
-       const { authId, authName, authPlain } = await self.prj.iiDataFromUrl({ url })
+       const { authId, authName, authPlain, prefii } = await self.prj.iiDataFromUrl({ url })
 
-       const secII = sec ? sec : ct.transform(title, '_').toLowerCase()
+       const secII = ct.transform(title, '_').toLowerCase()
+
+       const secPref = `${date}.${prefii}.${authId}`
+       const secPrefRe = secPref.replace(/\./g,'\\.')
+       const regex = `^${secPrefRe}\\.(\\d+)\\.(\\S+)$`
+       console.log({ prefii, secPref, regex })
+
+       //const regex = `^${secPref}`
+       const q = `  SELECT MAX(s) max FROM (
+                      SELECT SUB("${regex}",'$1',sec) s FROM projs WHERE SEARCH("${regex}",sec)
+                    )
+                 `
+       const rw = await dbProc.get(self.dbc,q,[])
+       const max = rw ? rw.max : 0
+       console.log({ max })
 
        const secNum = 1
-       const secFull = `${date}.${authId}.${secNum}.${secII}`
+       const secFull = `${secPref}.${secNum}.${secII}`
 
        res.send({ secFull })
     }

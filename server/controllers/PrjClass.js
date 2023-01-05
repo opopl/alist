@@ -160,7 +160,7 @@ const PrjClass = class {
 
     if (rw) { authId = rw.id; authName = rw.name; authPlain = rw.plain }
 
-    return { authId, authName, authPlain }
+    return { authId, authName, authPlain, prefii }
   }
 
 //@@ getUrlFacebookData

@@ -49,7 +49,6 @@ prj:
                   'button button@class=prj-input-url-clear@Clear',
                   'input text@ class=prj-input-url name=url', '' ]
               - [ 'label@@ Title:'   , '', 'input text@ name=title', '' ]
-              - [ 'label@@ Section:' , '', 'input text@ name=sec', '' ]
               - [ 'label@@ Tags:'    ,
                   'button button@class=prj-input-tags-clear@Clear',
                   'input text@ name=tags class=prj-input-tags', '' ]
