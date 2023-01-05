@@ -362,8 +362,8 @@ const c_PrjClass = class {
                     )
                  `
        const rw = await dbProc.get(self.dbc,q,[])
-       const max = rw ? rw.max : 0
-       console.log({ max })
+       const max = rw.max || 0
+       console.log({ rw, max })
 
        const secNum = 1
        const secFull = `${secPref}.${secNum}.${secII}`
