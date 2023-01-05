@@ -341,10 +341,16 @@ const c_PrjClass = class {
 
        const data = JSON.parse(body.data)
 
-       const { sec, proj, url, title, date  } = srvUtil.dictGet(data,'sec proj url title date')
+       const { sec, proj, url, title, date } = srvUtil.dictGet(data,'sec proj url title date')
 
        const { authId, authName, authPlain } = await self.prj.iiDataFromUrl({ url })
-       console.log({ authId, authName, authPlain })
+       console.log({ authId, authName, authPlain, date })
+       console.log({ sec, proj, url, title, date, authId })
+
+       const secNum = 1
+       const secFull = `${date}.${authId}.${secNum}.${sec}`
+
+       console.log({ secFull })
 
        res.send({ sec, proj })
     }

@@ -53,7 +53,7 @@ prj:
               - [ 'label@@ Tags:'    ,
                   'button button@class=prj-input-tags-clear@Clear',
                   'input text@ name=tags class=prj-input-tags', '' ]
-              - [ 'label@@ Date:'    , '', 'input date@ name=date', '' ]
+              - [ 'label@@ Date:'    , '', 'input text@ name=date class=prj-input-date', '' ]
               - [ 'button submit@@Submit', '', 'button button@class=prj-btn-form-reset@Clear Form' ]
 ###form_img_new
             'form_img_new':
