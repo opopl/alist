@@ -343,7 +343,8 @@ const c_PrjClass = class {
 
        const { sec, proj, url, title, date  } = srvUtil.dictGet(data,'sec proj url title date')
 
-			 const iiData = await self.prj.iiDataFromUrl({ url })
+       const { authId, authName, authPlain } = await self.prj.iiDataFromUrl({ url })
+       console.log({ authId, authName, authPlain })
 
        res.send({ sec, proj })
     }

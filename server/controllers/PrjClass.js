@@ -126,19 +126,41 @@ const PrjClass = class {
 
     const iiData = {}
 
-
     const { site, prefii } = self.getSiteFromUrl({ url })
 
     console.log({ site, prefii })
 
+    let fbAuthId, fbGroupId, fbPostId
     if (site == 'com.us.facebook'){
       //let fb_data   = projs#url#fb#data({
-      const fbData = self.getUrlFacebookData({ url })
-
-
+      ( { fbAuthId, fbGroupId, fbPostId } = self.getUrlFacebookData({ url }) )
     }
 
-    return iiData
+    console.log({ fbGroupId })
+
+    let rw, authId, authName, authPlain
+    if (fbAuthId) {
+       const q = `select a.id, a.name, a.plain from authors a
+                  inner join auth_details as ad
+                  on a.id = ad.id
+                  where fb_id = ?`
+       const p = [ fbAuthId ]
+
+       rw = await dbProc.get(db.auth, q, p)
+
+    } else if (fbGroupId) {
+       const q = `select a.id, a.name, a.plain from authors a
+                  inner join auth_details ad
+                  on a.id = ad.id
+                  where fb_group_id = ?`
+       const p = [ fbGroupId ]
+
+       rw = await dbProc.get(db.auth, q, p)
+    }
+
+    if (rw) { authId = rw.id; authName = rw.name; authPlain = rw.plain }
+
+    return { authId, authName, authPlain }
   }
 
 //@@ getUrlFacebookData
@@ -154,17 +176,23 @@ const PrjClass = class {
     u.searchParams.forEach(function(value, key){
       query[key] = value
     })
-    const pathArr = path.split('/')
-    const pathFront = pathArr[0]
+    const pathArr = path.split('/').filter(x => x.length)
+    const pathFront = pathArr.shift()
 
-    let fbAuthId
+    let fbAuthId, fbGroupId, fbPostId
     if (pathFront == 'permalink.php'){
-      const postId = query.story_fbid
-      if (postId) { fbAuthId = query.id }
+      fbPostId = query.story_fbid
+      if (fbPostId) { fbAuthId = query.id }
+    }
+    else if (pathFront == 'groups'){
+      fbGroupId = pathArr.shift()
+
+    }else{
+      fbAuthId = pathFront
     }
 
+    return { fbAuthId, fbGroupId, fbPostId }
   }
-
 
 //@@ dbBldData
   async dbBldData (w={}) {
