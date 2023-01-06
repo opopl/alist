@@ -281,7 +281,6 @@ const PrjClass = class {
     return lines
   }
 
-
 //@@ _secHead
   _secHead({
      sec, parent, url, author_id, date,
@@ -408,11 +407,89 @@ const PrjClass = class {
      return fileA
   }
 
+/*sub sec_insert_child {*/
+    //my ($self, $ref) = @_;
+    //$ref ||= {};
+
+    //my $file = $sd->{file};
+
+    //$self->sec_insert({
+        //sec  => $sec,
+        //proj => $proj,
+        //lines => \@ii_lines,
+    //});
+
+    //my $file_child = $sdc->{file};
+    //return $self unless $sdc && $sdc->{'@file_ex'};
+
+    //# insert children
+    //my $ins_child = {
+       //file_parent => $file,
+       //file_child  => $file_child,
+    //};
+
+    //dbh_insert_update_hash({
+       //dbh  => $self->{dbh},
+       //t    => 'tree_children',
+       //h    => $ins_child,
+       //uniq => 1,
+    //});
+
+    //return $self
+/*}*/
+
+//@@ secInsertChild
+  async secInsertChild ({ sec, proj, child }){
+    const self = this
+
+    proj = proj ? proj : self.proj
+
+    const sd = await self.dbSecData({ sec, proj })
+    const sdc = await self.dbSecData({ sec : child, proj })
+
+    if (!sd || !sdc) { return self }
+
+    const children = sd.children
+    if (children.includes(child)) { return self }
+
+    const fileChild = sdc.file
+
+    const iiLines = []
+    iiLines.push(`\\ii{${child}}`)
+
+    await self.secInsert({ sec, proj, lines: iiLines })
+
+    const insChild = { 
+      file_parent : file, 
+      file_child : fileChild 
+    }
+
+    return self
+  }
+
+//@@ secInsert
+  async secInsert ({ sec, proj, lines }){
+    const self = this
+
+    if (!lines || lines.length) { return self }
+    proj = proj ? proj : self.proj
+
+    const sd = await self.dbSecData({ sec, proj })
+    if (!sd) { return self }
+
+    const file = sd.file
+    const filePath = path.join(self.prjRoot, file)
+
+    const opts = { encoding : 'utf8', mode : 'a' }
+    await srvUtil.fsWriteFile(filePath, lines.join('\n') + '\n', opts)
+
+    return self
+  }
 
 //@@ secNew
   async secNew ({
-          sec, parent, rw, append, prepend,
-          seccmd, title, url,
+          url, sec, parent, rw, append, prepend,
+          seccmd, title,
           author_id, tags,
           date
     }){
@@ -435,8 +512,8 @@ const PrjClass = class {
     filePath = self._secFilePath({ file })
 
     const secLines = self._secNewLines({
-        sec, parent, append, prepend,
-        seccmd, title, tags, author_id
+        url, sec, parent, append, prepend,
+        seccmd, title, tags, author_id, date
     })
     const secTxt = secLines.join('\n') + '\n'
     srvUtil.fsWrite(filePath, secTxt)

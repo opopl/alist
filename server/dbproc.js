@@ -18,7 +18,7 @@ const update = sql.update
 //}
 
 //@@ info
-exports.info = async function({ base2info, tBase, joinCol, joinValue, info }) {
+const info = async function({ base2info, tBase, joinCol, joinValue, info }) {
 
    for (let [baseCol, baseValue] of Object.entries(info)) {
      const infoList = baseValue.split(',').map(x => x.trim()).filter(x => x.length)
@@ -32,21 +32,23 @@ exports.info = async function({ base2info, tBase, joinCol, joinValue, info }) {
                                  dict[infoCol] = infoValue
                                  return dict })
 
-     //console.log({ baseCol, baseValue, tInfo, infoList, insInfo })
-     //console.log({ infoList, insInfo, tags, author_id })
      const qi = insert(tInfo, insInfo)
                    .toParams({placeholder: '?%d'})
 
      console.log({ qi })
 
-     //await dbProc.run(self.dbc, qi.text, qi.values)
+     //await run(self.dbc, qi.text, qi.values)
    }
 
 }
 
+//@@ insertUpdateDict
+const insertUpdateDict = async function({ table, db, upd }) {
+}
+
 
 //@@ get
-exports.get = function(db, query, params) {
+const get = function(db, query, params) {
     return new Promise(function(resolve, reject) {
         if(params == undefined) params=[]
 
@@ -58,7 +60,7 @@ exports.get = function(db, query, params) {
 }
 
 //@@ run
-exports.run = function(db, query, params) {
+const run = function(db, query, params) {
     return new Promise(function(resolve, reject) {
         if(params == undefined) params=[]
 
@@ -69,8 +71,9 @@ exports.run = function(db, query, params) {
     })
 }
 
+
 //@@ all
-exports.all = function(db, query, params) {
+const all = function(db, query, params) {
     return new Promise(function(resolve, reject) {
         if(params == undefined) params=[]
 
@@ -79,6 +82,11 @@ exports.all = function(db, query, params) {
             else { resolve(rows) }
         })
     })
+}
+
+module.exports = {
+  all, get, run,
+  info
 }
 
 

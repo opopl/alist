@@ -22,7 +22,6 @@ const fsRead = function(path, encoding) {
             else { resolve(data) }
         })
     })
-
 }
 
 const objGetMethods = (obj) => {
@@ -111,6 +110,18 @@ const fsWrite = function(path, data) {
 
 }
 
+//@@ fsWriteFile
+const fsWriteFile = function(path, data, opts = {}) {
+    return new Promise(function(resolve, reject) {
+        //if(encoding == undefined) encoding='utf8'
+
+        fs.writeFile(path, data, opts, function(err)  {
+            if(err) reject("Write error: " + err.message)
+            else { resolve(data) }
+        })
+    })
+}
+
 //@@ fsFind
 const fsFind = async ({ dir, cb_file, cb_dir }) => {
 
@@ -144,6 +155,7 @@ module.exports = {
   fsFind,
   fsRead,
   fsWrite,
+  fsWriteFile,
   dictGet,
   fetchFile,
   fetchImg,
