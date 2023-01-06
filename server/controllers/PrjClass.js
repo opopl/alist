@@ -456,26 +456,12 @@ const PrjClass = class {
         //await dbProc.run(self.dbc, q_ins.text, q_ins.values)
 
         const base2info = { tags : 'tag' }
+        const tBase = 'projs'
         const joinCol = 'file'
         const joinValue = file
+        const info = { tags, author_id }
 
-        for (let [baseCol, baseValue] of Object.entries({ tags, author_id })) {
-          const infoCol = _.get(base2info, baseCol, baseCol)
-          const tInfo = `_info_projs_${baseCol}`
-          const infoList = baseValue.split(',').map(x => x.trim()).filter(x => x.length)
-          const insInfo = infoList.map(infoValue => {
-                                      let dict = {}; dict[joinCol] = joinValue;
-                                      dict[infoCol] = infoValue
-                                      return dict })
-
-          const qi = insert(tInfo, insInfo)
-                        .toParams({placeholder: '?%d'})
-
-          console.log({ qi })
-
-          //await dbProc.run(self.dbc, qi.text, qi.values)
-        }
-
+        await dbProc.info({ base2info, tBase, joinCol, joinValue, info })
     }
 
     return self

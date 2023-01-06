@@ -1,15 +1,48 @@
 
+const _ = require('lodash')
+const sql = require('sql-bricks-sqlite')
+
+const select = sql.select
+const insert = sql.insert
+const update = sql.update
+
 //https://www.scriptol.com/sql/sqlite-async-await.php
 //
 /*const sqlite3 = require('sqlite3').verbose()*/
 //var db
 //
 
-
 //@@ getOne
 //exports.getOne = async function(db, query, params) {
-	//const rw = await get(db, query, params)
+  //const rw = await get(db, query, params)
 //}
+
+//@@ info
+exports.info = async function({ base2info, tBase, joinCol, joinValue, info }) {
+
+   for (let [baseCol, baseValue] of Object.entries(info)) {
+     const infoList = baseValue.split(',').map(x => x.trim()).filter(x => x.length)
+     if (!infoList.length) { continue }
+
+     const infoCol = _.get(base2info, baseCol, baseCol)
+     const tInfo = `_info_${tBase}_${baseCol}`
+
+     const insInfo = infoList.map(infoValue => {
+                                 let dict = {}; dict[joinCol] = joinValue;
+                                 dict[infoCol] = infoValue
+                                 return dict })
+
+     //console.log({ baseCol, baseValue, tInfo, infoList, insInfo })
+     //console.log({ infoList, insInfo, tags, author_id })
+     const qi = insert(tInfo, insInfo)
+                   .toParams({placeholder: '?%d'})
+
+     console.log({ qi })
+
+     //await dbProc.run(self.dbc, qi.text, qi.values)
+   }
+
+}
 
 
 //@@ get
