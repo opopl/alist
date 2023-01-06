@@ -444,14 +444,15 @@ const PrjClass = class {
 
     proj = proj ? proj : self.proj
 
-    const sd = await self.dbSecData({ sec, proj })
-    const sdc = await self.dbSecData({ sec : child, proj })
+    const sd  = await self.dbSecData({ sec, proj })
+    const sdc = await self.dbSecData({ sec: child, proj })
 
     if (!sd || !sdc) { return self }
 
     const children = sd.children
     if (children.includes(child)) { return self }
 
+    const file = sd.file
     const fileChild = sdc.file
 
     const iiLines = []
@@ -459,10 +460,15 @@ const PrjClass = class {
 
     await self.secInsert({ sec, proj, lines: iiLines })
 
-    const insChild = { 
-      file_parent : file, 
-      file_child : fileChild 
+    const insChild = {
+      file_parent : file,
+      file_child : fileChild
     }
+
+    const q = insert('tree_children',insChild)
+               .toParams({placeholder: '?%d'})
+
+    await dbProc.run(self.dbc, q.text, q.values )
 
     return self
   }
@@ -471,7 +477,7 @@ const PrjClass = class {
   async secInsert ({ sec, proj, lines }){
     const self = this
 
-    if (!lines || lines.length) { return self }
+    if (!lines || !lines.length) { return self }
     proj = proj ? proj : self.proj
 
     const sd = await self.dbSecData({ sec, proj })
@@ -530,7 +536,7 @@ const PrjClass = class {
         const q_ins = insert('projs',ins)
                .toParams({placeholder: '?%d'})
 
-        //await dbProc.run(self.dbc, q_ins.text, q_ins.values)
+        await dbProc.run(self.dbc, q_ins.text, q_ins.values)
 
         const base2info = { tags : 'tag' }
         const tBase = 'projs'
@@ -539,6 +545,8 @@ const PrjClass = class {
         const info = { tags, author_id }
 
         await dbProc.info({ base2info, tBase, joinCol, joinValue, info })
+
+        if (date) { await self.secInsertChild({ sec: date, proj, child: sec }) }
     }
 
     return self
