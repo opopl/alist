@@ -17,8 +17,8 @@ const update = sql.update
   //const rw = await get(db, query, params)
 //}
 
-//@@ info
-const info = async function({ base2info, tBase, joinCol, joinValue, info }) {
+//@@ infoInsert
+const infoInsert = async function({ db, base2info, tBase, joinCol, joinValue, info }) {
 
    for (let [baseCol, baseValue] of Object.entries(info)) {
      const infoList = baseValue.split(',').map(x => x.trim()).filter(x => x.length)
@@ -37,7 +37,7 @@ const info = async function({ base2info, tBase, joinCol, joinValue, info }) {
 
      console.log({ qi })
 
-     await run(self.dbc, qi.text, qi.values)
+     await run(db, qi.text, qi.values)
    }
 
 }
@@ -86,7 +86,7 @@ const all = function(db, query, params) {
 
 module.exports = {
   all, get, run,
-  info
+  infoInsert
 }
 
 

@@ -552,7 +552,7 @@ const PrjClass = class {
         const joinValue = file
         const info = { tags, author_id }
 
-        await dbProc.info({ base2info, tBase, joinCol, joinValue, info })
+        await dbProc.infoInsert({ db: self.dbc, base2info, tBase, joinCol, joinValue, info })
 
         if (date) { await self.secInsertChild({ sec: date, proj, child: sec }) }
     }
