@@ -486,7 +486,7 @@ const PrjClass = class {
     const file = sd.file
     const filePath = path.join(self.prjRoot, file)
 
-    const opts = { encoding : 'utf8', mode : 'a' }
+    const opts = { encoding : 'utf8', flag : 'a' }
     await srvUtil.fsWriteFile(filePath, lines.join('\n') + '\n', opts)
 
     return self
