@@ -543,7 +543,7 @@ const c_PrjClass = class {
     return async (req, res) => {
       const query = req.query
 
-      const sec = _.get(query, 'sec', '')
+      const sec  = _.get(query, 'sec', '')
       const proj = _.get(query, 'proj', self.proj)
 
       let m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/.exec(sec)
@@ -571,8 +571,14 @@ const c_PrjClass = class {
 
       const target = `_buf.${sec}`
       const html = await self.prj.htmlTargetOutput({ proj, target })
-      return res.send(html)
+      const tmplData = { }
+      if (html) {
+        const $ = cheerio.load(html)
+        const htmlBody = $('body').html()
+        Object.assign(tmplData, { htmlBody })
+      }
 
+      return res.render('sec/sec', tmplData)
     }
   }
 

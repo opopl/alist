@@ -10,6 +10,9 @@
     {% block content %}
     {% endblock %}
 
+    {% if noScript %}
+    {% else %}
     <script src="/prj/assets/js/dist/bundle.js"></script>
+    {% endif %}
 </body>
 </html>
