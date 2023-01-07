@@ -509,6 +509,8 @@ const PrjClass = class {
     }){
 
     const self = this
+    var ok = true
+    var msg = ''
 
     const { proj, rootid } = srvUtil.dictGet(self,'proj rootid')
 
@@ -519,7 +521,10 @@ const PrjClass = class {
       file = _.get(sd,'file')
       filePath = path.join(self.prjRoot, file)
       fileEx = fs.existsSync(filePath)
-      if (!rw && fileEx) { return self }
+      if (!rw && fileEx) {
+        ok = false; msg = 'section file exists'
+        return { ok, msg }
+      }
     }
 
     file = self._secFile({ sec })
@@ -530,7 +535,14 @@ const PrjClass = class {
         seccmd, title, tags, author_id, date
     })
     const secTxt = secLines.join('\n') + '\n'
-    srvUtil.fsWrite(filePath, secTxt)
+
+    try {
+      srvUtil.fsWrite(filePath, secTxt)
+    } catch(e) {
+      msg = `file write error: ${e}`
+      ok = false
+      return { ok, msg }
+    }
 
     //todo git add
 
@@ -557,7 +569,7 @@ const PrjClass = class {
         if (date) { await self.secInsertChild({ sec: date, proj, child: sec }) }
     }
 
-    return self
+    return { ok, msg }
   }
 
 //@@ dbSecSelect
