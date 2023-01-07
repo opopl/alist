@@ -10,6 +10,11 @@ const imageinfo = require('imageinfo')
 //import { createHash } from 'node:crypto'
 const crypto = require('crypto')
 
+const util = require('util')
+
+const fsMove = util.promisify(fse.move)
+const fsMakePath = util.promisify(fs.mkdir)
+
 const findit = require('findit')
 
 //@@ fsRead
@@ -152,9 +157,9 @@ const fsFind = async ({ dir, cb_file, cb_dir }) => {
 
 module.exports = {
   md5hex,
+  fsMove, fsMakePath,
   fsFind,
-  fsRead,
-  fsWrite,
+  fsRead, fsWrite,
   fsWriteFile,
   dictGet,
   fetchFile,

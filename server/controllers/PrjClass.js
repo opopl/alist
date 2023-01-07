@@ -20,8 +20,8 @@ const select = db.sql.select
 const insert = db.sql.insert
 const update = db.sql.update
 
-const fsMove = util.promisify(fse.move)
-const fsMakePath = util.promisify(fs.mkdir)
+const fsMove = srvUtil.fsMove
+const fsMakePath = srvUtil.fsMakePath
 
 const { AuthClass } = require('./AuthClass')
 const { ImgClass } = require('./ImgClass')
@@ -651,9 +651,14 @@ const PrjClass = class {
 
     if (exNew) { return self }
 
+    // create new
     if (!exDone) {
-      await fsMakePath(secDirNew,{ recursive : true })
+      for(let x of ['cmt','orig','html'] ){
+         const xDir = path.join(secDirNew, x)
+         await fsMakePath(xDir,{ recursive : true })
+      }
 
+    // move done => new
     }else if(!exNew){
       await fsMakePath( path.dirname(secDirNew),{ recursive : true }).then(async() => {
          await fsMove( secDirDone, secDirNew )
