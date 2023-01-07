@@ -367,20 +367,22 @@ const c_PrjClass = class {
        const maxStr = rw.max || '0'
        const max = parseInt(maxStr) + 1
        const secFull = `${secPref}.${max}.${secII}`
+       const sec = secFull
 
        const seccmd = 'subsection'
        const parent = date
 
        await self.prj.secNew({
+            sec,
+
             url, date, tags,
-            sec: secFull, url,
             author_id : authId,
             seccmd, parent, title
        })
 
        await self.prj.secFsNew({ sec })
 
-       res.send({ secFull })
+       res.send({ sec })
     }
   }
 

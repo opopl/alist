@@ -37,7 +37,7 @@ const info = async function({ base2info, tBase, joinCol, joinValue, info }) {
 
      console.log({ qi })
 
-     //await run(self.dbc, qi.text, qi.values)
+     await run(self.dbc, qi.text, qi.values)
    }
 
 }
