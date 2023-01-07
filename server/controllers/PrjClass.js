@@ -274,6 +274,14 @@ const PrjClass = class {
 
     if (seccmd && title) {
        lines.push('', `\\${seccmd}{${title}}`, labelStr, '')
+       if (url) { lines.push(`\\Purl{${url}}`) }
+       if (author_id) { lines.push(
+                    '\\ifcmt',
+                    ' author_begin',
+                    `   author_id ${author_id}`,
+                    ' author_end',
+                    '\\fi',
+                )}
     }
 
     lines.push(...append)

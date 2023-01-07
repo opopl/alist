@@ -378,6 +378,8 @@ const c_PrjClass = class {
             seccmd, parent, title
        })
 
+       await self.prj.secFsNew({ sec })
+
        res.send({ secFull })
     }
   }
