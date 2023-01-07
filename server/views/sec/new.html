@@ -8,6 +8,7 @@
   <ul>
     <li><a href="#tab_sec_new">Section</a></li>
     <li><a href="#tab_img_new">Image</a></li>
+    <li><a href="#tab_auth_new">Author</a></li>
   </ul>
 
   {% for input in inputList %}
@@ -15,7 +16,7 @@
     {% set tabId  = input.tabId %}
     {% set after  = input.after %}
 
-    {% set f = _get(forms, formId) %}
+    {% set f = forms | get(formId) %}
 
     <div class="prj-tab" id="{{ tabId }}">
       {{ form.formRaw(formId, formRows = f.rows, formCols = f.cols) }}

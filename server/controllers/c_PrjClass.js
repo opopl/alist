@@ -450,14 +450,11 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       const forms = self.getConfig({ path : `templates.forms` })
-
-      const inputList = [
-        { tabId : 'tab_sec_new', formId : 'form_sec_new' },
-        { tabId : 'tab_img_new', formId : 'form_img_new' },
-      ]
+      const cnf = self.getConfig({ path : `methods.htmlSecNew` })
+      const inputList = _.get(cnf,'inputList',[])
 
       const title = 'New'
-      return res.render('sec/new', { title, forms, inputList, _get })
+      return res.render('sec/new', { title, forms, inputList })
     }
   }
 

@@ -167,7 +167,15 @@ prj:
               - [ 'input submit@hidden@','','' ]
 
 
+###methods
        methods:
+###methods.htmlSecNew
+          htmlSecNew:
+             inputList:
+             - { tabId : 'tab_sec_new', formId : 'form_sec_new' }
+             - { tabId : 'tab_img_new', formId : 'form_img_new' }
+             - { tabId : 'tab_auth_new', formId : 'form_auth_new' }
+
           htmlSecView:
              cols:
              - _check
