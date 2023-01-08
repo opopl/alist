@@ -99,7 +99,9 @@ prj:
               - { width : '60%' }
               rows:
               - [ 'label@@ Name:','','input text@name=plain' ]
+              - [ 'label@@ Author Id:','','input text@name=author_id' ]
               - [ 'label@@ URL:','','input text@class=prj-input-url name=url' ]
+              - [ 'input submit@hidden@','','' ]
 
 ###form_pics_upload
             'form_pics_upload':
@@ -316,6 +318,9 @@ prj:
 ###ui.forms
           forms:
              '@common':
+                class:
+                  '.prj-input-tags':
+
                 validate:
                   messages:
                     url:
@@ -325,11 +330,17 @@ prj:
 
 ###ui.forms.form_auth_new
              form_auth_new:
+                fields:
+                  author_id:
+                    autocomplete:
+                      url: '/prj/auth/all'
                 submit:
                   url: "/prj/auth/new"
-                validate :
+                validate:
                   rules:
                     name:
+                      required: true
+                    author_id:
                       required: true
 
 ###ui.forms.form_sec_new

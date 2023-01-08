@@ -94,6 +94,8 @@ const c_PrjClass = class {
     return async (req, res) => {
        const body = req.body
        const data = JSON.parse(body.data)
+       console.log({ data })
+       return res.send({ data })
     }
   }
 

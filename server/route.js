@@ -83,6 +83,15 @@ class routerFactory {
     router.get('/prj/sec/new/html' , self.c_Prj.htmlSecNew())
     router.post('/prj/sec/new'     , self.c_Prj.jsonSecNew())
 
+//@@ Sec/Fs
+    router.get('/prj/sec/fs/new' , self.c_Prj.jsonSecFsNew())
+    router.get('/prj/sec/fs/done' , self.c_Prj.jsonSecFsDone())
+
+    // list sections in 'new' folder
+    router.get('/prj/sec/fs/new/list' , self.c_Prj.jsonSecFsNewList())
+
+    router.post('/prj/sec/fs/load/scrn' , self.c_Prj.jsonSecFsLoadScrn())
+
 //@@ Log
     //router.get('/log' , self.c_Log.jsonLog())
 
@@ -94,14 +103,6 @@ class routerFactory {
 
     router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
     router.post('/prj/sec/data' , self.c_Prj.jsonSecData())
-
-    router.get('/prj/sec/fs/new' , self.c_Prj.jsonSecFsNew())
-    router.get('/prj/sec/fs/done' , self.c_Prj.jsonSecFsDone())
-
-    // list sections in 'new' folder
-    router.get('/prj/sec/fs/new/list' , self.c_Prj.jsonSecFsNewList())
-
-    router.post('/prj/sec/fs/load/scrn' , self.c_Prj.jsonSecFsLoadScrn())
 
     router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
     router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())
@@ -124,6 +125,7 @@ class routerFactory {
 //@@ Authors
     router.get('/prj/auth/html', self.c_Prj.htmlAuthSecs())
     router.get('/prj/auth/all', self.c_Prj.jsonAuthAll())
+    router.post('/prj/auth/new', self.c_Prj.jsonAuthNew())
 
     router.get('/prj/auth/info/tmpl', self.c_Prj.tmplAuthInfo())
 
