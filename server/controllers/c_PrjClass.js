@@ -87,6 +87,16 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonAuthNew
+  jsonAuthNew () {
+    const self = this
+
+    return async (req, res) => {
+       const body = req.body
+       const data = JSON.parse(body.data)
+    }
+  }
+
 //@@ jsonSecCount
   jsonSecCount () {
     const self = this
@@ -340,7 +350,6 @@ const c_PrjClass = class {
 
     return async (req, res) => {
        const body = req.body
-
        const data = JSON.parse(body.data)
 
        const ct = new cyr2trans()

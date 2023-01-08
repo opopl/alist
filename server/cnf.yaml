@@ -89,6 +89,17 @@ prj:
               #- [ 'label@@ Tags:' , '', 'input text@ id=input_sec_new_tags name=tags', '' ]
               #- [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
               #- [ 'button submit@@Submit', '', '' ]
+              #
+
+###form_auth_new
+            'form_auth_new':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ Name:','','input text@name=plain' ]
+              - [ 'label@@ URL:','','input text@class=prj-input-url name=url' ]
 
 ###form_pics_upload
             'form_pics_upload':
@@ -311,6 +322,16 @@ prj:
                       required: 'URL REQUIRED'
                       url: 'MUST BE URL'
                       url_img_db : 'ALREADY IN DB'
+
+###ui.forms.form_auth_new
+             form_sec_new:
+                submit:
+                  url: "/prj/auth/new"
+                validate :
+                  rules:
+                    name:
+                      required: true
+
 
 ###ui.forms.form_sec_new
              form_sec_new:
