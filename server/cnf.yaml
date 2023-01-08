@@ -324,14 +324,13 @@ prj:
                       url_img_db : 'ALREADY IN DB'
 
 ###ui.forms.form_auth_new
-             form_sec_new:
+             form_auth_new:
                 submit:
                   url: "/prj/auth/new"
                 validate :
                   rules:
                     name:
                       required: true
-
 
 ###ui.forms.form_sec_new
              form_sec_new:
