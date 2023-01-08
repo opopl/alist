@@ -571,11 +571,13 @@ const c_PrjClass = class {
 
       const target = `_buf.${sec}`
       const html = await self.prj.htmlTargetOutput({ proj, target })
-      const tmplData = { }
+      const tmplData = { noScript: true }
       if (html) {
         const $ = cheerio.load(html)
         const htmlBody = $('body').html()
         Object.assign(tmplData, { htmlBody })
+      }else{
+        Object.assign(tmplData, { noScript: false })
       }
 
       return res.render('sec/sec', tmplData)
