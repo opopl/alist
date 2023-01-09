@@ -558,8 +558,10 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       let m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/.exec(sec)
+      const sd = await self.prj.dbSecData({ proj, sec })
+      if (sd) { await self.prj.secRowUpdate({ row: sd, proj }) }
+
       if (m) {
-         const sd = await self.prj.dbSecData({ proj, sec })
          const secRows = []
 
          const { day, month, year } = srvUtil.dictGet(m.groups,'day month year')
@@ -577,7 +579,7 @@ const c_PrjClass = class {
              secRows.push(row)
            }
          }
-         return res.render('sec/date.html',{ secRows, header, cols, pageTitle, _get })
+         return res.render('sec/date.html',{ secRows, header, cols, pageTitle })
       }
 
       const target = `_buf.${sec}`
@@ -588,7 +590,8 @@ const c_PrjClass = class {
         const htmlBody = $('body').html()
         Object.assign(tmplData, { htmlBody })
       }else{
-        Object.assign(tmplData, { noScript: false })
+        Object.assign(tmplData, { noScript: false, secData: sd })
+        console.log({ sd })
       }
 
       return res.render('sec/sec', tmplData)
