@@ -1,41 +1,14 @@
 
 {% extends "layout.html" %}
 {%- import "import/form.html" as form -%}
+{%- import "import/sec/header.html" as hd -%}
 
 {% block content %}
 
 {% if htmlBody %}
   {{ htmlBody | safe }}
 {% else %}
-  {% set title = secData.title %}
-  {% set url = secData.url %}
-  {% set date = secData.date %}
-  {% set authors = secData.authors %}
-
-  <h4>{{ title }}</h4>
-
-  {% if url %}
-    <p class="noindent">
-      <a class="url" href="{{ url }}">{{ url | safe }}</a>
-    </p>
-  {% endif %}
-
-  {% if date %}
-    <p class="indent">
-      <a class="prj-link" href="/prj/sec/html?sec={{ date }}">{{ date }}</a>
-    </p>
-  {% endif %}
-
-  {% if authors and authors | isArr %}
-    {% for author in authors %}
-      {% if author.id and author.name %}
-        <p class="indent">
-          <a href="/prj/auth/html?id={{ author.id }}" class="prj-link" type="auth" target_ext="html">{{ author.name }}</a>
-        </p>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-
+  {{ hd.secHeader(secData) | safe }}
 {% endif %}
 
 {% endblock %}
