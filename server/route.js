@@ -123,8 +123,16 @@ class routerFactory {
     router.get(/^\/prj\/sec\/asset\/(.*)$/, self.c_Prj.secAsset())
 
 //@@ Authors
+    // html - list of sections for each author
     router.get('/prj/auth/html', self.c_Prj.htmlAuthSecs())
+
+    // json - all authors
     router.get('/prj/auth/all', self.c_Prj.jsonAuthAll())
+
+    // json - all authors, detail
+    router.get('/prj/auth/all/detail', self.c_Prj.jsonAuthAllDetail())
+
+    // json - create new author
     router.post('/prj/auth/new', self.c_Prj.jsonAuthNew())
 
     router.get('/prj/auth/info/tmpl', self.c_Prj.tmplAuthInfo())

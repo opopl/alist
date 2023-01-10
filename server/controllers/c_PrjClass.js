@@ -70,6 +70,39 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonAuthAllDetail
+  jsonAuthAllDetail () {
+    const self = this
+
+    return async (req, res) => {
+      const q = select('author_id')
+              .distinct('author_id')
+              .from('_info_projs_author_id')
+              .orderBy('author_id')
+              .toString()
+
+      var data = await dbProc.all(self.dbc, q, [])
+      const author_ids = data.map((x) => { return x.author_id })
+      const authors = []
+      for(let author_id of author_ids){
+        const qa = `SELECT
+                        a.id id, a.plain plain, a.name name,
+                        ad.fb_id fb_id,
+                        ad.fb_url fb_url
+                    FROM
+                        authors a
+                    INNER JOIN auth_details ad
+                    ON
+                        a.id = ad.id
+                    WHERE a.id = ?
+                    `
+        const author = await dbProc.get(db.auth, qa, [ author_id ])
+        if (author) { authors.push(author) }
+      }
+      res.json(authors)
+    }
+  }
+
 //@@ jsonAuthAll
   jsonAuthAll () {
     const self = this
