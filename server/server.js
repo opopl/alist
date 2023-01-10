@@ -112,8 +112,6 @@ class Alist {
         .initTmpl()
         .initClasses()
 
-    console.log(path.resolve(__dirname, 'views'));
-
     // srvly middleware
     // Note: Keep this at the top, above routes
     srv.use(cors())

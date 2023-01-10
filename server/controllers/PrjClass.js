@@ -39,11 +39,6 @@ const PrjClass = class {
      this.target = ''
      Object.assign(this, ref)
 
-     //this.rootid = 'p_sr'
-     //this.proj = 'letopis'
-     console.log({ proj : this.proj });
-     console.log({ rootid : this.rootid });
-
      this.auth = new AuthClass()
 
      this.htmlBare = `<!DOCTYPE html>
