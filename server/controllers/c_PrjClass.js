@@ -102,29 +102,39 @@ const c_PrjClass = class {
      }
   }
 
+//@@ htmlAuthAll
+// GET
+  htmlAuthAll () {
+    const self = this
+
+    return async (req, res) => {
+      const { authors } = await self.prj.dbAuthors()
+      res.render('auth_all', { authors })
+    }
+  }
+
 //@@ jsonAuthAllDetail
+// POST
   jsonAuthAllDetail () {
     const self = this
 
     return async (req, res) => {
+      const body = req.body
+      const data = JSON.parse(body.data)
 
-      const q = `SELECT ad.id id,
-                        ad.fb_id fb_id,
-                        ad.fb_url fb_url,
-                        a.plain plain,
-                        a.name name
-                 FROM _info_projs_author_id info
+      const { regex, exclude } = srvUtil.dictGet(data,'regex exclude')
 
-                 INNER JOIN auth_details ad
-                 ON info.author_id = ad.id
+      const { authors } = await self.prj.dbAuthors()
 
-                 INNER JOIN authors a
-                 ON info.author_id = a.id
+/*      const condList = []*/
+      //if (regex) { condList.push( `SEARCH("${regex}",tag)` ) }
+      //if (exclude) {
+        //const excludeList =  exclude.split(',').map(x => `"${x}"`)
+        //condList.push( `tag NOT IN (${excludeList.join(',')})` )
+      //}
 
-                 ORDER BY id
-                `
+      /*const cond = (condList.length) ? `WHERE ${condList.join(' AND ')}` : ''*/
 
-      const authors = await dbProc.all(self.dbc, q, [])
       res.json(authors)
     }
   }

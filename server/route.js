@@ -130,7 +130,9 @@ class routerFactory {
     router.get('/prj/auth/all', self.c_Prj.jsonAuthAll())
 
     // json - all authors, detail
-    router.get('/prj/auth/all/detail', self.c_Prj.jsonAuthAllDetail())
+    router.post('/prj/auth/all/detail', self.c_Prj.jsonAuthAllDetail())
+
+    router.get('/prj/auth/all/html', self.c_Prj.htmlAuthAll())
 
     // json - create new author
     router.post('/prj/auth/new', self.c_Prj.jsonAuthNew())

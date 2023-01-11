@@ -1,0 +1,17 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<table>
+{% for author in authors %}
+  <tr>
+    <td> {{ author.id }} </td>
+    <td> {{ author.name }} </td>
+    <td> {{ author.fb_id }} </td>
+    <td> {{ author.fb_url }} </td>
+  </tr>
+{% endfor %}
+</table>
+ 
+{% endblock %}

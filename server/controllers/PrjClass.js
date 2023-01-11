@@ -720,6 +720,33 @@ const PrjClass = class {
     }
   }
 
+//@@ dbAuthors
+  async dbAuthors ({ proj } = {})  {
+    const self = this
+
+    if (!proj) { proj = self.proj }
+
+    const tInfo = '_info_projs_author_id'
+    const q = `SELECT DISTINCT ad.id id,
+                        ad.fb_id fb_id,
+                        ad.fb_url fb_url,
+                        a.plain plain,
+                        a.name name
+               FROM ${tInfo} info
+
+               INNER JOIN auth_details ad
+               ON info.author_id = ad.id
+
+               INNER JOIN authors a
+               ON info.author_id = a.id
+
+               ORDER BY id
+                `
+
+    const authors = await dbProc.all(self.dbc, q, [])
+    return { authors }
+  }
+
 //@@ dbSecData
   async dbSecData (whr={})  {
     const self = this
