@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+    mode: 'development',
     entry: path.resolve(__dirname) + '/ui/js/src/root.js',
     output: {
         path: path.resolve(__dirname) + '/ui/js/dist',

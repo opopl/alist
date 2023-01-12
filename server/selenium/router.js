@@ -47,7 +47,6 @@ class routerFactory {
       res.render('search');
     })
 
-
     router.get(/\/css\/(.*)/, async (req, res) => {
       const file = req.params[0]
       const cssFile = path.join(__dirname, 'ui', 'css', file)
