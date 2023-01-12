@@ -68,6 +68,7 @@
     "imageinfo": "^1.0.4",
     "jquery": "^3.6.1",
     "jquery-ui": "^1.13.2",
+    "jquery-ui-bundle": "^1.12.1-migrate",
     "js-yaml": "^4.1.0",
     "knex": "0.95",
     "lodash": "^4.17.21",

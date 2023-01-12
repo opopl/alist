@@ -10,6 +10,13 @@ module.exports = {
         filename: 'bundle.js',
         publicPath: '/app/'
     },
+    resolve : {
+      alias: {
+        modules : path.join(__dirname, '..', '..', 'node_modules'),
+        //"jquery-ui" : "jquery-ui/jquery-ui.js"
+        //"jquery" : "jquery/src/jquery"
+      }
+    },
     watch: true,
     watchOptions: {
       aggregateTimeout: 200,
@@ -59,7 +66,7 @@ module.exports = {
       ]
     },
     plugins: [
-      /* Use the ProvidePlugin constructor to inject jquery implicit globals */
+       //Use the ProvidePlugin constructor to inject jquery implicit globals 
       new webpack.ProvidePlugin({
           $               : "jquery",
           jQuery          : "jquery",

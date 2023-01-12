@@ -3,15 +3,26 @@
 require('../../css/ui.css');
 
 // js
-//window.$ = require('jquery');
-require('webpack-jquery-ui');
-require('webpack-jquery-ui/css');
+//
+//
+//const { $ } = require('jquery')
+//window.$ = window.jQuery = $
 
-window.$ = window.jQuery = $
+require('jquery-ui-bundle')
 
-import { AppUi } from './ui.js';
+require('webpack-jquery-ui')
+require('webpack-jquery-ui/css')
+
+//window.$ = window.jQuery = $
+
+console.log($.ui.tabs) 
+console.log($.ui.dialog) 
+
+//require('jquery-ui')
+
+import { App } from './ui.js';
 
 $(function(){
-  window.app =  new AppUi();
+  window.app =  new App();
   app.run();
 });

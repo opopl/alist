@@ -4,7 +4,15 @@ var pretty = require('pretty');
 
 var _ = require('lodash');
 
-function AppUi(){
+////window.$ = require('jquery');
+//require('webpack-jquery-ui');
+//require('webpack-jquery-ui/css');
+//require('jquery-validation');
+
+//console.log($.ui.tabs) 
+//console.log($.ui.dialog) 
+
+function App(){
 
 //@@ register_on_enter
   this.register_on_enter = function(sel, func){
@@ -125,5 +133,5 @@ function AppUi(){
 
 }
 
-module.exports = { AppUi }
+module.exports = { App }
 
