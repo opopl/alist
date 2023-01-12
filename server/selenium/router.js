@@ -40,11 +40,11 @@ class routerFactory {
     });
 
     router.get('/page', function (req, res) {
-      res.render('index');
+      res.render('selenium/index');
     })
 
     router.get('/search', async (req, res) => {
-      res.render('search');
+      res.render('selenium/search');
     })
 
     router.get(/\/css\/(.*)/, async (req, res) => {
@@ -67,6 +67,7 @@ class routerFactory {
       await driver.get('http://www.duckduckgo.com');
     })
 
+//@a /goto
     router.post('/goto', async (req, res) => {
       const thisHost = req.get('host')
       const thisProto = req.protocol
@@ -82,8 +83,12 @@ class routerFactory {
         //},
       /*}*/
 
-      axios.get(`${thisProto}://${thisHost}/page/src`).then((data) => {
+			const urlSrc = `${thisProto}://${thisHost}/page/src`
+      axios.get(`${urlSrc}`).then((response) => {
+				const data = response.data
+
         const src = data.src
+
         res.status(200).send({ url, src })
       }).catch((err) => {
         console.log(err.response.status);
@@ -91,6 +96,7 @@ class routerFactory {
 
     })
 
+//@a /goto/fb
     router.get('/goto/fb', async (req, res) => {
       await driver.get('http://m.facebook.com');
 
@@ -101,6 +107,7 @@ class routerFactory {
       return res.status(200)
     });
 
+//@a /page/src
     router.post('/page/src', async (req, res) => {
       const xpath = req.body.xpath
       const selector = req.body.selector

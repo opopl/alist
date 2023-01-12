@@ -1,0 +1,7 @@
+
+driver:
+  firefox:
+     preferences:
+       'geo.enabled' : false
+       'geo.provider.network.url' : 'data:application/json,{ "location" : { "latitude" : 43.7001100, "longitude" : -79.4163000, "accuracy" : 10 }}'
+       'geo.provider.use_geoclue' : false

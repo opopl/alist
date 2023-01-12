@@ -14,9 +14,11 @@ const logger = require('morgan')
 
 const fileUpload = require('express-fileupload')
 
+const _ = require('lodash')
 const path = require('path')
 const fs = require('fs')
 const util = require('util')
+const yaml = require('js-yaml')
 
 const cons = require('consolidate');
 const nunjucks = require('nunjucks');
@@ -54,16 +56,16 @@ class Scraper {
     srv.use(fileUpload())
     srv.use(logger('dev'))
     
-    const viewsDir = path.resolve(__dirname, 'views')
+    const viewsDir = path.resolve(__dirname, '..', 'views')
     cons.requires.nunjucks = nunjucks.configure(viewsDir, {
       autoescape: true,
       express   : srv
-    });
+    })
     
     // view engine setup
-    srv.engine('html', cons.nunjucks);
-    srv.set('views', path.resolve(__dirname, 'views'));
-    srv.set('view engine', 'html');
+    srv.engine('html', cons.nunjucks)
+    srv.set('views', viewsDir)
+    srv.set('view engine', 'html')
 
     srv.use('/', new routerFactory({ app: self }).router())
 
@@ -81,15 +83,31 @@ class Scraper {
   async initDrv() {
     const self = this
 
+    const prefs = _.get(self,'cnf.driver.firefox.preferences',{})
+
     const options = new firefox.Options()
-      .setPreference('geo.enabled', false)
-      .setPreference('geo.provider.network.url', 'data:application/json,{ "location" : { "latitude" : 43.7001100, "longitude" : -79.4163000, "accuracy" : 10 }}')
-      .setPreference('geo.provider.use_geoclue', false)
+
+    for (let [key, value] of Object.entries(prefs)) {
+      options.setPreference(key, value)
+    }
 
     self.driver = await new Builder()
         .forBrowser(Browser.FIREFOX)
         .setFirefoxOptions(options)
         .build()
+
+    return self
+  }
+
+//@@ initYaml
+  initYaml(){
+    const self = this
+
+    const yFile = path.join(__dirname, 'fb.yaml')
+
+    const yFileEx = fs.existsSync(yFile)
+    const cnf = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
+    self.cnf = cnf
 
     return self
   }
@@ -116,6 +134,8 @@ class Scraper {
 //@@ run
   async run() {
     const self = this
+
+    self.initYaml()
 
     await self.initCookies()
     await self.initDrv()

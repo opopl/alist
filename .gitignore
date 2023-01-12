@@ -1,4 +1,5 @@
 
+server/selenium/ui/js/dist
 
 *.tags
 server/sqlite3-extras.*
