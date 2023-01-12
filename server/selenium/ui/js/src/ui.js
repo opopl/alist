@@ -45,6 +45,8 @@ function AppUi(){
 //@@ init
   this.init = function(){
     const app = this
+
+    $('#tabs').tabs()
   
     $('#btn_facebook').on('click',function(){
        $.ajax({
@@ -81,11 +83,11 @@ function AppUi(){
               $.ajax({
                 method  : 'POST',
                 data    : { xpath },
-                dataType : 'json',
-                url     : `/page/src`,
-                success : function(data){
-                  const src = data.src
-                  $('#page_src').text(src)
+                //dataType : 'json',
+                url     : `/page/src/html`,
+                success : function(html){
+                  const src = html
+                  $('#pre_page_src').text(src)
                 },
                 error   : function(data){},
               });

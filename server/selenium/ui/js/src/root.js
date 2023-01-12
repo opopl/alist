@@ -7,6 +7,8 @@ require('../../css/ui.css');
 require('webpack-jquery-ui');
 require('webpack-jquery-ui/css');
 
+window.$ = window.jQuery = $
+
 import { AppUi } from './ui.js';
 
 $(function(){

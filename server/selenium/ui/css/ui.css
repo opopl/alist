@@ -32,6 +32,23 @@ table .col-3 {
   width: 20%;
 }
 
+.sln-flex-container {
+    display: flex;
+    /*flex-direction: row;*/
+    /*flex-wrap: wrap;*/
+    flex: row;
+    justify-content: space-between;
+}
+
+.sln-flex-row {
+    width: 100%;
+    height: 200px;
+    /*background: gray;*/
+    /*position: fixed;*/
+    display: flex;
+    text-align: center;
+}
+
 .form-row {
   display: flex;
   justify-content: flex-start;

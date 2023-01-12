@@ -35,17 +35,20 @@ class routerFactory {
     const driver = self.app.driver
     const cookies = self.app.cookies
 
+//@r GET /
     router.get('/', function (req, res) {
       res.redirect('/search');
-    });
+    })
+
+//@r GET /search
+    router.get('/search', async (req, res) => {
+      res.render('selenium/search');
+    })
 
     router.get('/page', function (req, res) {
       res.render('selenium/index');
     })
 
-    router.get('/search', async (req, res) => {
-      res.render('selenium/search');
-    })
 
     router.get(/\/css\/(.*)/, async (req, res) => {
       const file = req.params[0]
@@ -67,7 +70,7 @@ class routerFactory {
       await driver.get('http://www.duckduckgo.com');
     })
 
-//@a /goto
+//@r POST /goto
     router.post('/goto', async (req, res) => {
       const thisHost = req.get('host')
       const thisProto = req.protocol
@@ -83,11 +86,11 @@ class routerFactory {
         //},
       /*}*/
 
-			const urlSrc = `${thisProto}://${thisHost}/page/src`
+      const urlSrc = `${thisProto}://${thisHost}/page/src/html`
       axios.get(`${urlSrc}`).then((response) => {
-				const data = response.data
+        const data = response.data
 
-        const src = data.src
+        const src = data
 
         res.status(200).send({ url, src })
       }).catch((err) => {
@@ -96,7 +99,7 @@ class routerFactory {
 
     })
 
-//@a /goto/fb
+//@r GET /goto/fb
     router.get('/goto/fb', async (req, res) => {
       await driver.get('http://m.facebook.com');
 
@@ -107,8 +110,8 @@ class routerFactory {
       return res.status(200)
     });
 
-//@a /page/src
-    router.post('/page/src', async (req, res) => {
+//@r POST /page/src/html
+    router.post('/page/src/html', async (req, res) => {
       const xpath = req.body.xpath
       const selector = req.body.selector
 
@@ -136,15 +139,16 @@ class routerFactory {
 
       ok = ok && html
       if (ok) {
-        return res.send({ src : html })
+        return res.send(html)
       }else{
         return res.status(404).send({ msg : 'not found by xpath' })
       }
     })
 
-    router.get('/page/src', async (req, res) => {
-      const pageSource = await driver.wait(until.elementLocated(By.css('body')), 1000).getAttribute('innerHTML');
-      return res.status(200).send({ src : pageSource })
+//@r GET /page/src/html
+    router.get('/page/src/html', async (req, res) => {
+      const pageSource = await driver.wait(until.elementLocated(By.css('html')), 1000).getAttribute('outerHTML')
+      return res.status(200).send(pageSource)
     })
 
     return router
