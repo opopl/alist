@@ -7,7 +7,6 @@ var _ = require('lodash');
 ////window.$ = require('jquery');
 //require('webpack-jquery-ui');
 //require('webpack-jquery-ui/css');
-//require('jquery-validation');
 
 //console.log($.ui.tabs) 
 //console.log($.ui.dialog) 
@@ -88,6 +87,7 @@ function App(){
       .register_on_enter('#input_xpath',
           function(e){
               const xpath = $(this).val();
+              const urlSrc = `/page/src/html`
               $.ajax({
                 method  : 'POST',
                 data    : { xpath },
@@ -95,7 +95,9 @@ function App(){
                 url     : `/page/src/html`,
                 success : function(html){
                   const src = html
+                  const encoded = "data:text/html;charset=utf-8," + encodeURIComponent(html); 
                   $('#pre_page_src').text(src)
+                  $('#tab_src_html iframe').attr({ src : encoded })
                 },
                 error   : function(data){},
               });

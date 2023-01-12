@@ -13,10 +13,9 @@ require('jquery-ui-bundle')
 require('webpack-jquery-ui')
 require('webpack-jquery-ui/css')
 
-//window.$ = window.jQuery = $
+//require('jquery-validation');
 
-console.log($.ui.tabs) 
-console.log($.ui.dialog) 
+//window.$ = window.jQuery = $
 
 //require('jquery-ui')
 
