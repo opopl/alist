@@ -286,6 +286,8 @@ prj:
                 dataTable:
 ###ui.tables.@common.dataTable
                    paging  : true
+                   pageLength: 100
+                   aLengthMenu: [ [25, 50, 75, -1], [25, 50, 75, "All"] ]
                    autoWidth: false
                    columnDefs:
                    - { "width" : "5%" }
