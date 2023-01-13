@@ -244,9 +244,16 @@ const c_PrjClass = class {
             finder.on('end', () => { resolve(found) })
           })
           const found = await ff
+          const sorted = found.sort((a, b) => {
+            let aStat = fs.statSync(a),
+                bStat = fs.statSync(b);
+
+            return aStat.ctime < bStat.ctime;
+            //return new Date(bStat.birthtime).getTime() - new Date(aStat.birthtime).getTime();
+          })
 
           let i = 0
-          for(let iFile of found){
+          for(let iFile of sorted){
             const bn = path.basename(iFile)
 
             i+=1
