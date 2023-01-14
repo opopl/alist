@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 
 //const{ Builder, By, Key, until, xpath } = require("selenium-webdriver");
 //const{ Given, When, Then } = require('cucumber');
@@ -31,7 +32,7 @@ const firefox = require("selenium-webdriver/firefox");
 const user = process.env.FB_LOGIN
 const pass = process.env.FB_PASS
 
-const { routerFactory } = require('./router.js')
+const { routerFactory } = require('./sln_router.js')
 
 
 let cookies = {}
