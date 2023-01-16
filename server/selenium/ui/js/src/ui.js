@@ -8,8 +8,8 @@ var _ = require('lodash');
 //require('webpack-jquery-ui');
 //require('webpack-jquery-ui/css');
 
-//console.log($.ui.tabs) 
-//console.log($.ui.dialog) 
+//console.log($.ui.tabs)
+//console.log($.ui.dialog)
 
 function App(){
 
@@ -29,6 +29,28 @@ function App(){
      return this;
   };
 
+//@@ find
+  this.find = function({ xpath, selector }){
+    const app = this
+
+    const urlSrc = `/page/src/html`
+    $.ajax({
+      method  : 'POST',
+      data    : { xpath, selector },
+      //dataType : 'json',
+      url     : urlSrc,
+      success : function(html){
+        const src = html
+        const encoded = "data:text/html;charset=utf-8," + encodeURIComponent(html);
+        $('#pre_page_src').text(src)
+        $('#tab_src_html iframe').attr({ src : encoded })
+      },
+      error   : function(data){},
+    })
+
+    return this
+  }
+
 //@@ goto
   this.goto = function({ url }){
     const app = this
@@ -40,8 +62,8 @@ function App(){
       url     : `/goto`,
       success : function(data){
         //$('#input_go').val(url)
-        console.log({ data })
         $('#page_url').attr({ href : url }).text(url)
+        $('#tab_src_html iframe').attr({ src : `/page/src/html` })
       },
       error   : function(data){},
     });
@@ -54,7 +76,7 @@ function App(){
     const app = this
 
     $('#tabs').tabs()
-  
+
     $('#btn_facebook').on('click',function(){
        $.ajax({
          method  : 'GET',
@@ -81,45 +103,22 @@ function App(){
               const word = $(this).val();
               const url = `https://duckduckgo.com/?q=${word}`
               app.goto({ url })
-  
+
           }
       )
       .register_on_enter('#input_xpath',
           function(e){
               const xpath = $(this).val();
-              const urlSrc = `/page/src/html`
-              $.ajax({
-                method  : 'POST',
-                data    : { xpath },
-                //dataType : 'json',
-                url     : `/page/src/html`,
-                success : function(html){
-                  const src = html
-                  const encoded = "data:text/html;charset=utf-8," + encodeURIComponent(html); 
-                  $('#pre_page_src').text(src)
-                  $('#tab_src_html iframe').attr({ src : encoded })
-                },
-                error   : function(data){},
-              });
+              app.find({ xpath })
           }
       )
       .register_on_enter('#input_selector',
           function(e){
               const selector = $(this).val();
-              $.ajax({
-                method  : 'POST',
-                data    : { selector },
-                dataType : 'json',
-                url     : `/page/src`,
-                success : function(data){
-                  const src = data.src
-                  $('#page_src').text(src)
-                },
-                error   : function(data){},
-              });
+              app.find({ selector })
           }
       )
-  
+
       return this
   }
 

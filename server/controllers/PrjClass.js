@@ -540,6 +540,9 @@ const PrjClass = class {
     }
 
     //todo git add
+    const fileBn = path.basename(filePath)
+    process.chdir(self.prjRoot)
+    execSync(`git add ${fileBn}`)
 
     if (!sd) {
         const ins = {
@@ -962,7 +965,7 @@ const PrjClass = class {
      const exe =  cmda.shift()
      const args = cmda
 
-     process.chdir(this.prjRoot)
+     process.chdir(self.prjRoot)
 
      //try {
        ////childProcess.execSync(cmd, { stdio: 'inherit' })

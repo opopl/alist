@@ -49,6 +49,11 @@ table .col-3 {
     text-align: center;
 }
 
+.sln-iframe { 
+	width: 50%;
+	height: 500px;
+}
+
 .form-row {
   display: flex;
   justify-content: flex-start;
