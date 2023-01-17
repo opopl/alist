@@ -1,0 +1,15 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<table>
+{% for topic in topics %}
+  <tr>
+    <td> <a href="{{ topic.pdf }}">PDF</a></td>
+    <td> {{ topic.name }} </td>
+  </tr>
+{% endfor %}
+</table>
+ 
+{% endblock %}

@@ -14,7 +14,17 @@ prj:
   controller:
     proj: letopis
     rootid : p_sr
+###@start.config
     config:
+###topics
+       topics:
+       - name: 'Волонтерство'
+         pdf: '/prj/target/pdf?target=vojna.volonter'
+       - name: 'Поезія'
+         pdf: '/prj/target/pdf?target=vojna.poetry'
+       - name: 'Харків'
+         pdf: '/prj/target/pdf?target=vojna.harkov'
+
        templates:
 ###templates.tabs
           tabs:

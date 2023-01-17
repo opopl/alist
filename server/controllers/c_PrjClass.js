@@ -674,6 +674,35 @@ const c_PrjClass = class {
     }
   }
 
+//@@ pdfTargetView
+  pdfTargetView () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const target = _.get(query, 'target', '')
+      const proj   = _.get(query, 'proj', self.proj)
+
+      const action = _.get(query, 'action', 'render')
+
+      const pdfFile = await self.prj.pdfFileTarget({ proj, target })
+      res.sendFile(pdfFile)
+    }
+  }
+
+//@@ htmlTopics
+  htmlTopics () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const topics = self.getConfig({ path: 'topics' })
+      res.render('topics', { topics })
+    }
+  }
+
 //@@ htmlTargetView
   htmlTargetView () {
     const self = this
@@ -688,7 +717,6 @@ const c_PrjClass = class {
 
       const html = await self.prj.htmlTargetOutput({ proj, target })
       res.send(html)
-
     }
   }
 

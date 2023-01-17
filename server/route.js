@@ -70,6 +70,10 @@ class routerFactory {
 //@@ Target
     router.get('/prj/target/data', self.c_Prj.jsonTargetData())
     router.get('/prj/target/html', self.c_Prj.htmlTargetView())
+    router.get('/prj/target/pdf' , self.c_Prj.pdfTargetView())
+
+//@@ Topics
+    router.get('/prj/topics/html' , self.c_Prj.htmlTopics())
 
 //@@ Code
     router.get('/prj/code/tab/:tabId/html' , self.c_Prj.htmlCodeTab())
