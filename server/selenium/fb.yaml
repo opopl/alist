@@ -5,3 +5,10 @@ driver:
        'geo.enabled' : false
        'geo.provider.network.url' : 'data:application/json,{ "location" : { "latitude" : 43.7001100, "longitude" : -79.4163000, "accuracy" : 10 }}'
        'geo.provider.use_geoclue' : false
+     extensions:
+     - savepage-we@DW-dev.xpi
+# https://github.com/trembacz/xpath-finder
+     #- xpath_finder-1.0.2.xpi
+     #- dom_xpath-1.0.4.xpi
+     #- javascript-0.3.1.xpi
+     #- scratchpad-0.3.xpi

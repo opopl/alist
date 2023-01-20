@@ -84,12 +84,27 @@ class Scraper {
   async initDrv() {
     const self = this
 
-    const prefs = _.get(self,'cnf.driver.firefox.preferences',{})
+    const preferences = _.get(self,'cnf.driver.firefox.preferences',{})
+    const extensions  = _.get(self,'cnf.driver.firefox.extensions',[])
+    const extDir = path.join(process.env.HOME, 'data', 'firefox', 'extensions')
 
     const options = new firefox.Options()
 
-    for (let [key, value] of Object.entries(prefs)) {
+    for (let [key, value] of Object.entries(preferences)) {
       options.setPreference(key, value)
+    }
+
+    for(let extension of extensions){
+      const extPath = path.join(extDir, extension)
+      if(!fs.existsSync(extPath)){ continue  }
+
+      try { 
+        options.addExtensions(extPath)
+        console.log(`[initDrv.OK] Loaded extension: ${extension}`)
+      } catch(e) {
+        console.log(`[initDrv.FAIL] Error loading extension: ${extension}`)
+        console.error(e)
+      }
     }
 
     self.driver = await new Builder()

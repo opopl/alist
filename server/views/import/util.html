@@ -1,0 +1,6 @@
+
+{% macro attrStr(dict={}) %}
+  {% for key, value in dict %}
+    {{ key }} = "{{ value }}" 
+  {% endfor %}
+{% endmacro %}

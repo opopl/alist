@@ -567,7 +567,10 @@ const c_PrjClass = class {
     return async (req, res) => {
 
       const tabId = req.params.tabId
+
       const forms = self.getConfig({ path : `templates.forms` })
+      const iframes = self.getConfig({ path : `templates.iframes` })
+
       const tmplEnv = self.tmplEnv
 
       let html, args = {}, formId
@@ -584,6 +587,9 @@ const c_PrjClass = class {
           secFsNewRows.push(row)
         }
         args = { secFsNewRows }
+      }
+      else if (tabId == 'tab_saved') {
+        args = { iframes }
       }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)

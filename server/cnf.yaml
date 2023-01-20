@@ -44,6 +44,13 @@ prj:
                     _pdf : 'pdf'
                     _check : ''
 
+###templates.iframes
+          iframes:
+            'iframe_saved':
+               height : 'auto'
+               width : '100%'
+               sandbox : 'allow-same-origin'
+
 ###templates.forms
           forms:
             'form_sec_new':
@@ -254,19 +261,20 @@ prj:
 ###ui.tab
           tab :
             saved:
+###ui.tab.saved
               iframe:
                 sandbox : ''
                 width : ''
                 height : ''
-              radioList:
-              - { id : 'orig', name : 'Orig' }
-              - { id : 'view', name : 'View' }
-              - { id : 'unwrap', name : 'Unwrap' }
-              - { id : 'parse', name : 'Parse' }
-              - { id : 'content', name : 'Content' }
-              - { id : 'article', name : 'Article' }
-              - { id : 'comments', name : 'Comments' }
-              - { id : 'cmttex', name : 'Comments (TeX)' }
+#              radioList:
+              #- { id : 'orig', name : 'Orig' }
+              #- { id : 'view', name : 'View' }
+              #- { id : 'unwrap', name : 'Unwrap' }
+              #- { id : 'parse', name : 'Parse' }
+              #- { id : 'content', name : 'Content' }
+              #- { id : 'article', name : 'Article' }
+              #- { id : 'comments', name : 'Comments' }
+              #- { id : 'cmttex', name : 'Comments (TeX)' }
 
 ###ui.page
           page :
