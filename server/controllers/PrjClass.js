@@ -1271,7 +1271,7 @@ const PrjClass = class {
 
     console.log('[htmlFileSecSaved] start');
 
-    const { secDirNew, secDirDone } = self.secDirsSaved({ sec, proj })
+    const { secDirNew, secDirDone } = self.secDirsSaved({ sec, proj, sub : 'html' })
 
     var htmlFile = ''
     const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
