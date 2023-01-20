@@ -565,7 +565,6 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
-
       const tabId = req.params.tabId
 
       const forms = self.getConfig({ path : `templates.forms` })

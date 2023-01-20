@@ -1271,27 +1271,7 @@ const PrjClass = class {
 
     console.log('[htmlFileSecSaved] start');
 
-    const dirNew = path.join(self.picDataDir, self.rootid, proj, 'new')
-    const dirDone = path.join(self.picDataDir, self.rootid, proj, 'done')
-
-    const secDirNew  = path.join(dirNew, sec)
-
-    const { day, month, year } = self.secDate({ proj, sec })
-
-    //let yfile = base#qw#catpath('plg','projs data yaml months.yaml')
-    //let map_months = base#yaml#parse_fs({ 'file' : yfile })
-    const yFile = path.join(self.plgDir, 'projs', 'data', 'yaml', 'months.yaml')
-    const yFileEx = fs.existsSync(yFile)
-    const mapMonths = yFileEx ? yaml.load(fs.readFileSync(yFile)) : {}
-    const monthName = _.get(mapMonths,`en.short.${month}`,month)
-
-    var secDirDone = path.join(dirDone, 'secs', sec)
-    if (day && monthName && year){
-      secDirDone = path.join(dirDone, year, monthName, `${day}`, sec )
-    }
-
-    const secDirDoneEx = fs.existsSync(secDirDone)
-    const secDirNewEx = fs.existsSync(secDirNew)
+    const { secDirNew, secDirDone } = self.secDirsSaved({ sec, proj })
 
     var htmlFile = ''
     const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
@@ -1343,9 +1323,7 @@ const PrjClass = class {
     if (sub) { secDirDone = path.join(secDirDone, sub) }
 
     return { secDirNew, secDirDone }
-
   }
-
 
 }
 
