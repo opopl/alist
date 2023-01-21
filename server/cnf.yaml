@@ -107,6 +107,14 @@ prj:
               #- [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
               #- [ 'button submit@@Submit', '', '' ]
               #
+###form_saved_import
+            'form_saved_import':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ Name:','','input text@name=plain' ]
 
 ###form_auth_new
             'form_auth_new':
