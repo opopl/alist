@@ -114,7 +114,7 @@ prj:
               - { width : '10%' }
               - { width : '60%' }
               rows:
-              - [ 'label@@ Name:','','input text@name=plain' ]
+              - [ 'label@@ File:','','input file@name=file' ]
 
 ###form_auth_new
             'form_auth_new':
@@ -331,6 +331,11 @@ prj:
                 autoOpen: false
                 resizeable: true
                 modal: true
+
+             dialog_saved_import:
+                title: "Import Saved File"
+                height: 700
+                width: 800
 
              dialog_img_delete:
                 title: "Image Deletion"
