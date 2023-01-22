@@ -147,6 +147,9 @@ class routerFactory {
     router.get('/prj/tag/html', self.c_Prj.htmlTagSecs())
     router.get('/prj/tag/list', self.c_Prj.jsonTagList())
 
+    // linked to btn_tags button
+    router.get('/prj/tags/html', self.c_Prj.htmlTags())
+
 //@@ Builds
     router.get('/prj/bld/data', self.c_Prj.jsonBldData())
 

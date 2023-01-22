@@ -836,6 +836,21 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlTags
+// GET /prj/tags/html
+  htmlTags ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const cnf = self.getConfig({ path : 'methods.htmlTags' }) || {}
+      const tagData = _.get(cnf, 'tagData', {})
+
+      return res.render('tags', { tagData })
+    }
+  }
+
 //@@ htmlTagSecs
 // GET /prj/tag/html
   htmlTagSecs ()  {

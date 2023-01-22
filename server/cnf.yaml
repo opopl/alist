@@ -204,9 +204,18 @@ prj:
 
               - [ 'input submit@hidden@','','' ]
 
-
 ###methods
        methods:
+
+###methods.htmlTags
+          htmlTags:
+             tagData:
+               cities:
+               - kiev
+               - mariupol
+               #- dnipro
+               #- harkiv
+
 ###methods.htmlSecNew
           htmlSecNew:
              inputList:
