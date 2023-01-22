@@ -238,22 +238,24 @@ const c_PrjClass = class {
             finder.on('file', function(file, stat){
               if (! /\.(png|jpg|jpeg)$/g.test(file)) { return }
 
-              found.push(file)
+              const stats = fs.statSync(file)
+
+              found.push({ file, stats })
             })
 
             finder.on('end', () => { resolve(found) })
           })
           const found = await ff
           const sorted = found.sort((a, b) => {
-            let aStat = fs.statSync(a),
-                bStat = fs.statSync(b);
-
-            return aStat.ctime < bStat.ctime;
+            return a.stats.ctime < b.stats.ctime
             //return new Date(bStat.birthtime).getTime() - new Date(aStat.birthtime).getTime();
           })
 
           let i = 0
-          for(let iFile of sorted){
+          for(let fileItem of sorted){
+            const iFile = fileItem.file
+            const stats = fileItem.stats
+
             const bn = path.basename(iFile)
 
             i+=1
@@ -263,7 +265,6 @@ const c_PrjClass = class {
 
             const name_orig = bn.replace(/\.(\w+)$/g,'','g')
 
-            const stats = fs.statSync(iFile)
             const mtime = Math.trunc(stats.mtimeMs/1000)
 
             await self.prj.imgman.dbImgStoreFile({ iFile, force, name_orig, mtime, tags, ...idb })
