@@ -247,7 +247,7 @@ const c_PrjClass = class {
           })
           const found = await ff
           const sorted = found.sort((a, b) => {
-            return a.stats.ctime < b.stats.ctime
+            return a.stats.ctimeMs < b.stats.ctimeMs
             //return new Date(bStat.birthtime).getTime() - new Date(aStat.birthtime).getTime();
           })
 
