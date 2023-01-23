@@ -1010,11 +1010,12 @@ const c_PrjClass = class {
     return async (req, res) => {
       const query = req.query
 
+      const proj = _.get(query, 'proj', self.proj)
       const sec = _.get(query, 'sec', '')
       const use = _.get(query, 'use', 'orig')
-      const proj = _.get(query, 'proj', self.proj)
+      const bn  = _.get(query, 'bn', 'we.html')
 
-      const { htmlFile, htmlFileEx } = await self.prj.htmlFileSecSaved({ proj, sec })
+      const { htmlFile, htmlFileEx } = await self.prj.htmlFileSecSaved({ proj, sec, bn })
       if(!htmlFileEx){
          //res.send(`<html><body>File not Found<body></html>`)
          res.send(`<html><body>Saved Html File not Found: ${htmlFile}<body></html>`)

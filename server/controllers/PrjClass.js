@@ -1266,7 +1266,8 @@ const PrjClass = class {
   async htmlFileSecSaved (ref = {})  {
     const self = this
 
-    const sec = _.get(ref, 'sec', '')
+    const sec  = _.get(ref, 'sec', '')
+    const bn   = _.get(ref, 'bn', 'we.html')
     const proj = _.get(ref, 'proj', self.proj)
 
     console.log('[htmlFileSecSaved] start');
@@ -1277,8 +1278,8 @@ const PrjClass = class {
     for(let dir of [ secDirDone, secDirNew ]){
       var ff = []
       const cb_file = ({ found }) => {
-         const bn = path.basename(found)
-         if (bn != 'we.html') { return }
+         const bnFound = path.basename(found)
+         if ( bnFound != bn ) { return }
          htmlFile = found
       }
       await srvUtil.fsFind({ dir, cb_file });
