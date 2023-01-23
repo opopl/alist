@@ -113,7 +113,8 @@ class routerFactory {
 
     router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
-    router.get('/prj/sec/saved', self.c_Prj.htmlSecSaved())
+    router.get('/prj/sec/saved/html', self.c_Prj.htmlSecSaved())
+    router.get('/prj/sec/saved/info', self.c_Prj.jsonSecSavedInfo())
 
     router.post('/prj/sec/saved/upload'   , self.c_Prj.uploadSecSaved())
 

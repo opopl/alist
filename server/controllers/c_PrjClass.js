@@ -262,8 +262,8 @@ const c_PrjClass = class {
             //if (i == 5) { break}
 
             console.log(`[jsonSecFsLoadScrn] Processing file: ${bn}`)
-            console.log(`[jsonSecFsLoadScrn] 	mtimeMs: ${stats.mtimeMs}`)
-            console.log(`[jsonSecFsLoadScrn] 	ctimeMs: ${stats.ctimeMs}`)
+            console.log(`[jsonSecFsLoadScrn]  mtimeMs: ${stats.mtimeMs}`)
+            console.log(`[jsonSecFsLoadScrn]  ctimeMs: ${stats.ctimeMs}`)
 
             const name_orig = bn.replace(/\.(\w+)$/g,'','g')
 
@@ -1000,6 +1000,14 @@ const c_PrjClass = class {
         }
         return res.send({ status: "success", path: pathSaved });
       });
+    }
+  }
+
+//@@ jsonSecSavedInfo
+  jsonSecSavedInfo ()  {
+    const self = this
+
+    return async (req, res) => {
     }
   }
 
