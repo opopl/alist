@@ -1000,8 +1000,9 @@ const c_PrjClass = class {
           if(fs.existsSync(dir)){ pathSaved = path.join(dir, bn) }
       })
 
-      console.log({ req })
-      return res.send({})
+      //console.log({ req })
+      //return res.send({})
+      console.log({ pathSaved })
 
       const file = req.files.file;
 
