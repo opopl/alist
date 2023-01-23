@@ -119,7 +119,7 @@ prj:
               - { width : '60%' }
               rows:
               - [ 'label@@ File:','','input file@name=file' ]
-              - [ 'label@@ Bn:','','input text@name=bn value=we.html' ]
+              - [ 'label@@ Bn:','','input text@name=bn value=we.a.html' ]
 
 ###form_auth_new
             'form_auth_new':
@@ -384,6 +384,12 @@ prj:
                   ajax:
                     data:
                       scheme: 'form'
+                validate:
+                  rules:
+                    bn:
+                      required: true
+                    file:
+                      required: true
 
 ###ui.forms.form_auth_new
              form_auth_new:

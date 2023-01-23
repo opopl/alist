@@ -625,12 +625,13 @@ const c_PrjClass = class {
       const form = _.get(forms, formId, {})
       const formCols = _.get(form,'cols',[])
       const formRows = _.get(form,'rows',[])
+      const formAttr = _.get(form,'attr',{})
 
       const formT = `
           {%- import "import/form.html" as form -%}
-          {{ form.formRaw(formId, formRows, formCols) }}
+          {{ form.formRaw(formId, formRows, formCols, formAttr) }}
       `
-      const html = self.tmplEnv.renderString(formT, { formCols, formRows, formId })
+      const html = self.tmplEnv.renderString(formT, { formCols, formRows, formId, formAttr })
       return res.send(html)
     }
   }
