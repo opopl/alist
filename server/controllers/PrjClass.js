@@ -1262,6 +1262,30 @@ const PrjClass = class {
 
   }
 
+//@@ htmlFileSecSavedList
+  async htmlFileSecSavedList (ref = {})  {
+    const self = this
+
+    const sec  = _.get(ref, 'sec', '')
+    const proj = _.get(ref, 'proj', self.proj)
+
+    const { secDirNew, secDirDone } = self.secDirsSaved({ sec, proj, sub : 'html' })
+
+    const files = []
+    const cb_file = ({ found }) => {
+         const bn = path.basename(found)
+         if (! /\.html$/g.test(bn)) { return }
+
+         files.push(bn)
+    }
+
+    for(let dir of [ secDirDone, secDirNew ]){
+       await srvUtil.fsFind({ dir, cb_file });
+    }
+
+    return { files }
+  }
+
 //@@ htmlFileSecSaved
   async htmlFileSecSaved (ref = {})  {
     const self = this

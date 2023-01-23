@@ -570,6 +570,9 @@ const c_PrjClass = class {
     return async (req, res) => {
       const tabId = req.params.tabId
 
+      const sec = _.get(req, 'query.sec', '')
+      const proj = _.get(req, 'query.proj', self.proj)
+
       const forms = self.getConfig({ path : `templates.forms` })
       const iframes = self.getConfig({ path : `templates.iframes` })
 
@@ -591,7 +594,8 @@ const c_PrjClass = class {
         args = { secFsNewRows }
       }
       else if (tabId == 'tab_saved') {
-        args = { iframes }
+        const { files } = await self.prj.htmlFileSecSavedList({ sec, proj })
+        args = { iframes, sec, proj, savedFiles : files }
       }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)
@@ -1008,6 +1012,14 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
+      const query = req.query
+
+      const proj = _.get(query, 'proj', self.proj)
+      const sec = _.get(query, 'sec', '')
+
+      const { files } = await self.prj.htmlFileSecSavedList({ sec, proj })
+
+      return res.send(files)
     }
   }
 

@@ -4,6 +4,14 @@
 
   <div style="display: flex; width: 100%; height: 50px; flex-direction: row;">
       <button id="btn_render_saved">Render</button>
+      {% if savedFiles %}
+        <select name="saved_files">
+          {% for file in savedFiles %}
+            <option value="{{ file }}">{{ file }}</option>
+          {% endfor %}
+        </select>
+      {% endif %}
+
       <button id="btn_import_saved">Import</button>
 
       <label for="file_saved" > Saved Html: </label>
