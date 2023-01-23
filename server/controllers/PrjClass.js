@@ -1274,7 +1274,7 @@ const PrjClass = class {
     const { secDirNew, secDirDone } = self.secDirsSaved({ sec, proj, sub : 'html' })
 
     var htmlFile = ''
-    const p_files = [ secDirDone, secDirNew ].map(async (dir) => {
+    for(let dir of [ secDirDone, secDirNew ]){
       var ff = []
       const cb_file = ({ found }) => {
          const bn = path.basename(found)
@@ -1282,8 +1282,7 @@ const PrjClass = class {
          htmlFile = found
       }
       await srvUtil.fsFind({ dir, cb_file });
-    })
-    await Promise.all(p_files)
+    }
 
     const htmlFileEx = fs.existsSync(htmlFile)
 

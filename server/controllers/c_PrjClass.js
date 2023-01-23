@@ -262,6 +262,8 @@ const c_PrjClass = class {
             //if (i == 5) { break}
 
             console.log(`[jsonSecFsLoadScrn] Processing file: ${bn}`)
+            console.log(`[jsonSecFsLoadScrn] 	mtimeMs: ${stats.mtimeMs}`)
+            console.log(`[jsonSecFsLoadScrn] 	ctimeMs: ${stats.ctimeMs}`)
 
             const name_orig = bn.replace(/\.(\w+)$/g,'','g')
 
