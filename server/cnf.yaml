@@ -120,6 +120,7 @@ prj:
               rows:
               - [ 'label@@ File:','','input file@name=file' ]
               - [ 'label@@ Bn:','','input text@name=bn value=we.a.html' ]
+              #- [ 'input submit@hidden@','','' ]
 
 ###form_auth_new
             'form_auth_new':
@@ -427,6 +428,7 @@ prj:
                   tags:
                     autocomplete:
                       url: '/img/tag/list'
+
                 submit:
                   url: "/img/data/all"
                   ajax:
@@ -442,6 +444,9 @@ prj:
 
 ###ui.forms.form_img_new
              form_img_new:
+                fields:
+                  file:
+                    img: true
                 submit:
                   url: "/img/new"
                 validate :
