@@ -1,0 +1,12 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Міста</h2>
+
+{% for city in tagData.cities %}
+  <button class="prj-btn-tag-link" value="{{ city }}"> {{ city }} </button>
+{% endfor %}
+
+{% endblock %}
