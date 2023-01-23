@@ -379,9 +379,14 @@ prj:
 
 ###ui.forms.form_saved_import
              form_saved_import:
+                fields:
+                  file:
+                     #html: true
                 submit:
                   # uploadSecSaved()
-                  url: "/prj/sec/saved/upload"
+                  url:
+                    path: "/prj/sec/saved/upload"
+                    query: { sec : '@@sec' }
                   ajax:
                     data:
                       scheme: 'form'
