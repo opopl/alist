@@ -109,12 +109,17 @@ prj:
               #
 ###form_saved_import
             'form_saved_import':
+ #missing method=POST and enctype=multipart/form-data on the form
+              attr:
+                method: 'POST'
+                enctype: 'multipart/form-data'
               cols:
               - { width : '10%' }
               - { width : '10%' }
               - { width : '60%' }
               rows:
               - [ 'label@@ File:','','input file@name=file' ]
+              - [ 'label@@ Bn:','','input text@name=bn value=we.html' ]
 
 ###form_auth_new
             'form_auth_new':
@@ -370,6 +375,15 @@ prj:
                       required: 'URL REQUIRED'
                       url: 'MUST BE URL'
                       url_img_db : 'ALREADY IN DB'
+
+###ui.forms.form_saved_import
+             form_saved_import:
+                submit:
+                  # uploadSecSaved()
+                  url: "/prj/sec/saved/upload"
+                  ajax:
+                    data:
+                      scheme: 'form'
 
 ###ui.forms.form_auth_new
              form_auth_new:

@@ -975,6 +975,7 @@ const c_PrjClass = class {
   }
 
 //@@ uploadSecSaved
+// POST /prj/sec/saved/upload
   uploadSecSaved ()  {
     const self = this
 
@@ -984,8 +985,11 @@ const c_PrjClass = class {
       }
 
       const query = req.query
-      const sec = _.get(query, 'sec', '')
-      const proj = _.get(query, 'proj', self.proj)
+      const body  = req.body
+      const bn    = _.get(body, 'bn', 'we.html')
+
+      const sec   = _.get(query, 'sec', '')
+      const proj  = _.get(query, 'proj', self.proj)
 
       const { secDirDone, secDirNew } = await self.prj.secDirsSaved({ proj, sec, sub : 'html' })
 
@@ -993,8 +997,11 @@ const c_PrjClass = class {
       [ secDirDone, secDirNew ].forEach((dir) => {
           if(pathSaved){ return }
 
-          if(fs.existsSync(dir)){ pathSaved = path.join(dir,'we.html') }
+          if(fs.existsSync(dir)){ pathSaved = path.join(dir, bn) }
       })
+
+      console.log({ req })
+      return res.send({})
 
       const file = req.files.file;
 

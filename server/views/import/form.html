@@ -1,4 +1,6 @@
 
+{%- import "import/util.html" as util -%}
+
 {%- macro cellRaw(key, attr, content) -%}
   {%- if key -%}
     {%- set akey = key.split(' ') -%}
@@ -46,8 +48,8 @@ style='width: {{ value }}'
 <div class="prj-form-col" col={{ index }} {{ colAttr(colCnf) | safe }}> {{ cellCode(cell, colCnf, index) | safe }} </div>
 {%- endmacro -%}
 
-{% macro formRaw(formId, formRows=[], formCols=[]) %}
-<form id="{{ formId }}">
+{% macro formRaw(formId, formRows=[], formCols=[], formAttr={}) %}
+<form id="{{ formId }}" {{ util.attrStr(formAttr) | safe }}>
   <div class="prj-form">
     {%- for row in formRows -%}
       {%- if row.length -%}
