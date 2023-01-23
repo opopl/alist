@@ -981,16 +981,18 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
-      if (!req.files) {
-        return res.status(400).send("No files were uploaded.");
-      }
+      //if (!req.files) {
+        //return res.status(400).send("No files were uploaded.");
+      //}
 
       const query = req.query
       const body  = req.body
-      const bn    = _.get(body, 'bn', 'we.html')
 
       const sec   = _.get(query, 'sec', '')
       const proj  = _.get(query, 'proj', self.proj)
+
+      const bn     = _.get(body, 'bn', 'we.html')
+      const file64 = _.get(body, 'file', '')
 
       const { secDirDone, secDirNew } = await self.prj.secDirsSaved({ proj, sec, sub : 'html' })
 
@@ -1001,18 +1003,28 @@ const c_PrjClass = class {
           if(fs.existsSync(dir)){ pathSaved = path.join(dir, bn) }
       })
 
-      //console.log({ req })
-      //return res.send({})
-      console.log({ pathSaved })
+      let decoded
+      const m = /^data:text\/html;base64,(?<code>.*)$/g.exec(file64)
+      const code = m ? m.groups.code : undefined
+      if (code) {
+        const buff = Buffer.from(code,'base64')
+        decoded = buff.toString('utf8')
+      }
 
-      const file = req.files.file;
+      if (decoded) {
+        const opts = { encoding : 'utf8', flag : 'w' }
+        await srvUtil.fsWriteFile(pathSaved, decoded, opts)
+      }
 
-      file.mv(pathSaved, (err) => {
-        if (err) {
-          return res.status(500).send(err);
-        }
-        return res.send({ status: "success", path: pathSaved });
-      });
+      return res.send({ status: "success", path: pathSaved })
+
+      //const req.files.file
+/*      file.mv(pathSaved, (err) => {*/
+        //if (err) {
+          //return res.status(500).send(err);
+        //}
+        //return res.send({ status: "success", path: pathSaved });
+      /*});*/
     }
   }
 

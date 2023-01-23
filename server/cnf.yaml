@@ -381,7 +381,7 @@ prj:
              form_saved_import:
                 fields:
                   file:
-                     #html: true
+                     html: true
                 submit:
                   # uploadSecSaved()
                   url:
