@@ -374,7 +374,7 @@ const c_PrjClass = class {
   }
 
 //@@ jsonSecPicData
-// GET, POST
+//@r /prj/sec/pic/data
   jsonSecPicData () {
     const self = this
 
@@ -976,7 +976,7 @@ const c_PrjClass = class {
   }
 
 //@@ uploadSecSaved
-// POST /prj/sec/saved/upload
+//@r POST /prj/sec/saved/upload
   uploadSecSaved ()  {
     const self = this
 
@@ -1016,7 +1016,7 @@ const c_PrjClass = class {
         await srvUtil.fsWriteFile(pathSaved, decoded, opts)
       }
 
-      return res.send({ status: "success", path: pathSaved })
+      return res.send({ status: "success", path: pathSaved, bn, sec })
 
       //const req.files.file
 /*      file.mv(pathSaved, (err) => {*/

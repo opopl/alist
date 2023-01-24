@@ -598,7 +598,7 @@ const PrjClass = class {
 
        const q = select('sec, url, caption, name').from('imgs')
                 .where({ proj, sec: child })
-                .orderBy('inum')
+                .orderBy('mtime')
                 .toParams({placeholder: '?%d'})
 
        const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
