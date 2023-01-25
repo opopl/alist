@@ -120,6 +120,9 @@ prj:
               rows:
               - [ 'label@@ File:','','input file@name=file' ]
               - [ 'label@@ Bn:','','input text@name=bn value=we.html' ]
+              - '<div class="bnListSav">
+                       <select />
+                 </div>'
               #- [ 'input submit@hidden@','','' ]
 
 ###form_auth_new

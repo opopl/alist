@@ -52,15 +52,22 @@ style='width: {{ value }}'
 <form id="{{ formId }}" {{ util.attrStr(formAttr) | safe }}>
   <div class="prj-form">
     {%- for row in formRows -%}
-      {%- if row.length -%}
-        <div class="prj-form-row">
-           {%- for cell in row -%}
-             {%- set colCnf = formCols[loop.index0] -%}
+      {% if row | isArr %}
 
-             {{ cellDiv(cell, colCnf, loop.index) }}
-           {%- endfor -%}
-        </div>
+        {%- if row.length -%}
+          <div class="prj-form-row">
+             {%- for cell in row -%}
+               {%- set colCnf = formCols[loop.index0] -%}
 
+               {{ cellDiv(cell, colCnf, loop.index) }}
+             {%- endfor -%}
+          </div>
+
+        {%- endif -%}
+
+      {%- elif row | isObj -%}
+      {%- else -%}
+        {{ row | safe }}
       {%- endif -%}
     {%- endfor -%}
 

@@ -987,7 +987,6 @@ const c_PrjClass = class {
       const proj  = _.get(body, 'proj', self.proj)
 
       const { htmlFile, htmlFileEx } = await self.prj.htmlFileSecSaved({ proj, sec, bn })
-      console.log({ htmlFileEx, bn })
       try {
         await srvUtil.fsRemove(htmlFile)
       } catch(e) {
