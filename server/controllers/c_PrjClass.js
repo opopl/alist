@@ -975,6 +975,19 @@ const c_PrjClass = class {
     }
   }
 
+//@@ removeSecSaved
+//@r POST /prj/sec/saved/remove
+  removeSecSaved ()  {
+    const self = this
+
+    return async (req, res) => {
+      const body  = req.body
+      const bn    = _.get(body, 'bn', 'we.html')
+      const sec   = _.get(body, 'sec', '')
+      const proj  = _.get(body, 'proj', self.proj)
+    }
+  }
+
 //@@ uploadSecSaved
 //@r POST /prj/sec/saved/upload
   uploadSecSaved ()  {

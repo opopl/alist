@@ -113,10 +113,12 @@ class routerFactory {
 
     router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
+//@@ Sec/Saved
     router.get('/prj/sec/saved/html', self.c_Prj.htmlSecSaved())
     router.get('/prj/sec/saved/info', self.c_Prj.jsonSecSavedInfo())
 
     router.post('/prj/sec/saved/upload'   , self.c_Prj.uploadSecSaved())
+    router.post('/prj/sec/saved/remove'   , self.c_Prj.removeSecSaved())
 
 //@@ Sec/Pic
     router.post('/prj/sec/pic/upload/url' , self.c_Prj.uploadSecPicUrl())
