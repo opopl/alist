@@ -120,9 +120,17 @@ prj:
               rows:
               - [ 'label@@ File:','','input file@name=file' ]
               - [ 'label@@ Bn:','','input text@name=bn value=we.html' ]
-              - '<div class="bnListSav">
-                       <select />
+              - '<div class="bnListSave">
+                   <select style="width: 20%"/>
                  </div>'
+              - '
+                 <div>
+                   <select style="width: 20%">
+                    <option value="we" checked>WE normal</option>
+                    <option value="we">WE mobile</option>
+                 </select>
+                 </div>
+                '
               #- [ 'input submit@hidden@','','' ]
 
 ###form_auth_new

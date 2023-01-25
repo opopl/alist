@@ -704,6 +704,17 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlControl
+  htmlControl () {
+    const self = this
+    return async (req, res) => {
+      const query = req.query
+
+      const control = self.getConfig({ path: 'control' })
+      res.render('control', { control })
+    }
+  }
+
 //@@ htmlTopics
   htmlTopics () {
     const self = this
