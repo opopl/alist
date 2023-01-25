@@ -121,15 +121,15 @@ prj:
               - [ 'label@@ File:','','input file@name=file' ]
               - [ 'label@@ Bn:','','input text@name=bn value=we.html' ]
               - '<div class="bnListSave">
-                   <select style="width: 20%"/>
+                    <label">Already Saved:</label>
+                    <select style="width: 20%"></select>
                  </div>'
               - '
-                 <div>
-                   <select style="width: 20%">
-                    <option value="we" checked>WE normal</option>
-                    <option value="we">WE mobile</option>
+                 <label for="save_type">Save Type:</label>
+                 <select style="width: 20%" name="save_type">
+                    <option bn="we.html" value="we" checked>WE normal</option>
+                    <option bn="we.mobile.html" value="we_mobile">WE mobile</option>
                  </select>
-                 </div>
                 '
               #- [ 'input submit@hidden@','','' ]
 

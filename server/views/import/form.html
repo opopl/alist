@@ -51,6 +51,7 @@ style='width: {{ value }}'
 {% macro formRaw(formId, formRows=[], formCols=[], formAttr={}) %}
 <form id="{{ formId }}" {{ util.attrStr(formAttr) | safe }}>
   <div class="prj-form">
+
     {%- for row in formRows -%}
       {% if row | isArr %}
 
@@ -66,9 +67,11 @@ style='width: {{ value }}'
         {%- endif -%}
 
       {%- elif row | isObj -%}
-      {%- else -%}
+      {% else %}
+          <div class="prj-form-row">
         {{ row | safe }}
-      {%- endif -%}
+          </div>
+      {% endif %}
     {%- endfor -%}
 
     <div class="prj-status-line"> </div>
