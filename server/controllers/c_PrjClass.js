@@ -985,6 +985,20 @@ const c_PrjClass = class {
       const bn    = _.get(body, 'bn', 'we.html')
       const sec   = _.get(body, 'sec', '')
       const proj  = _.get(body, 'proj', self.proj)
+
+      const { htmlFile, htmlFileEx } = await self.prj.htmlFileSecSaved({ proj, sec, bn })
+      console.log({ htmlFileEx, bn })
+      try {
+        await srvUtil.fsRemove(htmlFile)
+      } catch(e) {
+        return res.status(404).send({ 'msg' : `fail delete saved file: ${bn}`})
+      }
+
+      if(!fs.existsSync(htmlFile)){
+        return res.status(200).send({ 'msg' : `deleted saved file: ${bn}`})
+      }else{
+        return res.status(404).send({ 'msg' : `fail delete saved file: ${bn}`})
+      }
     }
   }
 

@@ -13,6 +13,8 @@ const crypto = require('crypto')
 const util = require('util')
 
 const fsMove = util.promisify(fse.move)
+
+const fsRemove = util.promisify(fs.unlink)
 const fsMakePath = util.promisify(fs.mkdir)
 
 const findit = require('findit')
@@ -157,7 +159,7 @@ const fsFind = async ({ dir, cb_file, cb_dir }) => {
 
 module.exports = {
   md5hex,
-  fsMove, fsMakePath,
+  fsMove, fsMakePath, fsRemove,
   fsFind,
   fsRead, fsWrite,
   fsWriteFile,
