@@ -1066,6 +1066,7 @@ const c_PrjClass = class {
   }
 
 //@@ jsonSecSavedInfo
+//@r GET /prj/sec/saved/info
   jsonSecSavedInfo ()  {
     const self = this
 
@@ -1082,6 +1083,7 @@ const c_PrjClass = class {
   }
 
 //@@ htmlSecCheckList
+//@r GET /prj/sec/checklist/html
   htmlSecCheckList ()  {
     const self = this
 
@@ -1091,8 +1093,20 @@ const c_PrjClass = class {
       const sec = _.get(query, 'sec', '')
       const proj = _.get(query, 'proj', self.proj)
 
-      const checklist = {}
-      return res.render('sec/checklist', { checklist })
+      const { files } = await self.prj.htmlFileSecSavedList({ sec, proj })
+
+      const style = {
+        cols : {
+          one : 'width: 10%',
+          two : 'width: 5%',
+          three : 'width: 50%',
+        }
+      }
+      const checklist = {
+        saved : { files }
+      }
+
+      return res.render('sec/checklist', { checklist, style })
     }
   }
 

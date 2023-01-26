@@ -4,12 +4,25 @@
 {% block content %}
 
 <div class="prj-form">
-	<div class="prj-form-row">
-		<div class="prj-form-col" col="1" style="width: 10%"> 
-				<label> Title:</label> 
-		</div>
-		<div class="prj-form-col" col="2" style="width: 5%"></div>
-		<div class="prj-form-col" col="3" style="width: 50%"> <input type="text" name="title"> </div>
+  <div class="prj-form-row">
+    <!--<div class="prj-form-col" col="1" style="width: 10%"> -->
+    <div class="prj-form-col" col="1" style="{{ style.cols.one }}">
+        <label> Saved:</label>
+    </div>
+    <div class="prj-form-col" col="1" style="{{ style.cols.two }}">
+        <input type="checkbox" name="has_saved"
+          {% if checklist.saved.files | length %}
+            checked
+          {% endif %}
+        />
+    </div>
+    <div class="prj-form-col" col="1" style="{{ style.cols.three }}">
+        <select name="saved_files">
+           {% for file in checklist.saved.files %}
+             <option value="{{ file }}"> {{ file }}</option>
+           {% endfor %}
+        </select>
+    </div>
   </div>
 
 <!---->
