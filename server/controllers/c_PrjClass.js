@@ -1094,16 +1094,23 @@ const c_PrjClass = class {
       const proj = _.get(query, 'proj', self.proj)
 
       const { files } = await self.prj.htmlFileSecSavedList({ sec, proj })
+      const row = await self.prj.dbSecData({ sec, proj })
+      await self.prj.secRowUpdate({ row })
 
       const style = {
         cols : {
           one : 'width: 10%',
           two : 'width: 5%',
           three : 'width: 50%',
+          four : 'width: 10%',
         }
       }
       const checklist = {
-        saved : { files }
+        saved : { files },
+        output : {
+          pdf : row._pdf.output_ex,
+          html : row._html.output_ex,
+        }
       }
 
       return res.render('sec/checklist', { checklist, style })
