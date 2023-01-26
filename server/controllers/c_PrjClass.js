@@ -1081,6 +1081,21 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlSecCheckList
+  htmlSecCheckList ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const sec = _.get(query, 'sec', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const checklist = {}
+      return res.render('sec/checklist', { checklist })
+    }
+  }
+
 //@@ htmlSecSaved
   htmlSecSaved ()  {
     const self = this

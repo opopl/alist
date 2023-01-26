@@ -368,23 +368,26 @@ prj:
                 autoOpen: false
                 resizeable: true
                 modal: true
+                width: 800
+                height: 700
+
+             dialog_checklist:
+                title: "Checklist"
 
              dialog_saved_import:
                 title: "Import Saved File"
-                height: 700
-                width: 800
 
              dialog_img_delete:
                 title: "Image Deletion"
+                width: 200
+                height: 100
 
              dialog_img_data:
                 title: "Image Database Data"
-                height: 700
-                width: 800
+
              dialog_img_edit:
                 title: "Image Edit"
                 height: 400
-                width: 800
 
 ###ui.forms
           forms:
