@@ -1,0 +1,18 @@
+
+<div class="prj-form-row">
+  <div class="prj-form-col" col="1" style="{{ style.cols.one }}">
+      <label> PDF:</label>
+  </div>
+  <div class="prj-form-col" col="2" style="{{ style.cols.two }}">
+      <input type="checkbox" name="has_pdf" disabled
+        {% if checklist.output.pdf %}
+          checked
+        {% endif %}
+      />
+  </div>
+  <div class="prj-form-col" col="3" style="{{ style.cols.three }}"> 
+    <button name="btn_view_pdf">View PDF</button>
+    <button name="btn_compile_pdf">Compile PDF</button>
+  </div>
+  <div class="prj-form-col" col="4" style="{{ style.cols.four }}"> </div>
+</div>

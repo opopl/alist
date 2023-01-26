@@ -1,0 +1,23 @@
+
+<div class="prj-form-row">
+  <div class="prj-form-col" col="1" style="{{ style.cols.one }}">
+      <label> Saved: </label>
+  </div>
+  <div class="prj-form-col" col="2" style="{{ style.cols.two }}">
+      <input type="checkbox" name="has_saved" disabled
+        {% if checklist.saved.files | length %}
+          checked
+        {% endif %}
+      />
+  </div>
+  <div class="prj-form-col" col="3" style="{{ style.cols.three }}">
+      <select name="saved_files">
+         {% for file in checklist.saved.files %}
+           <option value="{{ file }}"> {{ file }}</option>
+         {% endfor %}
+      </select>
+  </div>
+  <div class="prj-form-col" col="4" style="{{ style.cols.four }}"> 
+    <button name="btn_saved_import">Import</button>
+  </div>
+</div>
