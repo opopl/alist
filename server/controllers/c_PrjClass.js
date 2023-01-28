@@ -597,6 +597,9 @@ const c_PrjClass = class {
         const { files } = await self.prj.htmlFileSecSavedList({ sec, proj })
         args = { iframes, sec, proj, savedFiles : files }
       }
+      else if (tabId == 'tab_pdf') {
+        args = { iframes, sec, proj }
+      }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)
       return res.status(200).send(html)
