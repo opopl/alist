@@ -788,6 +788,7 @@ const c_PrjClass = class {
       const target = `_buf.${sec}`
       const pdfFile = self.prj.pdfFileTarget({ proj, target })
       const pdfFileEx = fs.existsSync(pdfFile)
+      console.log({ sec, pdfFile, pdfFileEx })
       if (!pdfFileEx) {
         const err = 'pdf file not found'
         return res.status(404).send({ err })
@@ -809,24 +810,25 @@ const c_PrjClass = class {
       const pdfImage = new PDFImage(`./${pdfFileBn}`,opts)
       const zip = new JSZip()
 
-      pdfImage.convertFile().then(function (imagePaths) {
-        imagePaths.forEach(function(x,i){
-          const j = i + 1
-          const imgFile = `${j}.png`
-          srvUtil.fsMove(x, imgFile, { overwrite : true })
+      pdfImage.convertFile().then(async function (imagePaths) {
+        let i = 0
+        for(let x of imagePaths){
+          i += 1
+
+          const imgFile = `${i}.png`
+          await srvUtil.fsMove(x, imgFile, { overwrite : true })
           const buf = fs.readFileSync(imgFile)
           const base64 = buf.toString('base64')
           zip.file(imgFile, base64, { base64: true } )
-        })
+        }
         zip.generateAsync({ type: "base64" }).then(function (content) {
           const buf = Buffer.from(content, 'base64')
           //location.href="data:application/zip;base64," + content;
           res.set('Content-Type', 'application/zip')
-          res.set('Content-Disposition', 'attachment; filename=file.zip');
-          res.set('Content-Length', buf.length);
-          res.end(buf, 'binary');
-        });
-        //return res.send({})
+          res.set('Content-Disposition', 'attachment; filename=file.zip')
+          res.set('Content-Length', buf.length)
+          res.end(buf, 'binary')
+        })
       },function (err){ res.status(500).send(err) })
 
       //pdftk
