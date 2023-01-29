@@ -16,6 +16,7 @@ const fsMove = util.promisify(fse.move)
 
 const fsRemove = util.promisify(fs.unlink)
 const fsMakePath = util.promisify(fs.mkdir)
+const fsCopyFile = util.promisify(fs.copyFile)
 
 const findit = require('findit')
 
@@ -159,7 +160,7 @@ const fsFind = async ({ dir, cb_file, cb_dir }) => {
 
 module.exports = {
   md5hex,
-  fsMove, fsMakePath, fsRemove,
+  fsMove, fsMakePath, fsRemove, fsCopyFile,
   fsFind,
   fsRead, fsWrite,
   fsWriteFile,

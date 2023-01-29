@@ -8,7 +8,10 @@ const _ = require('lodash')
 const srvUtil = require('./../srv-util')
 
 const cheerio = require("cheerio")
+
 const pdftk = require('node-pdftk')
+const PDFImage = require("pdf-image").PDFImage
+const JSZip = require("jszip")
 
 const cyr2trans = require('cyrillic-to-translit-js')
 
@@ -789,17 +792,49 @@ const c_PrjClass = class {
         const err = 'pdf file not found'
         return res.status(404).send({ err })
       }
+      const pdfFileBn = path.basename(pdfFile)
       const pdfDir = path.dirname(pdfFile)
       const pdfDirTmp = path.join(pdfDir, 'tmp', target)
       await fsMakePath(pdfDirTmp, { recursive : true })
+      srvUtil.fsCopyFile(pdfFile, path.join(pdfDirTmp, pdfFileBn))
       process.chdir(pdfDirTmp)
 
-      pdftk
-        .input(pdfFile)
-        .burst('burst.%d.pdf')
-        .then(() => {
-          return res.send({})
+      //const pdfImage = new PDFImage(pdfFileBn)
+      const opts = {
+        convertOptions: {
+          //"-quality" : "100",
+          //"-density" : "300"
+        }
+      }
+      const pdfImage = new PDFImage(`./${pdfFileBn}`,opts)
+      const zip = new JSZip()
+
+      pdfImage.convertFile().then(function (imagePaths) {
+        imagePaths.forEach(function(x,i){
+          const j = i + 1
+          const imgFile = `${j}.png`
+          srvUtil.fsMove(x, imgFile, { overwrite : true })
+          const buf = fs.readFileSync(imgFile)
+          const base64 = buf.toString('base64')
+          zip.file(imgFile, base64, { base64: true } )
         })
+        zip.generateAsync({ type: "base64" }).then(function (content) {
+          const buf = Buffer.from(content, 'base64')
+          //location.href="data:application/zip;base64," + content;
+          res.set('Content-Type', 'application/zip')
+          res.set('Content-Disposition', 'attachment; filename=file.zip');
+          res.set('Content-Length', buf.length);
+          res.end(buf, 'binary');
+        });
+        //return res.send({})
+      },function (err){ res.status(500).send(err) })
+
+      //pdftk
+        //.input(pdfFile)
+        //.burst('burst.%d.pdf')
+        //.then(() => {
+          //return res.send({})
+        /*})*/
     }
   }
 
