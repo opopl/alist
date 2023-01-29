@@ -235,6 +235,17 @@ prj:
 ###methods
        methods:
 
+###methods.zipSecPdfExport
+          zipSecPdfExport:
+# /prj/sec/pdf/export/zip
+            PDFImage:
+              convertOptions:
+                 "-quality" : "100"
+                 "-density" : "600"
+                 "-resize" : "25%"
+                 "-background" : "white"
+                 "-alpha" : "remove"
+
 ###methods.htmlTags
           htmlTags:
              tagData:

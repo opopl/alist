@@ -785,6 +785,8 @@ const c_PrjClass = class {
       const sec = _.get(req, 'body.sec', '')
       const proj = _.get(req, 'body.proj', self.proj)
 
+      const cnf = self.getConfig({ path : 'methods.zipSecPdfExport' }) || {}
+
       const target = `_buf.${sec}`
       const pdfFile = self.prj.pdfFileTarget({ proj, target })
       const pdfFileEx = fs.existsSync(pdfFile)
@@ -801,12 +803,8 @@ const c_PrjClass = class {
       process.chdir(pdfDirTmp)
 
       //const pdfImage = new PDFImage(pdfFileBn)
-      const opts = {
-        convertOptions: {
-          //"-quality" : "100",
-          //"-density" : "300"
-        }
-      }
+      const opts = _.get(cnf, 'PDFImage', {})
+
       const pdfImage = new PDFImage(`./${pdfFileBn}`,opts)
       const zip = new JSZip()
 
