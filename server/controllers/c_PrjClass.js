@@ -8,6 +8,7 @@ const _ = require('lodash')
 const srvUtil = require('./../srv-util')
 
 const cheerio = require("cheerio")
+const pdftk = require('node-pdftk')
 
 const cyr2trans = require('cyrillic-to-translit-js')
 
@@ -27,6 +28,8 @@ const insert = db.sql.insert
 const update = db.sql.update
 
 const _get = _.get
+
+const fsMakePath = srvUtil.fsMakePath
 
 const c_PrjClass = class {
 //@@ new
@@ -774,8 +777,29 @@ const c_PrjClass = class {
     const self = this
 
     return async (req, res) => {
-      const query = req.query
       const body = req.body
+
+      const sec = _.get(req, 'body.sec', '')
+      const proj = _.get(req, 'body.proj', self.proj)
+
+      const target = `_buf.${sec}`
+      const pdfFile = self.prj.pdfFileTarget({ proj, target })
+      const pdfFileEx = fs.existsSync(pdfFile)
+      if (!pdfFileEx) {
+        const err = 'pdf file not found'
+        return res.status(404).send({ err })
+      }
+      const pdfDir = path.dirname(pdfFile)
+      const pdfDirTmp = path.join(pdfDir, 'tmp', target)
+      await fsMakePath(pdfDirTmp, { recursive : true })
+      process.chdir(pdfDirTmp)
+
+      pdftk
+        .input(pdfFile)
+        .burst('burst.%d.pdf')
+        .then(() => {
+          return res.send({})
+        })
     }
   }
 
