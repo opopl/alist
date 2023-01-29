@@ -112,11 +112,14 @@ class routerFactory {
     router.post('/prj/sec/data' , self.c_Prj.jsonSecData())
 
     router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
-    router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())
 
     router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
     router.get('/prj/sec/checklist/html' , self.c_Prj.htmlSecCheckList())
+
+//@@ Sec/Pdf
+    router.post('/prj/sec/pdf/export/zip', self.c_Prj.zipSecPdfExport())
+    router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())
 
 //@@ Sec/Saved
     router.get('/prj/sec/saved/html', self.c_Prj.htmlSecSaved())
@@ -160,6 +163,8 @@ class routerFactory {
 
 //@@ Builds
     router.get('/prj/bld/data', self.c_Prj.jsonBldData())
+
+
 
 //@@ Assets
     router.get(/^\/prj\/assets\/js\/(.*)$/, self.c_Prj.jsFile())

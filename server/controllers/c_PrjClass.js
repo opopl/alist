@@ -768,6 +768,17 @@ const c_PrjClass = class {
     }
   }
 
+//@@ zipSecPdfExport
+//@r /prj/sec/pdf/export/zip
+  zipSecPdfExport () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+      const body = req.body
+    }
+  }
+
 //@@ pdfSecView
   pdfSecView () {
     const self = this
