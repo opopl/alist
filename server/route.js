@@ -111,11 +111,13 @@ class routerFactory {
     router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
     router.post('/prj/sec/data' , self.c_Prj.jsonSecData())
 
-    router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
-
     router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
     router.get('/prj/sec/checklist/html' , self.c_Prj.htmlSecCheckList())
+
+//@@ Sec/Html
+    router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
+    router.get('/prj/sec/html/story' , self.c_Prj.htmlSecStory())
 
 //@@ Sec/Pdf
     router.post('/prj/sec/pdf/export/zip', self.c_Prj.zipSecPdfExport())

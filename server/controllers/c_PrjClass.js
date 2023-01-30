@@ -645,6 +645,29 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlSecStory
+//@r GET /prj/sec/html/story
+  htmlSecStory () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const sec  = _.get(query, 'sec', '')
+      const proj = _.get(query, 'proj', self.proj)
+
+      const target = `_buf.${sec}`
+      const html = await self.prj.htmlTargetOutput({ proj, target })
+      if (html) {
+        const $ = cheerio.load(html)
+        const htmlStory = $('.prj-story').html()
+        return res.send(htmlStory)
+      }else{
+        return res.send('')
+      }
+    }
+  }
+
 //@@ htmlSecView
   htmlSecView () {
     const self = this
