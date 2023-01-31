@@ -604,6 +604,7 @@ const c_PrjClass = class {
         args = { iframes, sec, proj, savedFiles : files }
       }
       else if (tabId == 'tab_pdf') {
+        const file_exts = [ 'png', 'jpg' ]
         const tt = 'width: 30px; height: 15px;'
         const styles = {
           extract : {
@@ -617,7 +618,7 @@ const c_PrjClass = class {
             },
           }
         }
-        args = { iframes, sec, proj, styles }
+        args = { iframes, sec, proj, styles, file_exts }
       }
       else if (tabId == 'tab_bld') {
         const rowHeight = '50px'
@@ -817,6 +818,25 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlSecTable
+//@r /prj/sec/table/:table/html
+  htmlSecTable () {
+    const self = this
+
+    return async (req, res) => {
+      const sec = _.get(req, 'query.sec', '')
+      const proj = _.get(req, 'query.proj', self.proj)
+      const tbl = req.params.table
+
+      const tmplEnv = self.tmplEnv
+
+      if (tbl == 'builds') {
+      }
+      html = tmplEnv.render(`table/${tbl}.html`, args)
+      return res.status(200).send(html)
+    }
+  }
+
 //@@ jsonSecPdfInfo
 //@r /prj/sec/pdf/info
   jsonSecPdfInfo () {
@@ -825,11 +845,11 @@ const c_PrjClass = class {
     return async (req, res) => {
       let sec, proj
       if (req.method == 'GET') {
-	      sec = _.get(req, 'query.sec', '')
-	      proj = _.get(req, 'query.proj', self.proj)
+        sec = _.get(req, 'query.sec', '')
+        proj = _.get(req, 'query.proj', self.proj)
       } else if (req.method == 'POST') {
-	      sec = _.get(req, 'body.sec', '')
-	      proj = _.get(req, 'body.proj', self.proj)
+        sec = _.get(req, 'body.sec', '')
+        proj = _.get(req, 'body.proj', self.proj)
       }
 
       const info = await self.prj.getSecPdfInfo({ sec, proj })

@@ -351,8 +351,8 @@ prj:
                 - 'saved'
                 - 'pdf'
                 - 'tex'
-                - 'log'
-                - 'bld'
+                #- 'log'
+                #- 'bld'
                 - 'json'
 
 ###ui.tables
