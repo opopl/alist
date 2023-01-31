@@ -808,12 +808,17 @@ const c_PrjClass = class {
       const sec = _.get(req, 'body.sec', '')
       const proj = _.get(req, 'body.proj', self.proj)
 
+      // pdftk stage, overwrite extracted pages
+      const rwPdf = _.get(req, 'body.rwPdf', 0)
+
+      const maxPage = _.get(req, 'body.maxPage', 5)
+      const minPage = _.get(req, 'body.minPage', 1)
+
       const cnf = self.getConfig({ path : 'methods.zipSecPdfExport' }) || {}
 
       const target = `_buf.${sec}`
       const pdfFile = self.prj.pdfFileTarget({ proj, target })
       const pdfFileEx = fs.existsSync(pdfFile)
-      console.log({ sec, pdfFile, pdfFileEx })
       if (!pdfFileEx) {
         const err = 'pdf file not found'
         return res.status(404).send({ err })
@@ -826,38 +831,81 @@ const c_PrjClass = class {
       process.chdir(pdfDirTmp)
 
       //const pdfImage = new PDFImage(pdfFileBn)
-      const opts = _.get(cnf, 'PDFImage', {})
+      const optsPdfImage = _.get(cnf, 'PDFImage', {})
 
-      const pdfImage = new PDFImage(`./${pdfFileBn}`,opts)
       const zip = new JSZip()
 
-      pdfImage.convertFile().then(async function (imagePaths) {
-        let i = 0
-        for(let x of imagePaths){
-          i += 1
-
-          const imgFile = `${i}.png`
-          await srvUtil.fsMove(x, imgFile, { overwrite : true })
-          const buf = fs.readFileSync(imgFile)
-          const base64 = buf.toString('base64')
-          zip.file(imgFile, base64, { base64: true } )
-        }
-        zip.generateAsync({ type: "base64" }).then(function (content) {
-          const buf = Buffer.from(content, 'base64')
-          //location.href="data:application/zip;base64," + content;
-          res.set('Content-Type', 'application/zip')
-          res.set('Content-Disposition', 'attachment; filename=file.zip')
-          res.set('Content-Length', buf.length)
-          res.end(buf, 'binary')
-        })
-      },function (err){ res.status(500).send(err) })
-
-      //pdftk
-        //.input(pdfFile)
+      pdftk
+        .input(pdfFile)
+        .dumpData()
+        .output()
         //.burst('burst.%d.pdf')
-        //.then(() => {
-          //return res.send({})
-        /*})*/
+        .then(async(buffer) => {
+          fs.writeFileSync( 'info.txt', buffer )
+          const infoStr = buffer.toString()
+          const info = infoStr.split('\n')
+          let nPages
+          for(let x of info){
+            x = x.trim()
+            const m = /^NumberOfPages:\s+(?<num>\d+)$/g.exec(x)
+            if (!m) { continue }
+            nPages = parseInt(m.groups.num)
+            if (nPages) { break }
+          }
+
+          if (!nPages) {
+            const err = 'fail to get number of pages'
+            return res.status(500).send({ err })
+          }
+
+          for (var i = 0; i < nPages; i++) {
+            const page = i + 1
+            if (maxPage && page > maxPage) { break }
+            if (minPage && page < minPage) { continue }
+
+            console.log(`page: ${page}`)
+
+            const pageFile = `A${page}.pdf`
+            if(!fs.existsSync(pageFile) || rwPdf){
+              const pExtractPage = new Promise(async(resolve,reject) => {
+                pdftk
+                  .input({ A : pdfFile })
+                  .cat(`A${page}`)
+                  .output(pageFile)
+                  .then(buf => { resolve({ pageFile }) })
+              })
+              await pExtractPage
+              const msg = `done extracting page: ${pageFile}`
+              console.log({ msg })
+            }
+
+            const pdfImage = new PDFImage(pageFile, optsPdfImage)
+            const pImg = new Promise(async(resolve,reject) => {
+              pdfImage.convertPage(0).then(async function (imagePath) {
+                const imgFile = `${page}.png`
+                await srvUtil.fsMove(imagePath, imgFile, { overwrite : true })
+                const buf = fs.readFileSync(imgFile)
+                const base64 = buf.toString('base64')
+                zip.file(imgFile, base64, { base64: true } )
+                resolve({})
+              },function (err){ res.status(500).send(err) })
+            })
+            await pImg
+
+            // end loop over pages
+          }
+
+          zip.generateAsync({ type: "base64" }).then(function (content) {
+            const buf = Buffer.from(content, 'base64')
+            //location.href="data:application/zip;base64," + content;
+            res.set('Content-Type', 'application/zip')
+            res.set('Content-Disposition', 'attachment; filename=file.zip')
+            res.set('Content-Length', buf.length)
+            res.end(buf, 'binary')
+          })
+
+          //return res.status(200).send({ })
+        })
     }
   }
 
