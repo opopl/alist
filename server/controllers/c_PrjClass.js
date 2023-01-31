@@ -7,6 +7,8 @@ const _ = require('lodash')
 
 const srvUtil = require('./../srv-util')
 
+const sprintf = require('sprintf-js').sprintf
+
 const cheerio = require("cheerio")
 
 const pdftk = require('node-pdftk')
@@ -873,8 +875,7 @@ const c_PrjClass = class {
 
       let minPage = _.get(req, 'body.minPage', 1); minPage = parseInt(minPage)
       let maxPage = _.get(req, 'body.maxPage', 5); maxPage = parseInt(maxPage)
-
-      console.log({ minPage, maxPage })
+      const file_fmt = _.get(req, 'body.file_fmt', '%d.png')
 
       const cnf = self.getConfig({ path : 'methods.zipSecPdfExport' }) || {}
 
@@ -944,7 +945,9 @@ const c_PrjClass = class {
             const pdfImage = new PDFImage(pageFile, optsPdfImage)
             const pImg = new Promise(async(resolve,reject) => {
               pdfImage.convertPage(0).then(async function (imagePath) {
-                const imgFile = `${page}.png`
+                //const imgFile = `${page}.png`
+                const imgFile = sprintf(file_fmt, page)
+
                 await srvUtil.fsMove(imagePath, imgFile, { overwrite : true })
                 const buf = fs.readFileSync(imgFile)
                 const base64 = buf.toString('base64')
