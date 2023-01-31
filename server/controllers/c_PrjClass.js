@@ -607,7 +607,7 @@ const c_PrjClass = class {
       }
       else if (tabId == 'tab_pdf') {
         const file_exts = [ 'png', 'jpg' ]
-        const file_fmt = '@date.@auth.%d.png'
+        const file_fmt = '@date.@auth.@num.%d.png'
         const tt = 'width: 30px; height: 15px;'
         const styles = {
           extract : {
@@ -874,13 +874,16 @@ const c_PrjClass = class {
       const sd = await self.prj.dbSecData({ sec, proj })
       const sec_date = sd.date
       const auth_ids = _.get(sd, 'author_id', [])
-      let sec_auth
+      let sec_auth, sec_num
       for(let id of auth_ids){
         //if(/${id}/g.test(sec)){
         if(sec.search(/${id}/)){
           sec_auth = id; break
         }
       }
+      const re = new RegExp(`^${sec_date}.*${sec_auth}\\.(?<num>\\d+).*`,'g')
+      const m = re.exec(sec)
+      if (m) { sec_num = m.groups.num }
       //if (!sec_auth && auth_ids.length) { sec_auth = auth_ids[0] }
       
       //const sec_auth = sd.author_id
@@ -966,8 +969,9 @@ const c_PrjClass = class {
                 //const imgFile = `${page}.png`
                 let imgFile = sprintf(file_fmt, page)
                                   .replace(/\@sec/g, sec)
-                                  .replace(/\@date/g, sec_date)
-                                  .replace(/\@auth/g, sec_auth)
+                                  .replace(/\@date/g, sec_date ? sec_date : '')
+                                  .replace(/\@auth/g, sec_auth ? sec_auth : '')
+                                  .replace(/\@num/g, sec_num ? sec_num : '')
 
                 await srvUtil.fsMove(imagePath, imgFile, { overwrite : true })
                 const buf = fs.readFileSync(imgFile)
