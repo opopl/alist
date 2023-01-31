@@ -844,8 +844,10 @@ const c_PrjClass = class {
       // pdftk stage, overwrite extracted pages
       const rwPdf = _.get(req, 'body.rwPdf', 0)
 
-      const maxPage = _.get(req, 'body.maxPage', 5)
-      const minPage = _.get(req, 'body.minPage', 1)
+      let minPage = _.get(req, 'body.minPage', 1); minPage = parseInt(minPage)
+      let maxPage = _.get(req, 'body.maxPage', 5); maxPage = parseInt(maxPage)
+
+      console.log({ minPage, maxPage })
 
       const cnf = self.getConfig({ path : 'methods.zipSecPdfExport' }) || {}
 
