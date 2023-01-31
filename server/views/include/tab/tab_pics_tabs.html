@@ -9,19 +9,42 @@
   </ul>
 
   <div id="tab_pics_view">
-    <button id="btn_render_pics">Render</button>
+    <div style="display: flex; flex-direction: row; width: 100%">
+      <!--<button id="btn_render_pics" style="width: 100px">Render</button>-->
+      <button id="btn_render_pics" class="prj-btn">Render</button>
+      <div class="prj-toggle" style="width: 100%">
+        <input type="radio" id="radio_pics_scr_cmt" name="selector">
+        <label for="radio_pics_scr_cmt">Comment Screenshots</label>
 
-    <input type="radio" id="radio_pics_scr_cmt" name="selector">
-    <label for="radio_pics_scr_cmt">Comment Screenshots</label>
+        <input type="radio" id="radio_pics_scr_orig" name="selector" checked="checked">
+        <label for="radio_pics_scr_orig">Post Screenshots</label>
 
-    <input type="radio" id="radio_pics_scr_orig" name="selector" checked="checked">
-    <label for="radio_pics_scr_orig">Post Screenshots</label>
+        <input type="radio" id="radio_pics_ui_import" name="selector">
+        <label for="radio_pics_ui_import">UI Import</label>
 
-    <input type="radio" id="radio_pics_ui_import" name="selector">
-    <label for="radio_pics_ui_import">UI Import</label>
-
-    <input type="radio" id="radio_pics_all" name="selector">
-    <label for="radio_pics_all">All</label>
+        <input type="radio" id="radio_pics_all" name="selector">
+        <label for="radio_pics_all">All</label>
+      </div>
+    </div>
+    <div class="prj-form" style="border-radius: 0px; padding: 0px;">
+       <div class="prj-form-row">
+          <div class="prj-form-col" style="margin-top: 3px; width: 5%;">
+            <label for="cols" style="display: inline-block; padding: 8px 8px 8px 0;">Columns</label>
+          </div>
+          <div class="prj-form-col" style="margin-top: 3px; width: 5%;">
+            <select name="cols">
+               {% for num in [ 1, 2, 3, 4, 5 ] %}
+                  {% if num == 3 %}
+                    {% set selected = "selected" %}
+                  {% else %}
+                    {% set selected = null %}
+                  {% endif %}
+                  <option value="{{ num }}" {{ selected }}>{{ num }}</option>
+               {% endfor %}
+            </select>
+          </div>
+       </div>
+    </div>
   </div>
 
   {% set f = forms | get(formId) %}
