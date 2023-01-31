@@ -10,6 +10,8 @@ const fse = require('fs-extra')
 const cheerio = require("cheerio")
 const yaml = require('js-yaml')
 
+const pdftk = require('node-pdftk')
+
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 const srvUtil = require('./../srv-util')
@@ -623,6 +625,42 @@ const PrjClass = class {
     }
 
     return picData;
+  }
+
+//@@ getSecPdfInfo
+  async getSecPdfInfo ({ sec, proj }) {
+    const self = this
+
+    proj   = proj ? proj : self.proj
+    if (!sec) { return }
+
+    const target = `_buf.${sec}`
+    const pdfFile = self.pdfFileTarget({ proj, target })
+    const pdfFileEx = fs.existsSync(pdfFile)
+    if (!pdfFileEx) { return }
+
+    const pInfo = new Promise(async(resolve,reject) => {
+      pdftk
+        .input(pdfFile)
+        .dumpData()
+        .output()
+        .then(async(buffer) => {
+          const infoStr = buffer.toString()
+          const info = infoStr.split('\n')
+          let nPages
+          for(let x of info){
+            x = x.trim()
+            const m = /^NumberOfPages:\s+(?<num>\d+)$/g.exec(x)
+            if (!m) { continue }
+            nPages = parseInt(m.groups.num)
+            if (nPages) { break }
+          }
+          resolve({ nPages, infoStr })
+        })
+    })
+    const { nPages, infoStr } = await pInfo
+
+    return { nPages, infoStr }
   }
 
 //@@ getSecFsNewList

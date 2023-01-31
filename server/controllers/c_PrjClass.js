@@ -604,7 +604,20 @@ const c_PrjClass = class {
         args = { iframes, sec, proj, savedFiles : files }
       }
       else if (tabId == 'tab_pdf') {
-        args = { iframes, sec, proj }
+        const tt = 'width: 30px; height: 15px;'
+        const styles = {
+          extract : {
+            row : {
+              //label : 'display: inline-block; padding: 6px 6px 10px 0;',
+              label : 'display: inline-block;',
+              text : {
+                minPage : tt,
+                maxPage : tt
+              }
+            },
+          }
+        }
+        args = { iframes, sec, proj, styles }
       }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)
@@ -797,6 +810,26 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonSecPdfInfo
+//@r /prj/sec/pdf/info
+  jsonSecPdfInfo () {
+    const self = this
+
+    return async (req, res) => {
+      let sec, proj
+      if (req.method == 'GET') {
+	      sec = _.get(req, 'query.sec', '')
+	      proj = _.get(req, 'query.proj', self.proj)
+      } else if (req.method == 'POST') {
+	      sec = _.get(req, 'body.sec', '')
+	      proj = _.get(req, 'body.proj', self.proj)
+      }
+
+      const info = await self.prj.getSecPdfInfo({ sec, proj })
+      return res.send({ info })
+    }
+  }
+
 //@@ zipSecPdfExport
 //@r /prj/sec/pdf/export/zip
   zipSecPdfExport () {
@@ -821,7 +854,7 @@ const c_PrjClass = class {
       const pdfFileEx = fs.existsSync(pdfFile)
       if (!pdfFileEx) {
         const err = 'pdf file not found'
-        return res.status(404).send({ err })
+        return res.status(500).send({ err })
       }
       const pdfFileBn = path.basename(pdfFile)
       const pdfDir = path.dirname(pdfFile)

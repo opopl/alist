@@ -122,6 +122,8 @@ class routerFactory {
 //@@ Sec/Pdf
     router.post('/prj/sec/pdf/export/zip', self.c_Prj.zipSecPdfExport())
     router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())
+    router.post('/prj/sec/pdf/info'  , self.c_Prj.jsonSecPdfInfo())
+    router.get('/prj/sec/pdf/info'  , self.c_Prj.jsonSecPdfInfo())
 
 //@@ Sec/Saved
     router.get('/prj/sec/saved/html', self.c_Prj.htmlSecSaved())
