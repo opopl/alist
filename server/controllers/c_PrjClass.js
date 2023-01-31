@@ -619,6 +619,13 @@ const c_PrjClass = class {
         }
         args = { iframes, sec, proj, styles }
       }
+      else if (tabId == 'tab_bld') {
+        const rowHeight = '50px'
+        const styles = {
+          row : `display: flex; width: 100%; height: ${rowHeight}; flex-direction: row;`
+        }
+        args = { styles }
+      }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)
       return res.status(200).send(html)

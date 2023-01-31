@@ -1,6 +1,22 @@
 
 
 <div id="builds">
-  <button name="btn_update" class="prj-btn">Update</button>
+    <div style="{{ styles.row }}">
+    <button name="btn_update" class="prj-btn">Update</button>
+    <div class='prj-radio-group prj-toggle'>
+      <input type="radio" id="radio_bld_run" name="bld">
+      <label for="radio_bld_run">Running</label>
+
+      <input type="radio" id="radio_bld_fail" name="bld">
+      <label for="radio_bld_fail">Failed</label>
+
+      <input type="radio" id="radio_bld_ok" name="bld">
+      <label for="radio_bld_ok">Success</label>
+    </div>
+  </div>
+  <div style="{{ styles.row }}">
+     <span id="bld_statusline" style="font-weight: bold"></span>
+  </div>
+
   <table id="table_builds" />
 </div>
