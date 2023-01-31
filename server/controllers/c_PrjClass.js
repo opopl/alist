@@ -607,6 +607,7 @@ const c_PrjClass = class {
       }
       else if (tabId == 'tab_pdf') {
         const file_exts = [ 'png', 'jpg' ]
+        const file_fmt = '@date.@auth.%d.png'
         const tt = 'width: 30px; height: 15px;'
         const styles = {
           extract : {
@@ -620,7 +621,7 @@ const c_PrjClass = class {
             },
           }
         }
-        args = { iframes, sec, proj, styles, file_exts }
+        args = { iframes, sec, proj, styles, file_exts, file_fmt }
       }
       else if (tabId == 'tab_bld') {
         const rowHeight = '50px'
@@ -870,6 +871,23 @@ const c_PrjClass = class {
       const sec = _.get(req, 'body.sec', '')
       const proj = _.get(req, 'body.proj', self.proj)
 
+      const sd = await self.prj.dbSecData({ sec, proj })
+      const sec_date = sd.date
+      const auth_ids = _.get(sd, 'author_id', [])
+      let sec_auth
+      for(let id of auth_ids){
+        //if(/${id}/g.test(sec)){
+        if(sec.search(/${id}/)){
+          sec_auth = id; break
+        }
+      }
+      //if (!sec_auth && auth_ids.length) { sec_auth = auth_ids[0] }
+      
+      //const sec_auth = sd.author_id
+
+      console.log({ sd })
+      console.log({ sec_auth })
+
       // pdftk stage, overwrite extracted pages
       const rwPdf = _.get(req, 'body.rwPdf', 0)
 
@@ -946,7 +964,10 @@ const c_PrjClass = class {
             const pImg = new Promise(async(resolve,reject) => {
               pdfImage.convertPage(0).then(async function (imagePath) {
                 //const imgFile = `${page}.png`
-                const imgFile = sprintf(file_fmt, page)
+                let imgFile = sprintf(file_fmt, page)
+                                  .replace(/\@sec/g, sec)
+                                  .replace(/\@date/g, sec_date)
+                                  .replace(/\@auth/g, sec_auth)
 
                 await srvUtil.fsMove(imagePath, imgFile, { overwrite : true })
                 const buf = fs.readFileSync(imgFile)

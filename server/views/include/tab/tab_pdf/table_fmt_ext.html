@@ -2,16 +2,16 @@
 <table>
   <tr>
     <td> <label for="file_fmt" style="{{ styles.extract.row.fmt }}" >file name format</label> </td>
-    <td> <input type="text" name="file_fmt" value="%d.png" style="{{ styles.extract.row.text.fmt }}" /> </td>
+    <td> <input type="text" name="file_fmt" value="{{ file_fmt }}" style="{{ styles.extract.row.text.fmt }}" /> </td>
   </tr>
   <tr>
     <td> <label for="file_ext" style="{{ styles.extract.row.label }}">file extension</label> </td>
     <td> 
-			<select name="file_ext" disabled>
-				{% for ext in file_exts %}
-					<option value="{{ ext }}">{{ ext }}</option>
-				{% endfor %}
-			</select>
+      <select name="file_ext" disabled>
+        {% for ext in file_exts %}
+          <option value="{{ ext }}">{{ ext }}</option>
+        {% endfor %}
+      </select>
 <!--<input type="text" name="ext" value="1" style="{{ styles.extract.row.text.ext }}" /> </td>-->
   </tr>
 </table>
