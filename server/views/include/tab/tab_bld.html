@@ -1,4 +1,6 @@
 
+{%- import "import/tbl.html" as tb -%}
+
 <div id="builds">
   <div style="{{ styles.row }}">
     <button name="btn_update" class="prj-btn">Update</button>
@@ -17,17 +19,22 @@
      <!--<span id="bld_statusline" style="font-weight: bold"></span>-->
   <!--</div>-->
 
+{% set cols = tbl.builds.cols.all %}
+{% set coli = tbl.builds.cols.info %}
+{% set onlist = coli.onlist %}
+
+
   <div tbl="builds">
     {%- include "include/tab/tab_bld/cols.html" -%}
     {%- include "include/tab/tab_bld/ctl.html" -%}
     <div class="prj-table-container" status="fail">
-      <table> </table>
+      <table> {{ tb.thead(cols) }}</table>
     </div>
     <div class="prj-table-container" status="running">
-      <table> </table>
+      <table> {{ tb.thead(cols) }}</table>
     </div>
     <div class="prj-table-container" status="success">
-      <table> </table>
+      <table> {{ tb.thead(cols) }}</table>
     </div>
   </div>
 </div>

@@ -1,9 +1,4 @@
 
-{% set cols = tbl.builds.cols.all %}
-{% set coli = tbl.builds.cols.info %}
-{% set onlist = coli.onlist %}
-
-{{ coli | dump }}
 
 {% if cols and cols | length %}
   <div class="prj-toggle prj-table-cols">

@@ -1,0 +1,11 @@
+
+{% macro thead(cols=[]) %}
+<thead>
+  <th>
+    {% for col in cols %}
+      <td>{{ col }}</td>
+    {% endfor %}
+  </th>
+</thead>
+{% endmacro %}
+
