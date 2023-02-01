@@ -568,10 +568,10 @@ const c_PrjClass = class {
       const piece = req.params.piece
       return res.render(`include/piece/${piece}`, {})
     }
-
   }
 
 //@@ htmlCodeTab
+//@r GET /prj/code/tab/:tabId/html
   htmlCodeTab () {
     const self = this
 
@@ -616,7 +616,8 @@ const c_PrjClass = class {
               label : 'display: inline-block;',
               text : {
                 minPage : tt,
-                maxPage : tt
+                maxPage : tt,
+                fmt : 'width: 200px; height: 15px;'
               }
             },
           }
@@ -624,11 +625,23 @@ const c_PrjClass = class {
         args = { iframes, sec, proj, styles, file_exts, file_fmt }
       }
       else if (tabId == 'tab_bld') {
+        const tbl = {
+          builds : {
+            //cols : ['bid','buuid','duration','status','plan']
+            cols: { 
+              all : [ "bid", "buuid", "cmd", "proj", "target", "target_ext", "plan", "status", "duration", "start", "sec", "err" ],
+              info : {
+                onlist : [ 'bid', 'buuid', 'plan', 'status', 'duration', 'err' ]
+              }
+            }
+          }
+        }
+
         const rowHeight = '50px'
         const styles = {
           row : `display: flex; width: 100%; height: ${rowHeight}; flex-direction: row;`
         }
-        args = { styles }
+        args = { styles, tbl }
       }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)

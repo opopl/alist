@@ -352,7 +352,7 @@ prj:
                 - 'pdf'
                 - 'tex'
                 #- 'log'
-                #- 'bld'
+                - 'bld'
                 - 'json'
 
 ###ui.tables

@@ -1,22 +1,33 @@
 
-
 <div id="builds">
-    <div style="{{ styles.row }}">
+  <div style="{{ styles.row }}">
     <button name="btn_update" class="prj-btn">Update</button>
     <div class='prj-radio-group prj-toggle'>
       <input type="radio" id="radio_bld_run" name="bld">
       <label for="radio_bld_run">Running</label>
-
+  
       <input type="radio" id="radio_bld_fail" name="bld">
       <label for="radio_bld_fail">Failed</label>
-
+  
       <input type="radio" id="radio_bld_ok" name="bld">
       <label for="radio_bld_ok">Success</label>
     </div>
   </div>
-  <div style="{{ styles.row }}">
-     <span id="bld_statusline" style="font-weight: bold"></span>
-  </div>
+  <!--<div style="{{ styles.row }}">-->
+     <!--<span id="bld_statusline" style="font-weight: bold"></span>-->
+  <!--</div>-->
 
-  <table id="table_builds" />
+  <div tbl="builds">
+    {%- include "include/tab/tab_bld/cols.html" -%}
+    {%- include "include/tab/tab_bld/ctl.html" -%}
+    <div class="prj-table-container" status="fail">
+      <table> </table>
+    </div>
+    <div class="prj-table-container" status="running">
+      <table> </table>
+    </div>
+    <div class="prj-table-container" status="success">
+      <table> </table>
+    </div>
+  </div>
 </div>

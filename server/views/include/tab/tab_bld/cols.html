@@ -1,0 +1,21 @@
+
+{% set cols = tbl.builds.cols.all %}
+{% set coli = tbl.builds.cols.info %}
+{% set onlist = coli.onlist %}
+
+{{ coli | dump }}
+
+{% if cols and cols | length %}
+  <div class="prj-toggle prj-table-cols">
+    {% for col in cols %}
+      {% set id = "tbl_builds_col_" + col %}
+      {% if onlist and col in onlist %}
+        {% set checked = "checked" %}
+      {% else %}
+        {% set checked = null %}
+      {% endif %}
+      <input type="checkbox" id="{{ id }}" name="{{ id }}" col="{{col}}" {{ checked }}>
+      <label for="{{ id }}">{{ col }}</label>
+    {% endfor %}
+  </div>
+{% endif %}
