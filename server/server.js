@@ -11,6 +11,7 @@ const fileUpload = require('express-fileupload')
 
 const path = require('path')
 const fs = require('fs')
+const fsp = fs.promises
 const yaml = require('js-yaml')
 const _ = require('lodash')
 
@@ -80,7 +81,7 @@ class Alist {
   }
 
 //@@ initClasses
-  initClasses(){
+  async initClasses(){
     const self = this
 
     const tmplEnv = self.tmplEnv
@@ -91,9 +92,13 @@ class Alist {
 
     tmplEnv.addGlobal('prjConfig',_.get(optsPrj,'config',{}))
 
-    self.c_Auth = new c_AuthClass({ ...optsAuth, tmplEnv })
-    self.c_Img  = new c_ImgClass({ ...optsImg, tmplEnv })
-    self.c_Prj  = new c_PrjClass({ ...optsPrj, tmplEnv })
+    const tmpDirBase = path.join(__dirname, 'tmp')
+    const opts = { tmpDirBase }
+    if(!fs.existsSync(tmpDirBase)){ await fsp.mkdir(tmpDirBase) }
+
+    self.c_Auth = new c_AuthClass({ ...optsAuth, tmplEnv, ...opts })
+    self.c_Img  = new c_ImgClass({ ...optsImg, tmplEnv, ...opts })
+    self.c_Prj  = new c_PrjClass({ ...optsPrj, tmplEnv, ...opts })
     //self.firefoxDriver  = firefoxDriver 
 
     return self

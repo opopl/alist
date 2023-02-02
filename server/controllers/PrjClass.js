@@ -6,6 +6,7 @@ const path = require('path')
 const util = require('util')
 const fs = require('fs')
 const fse = require('fs-extra')
+const fsp = fs.promises
 
 const cheerio = require("cheerio")
 const yaml = require('js-yaml')
@@ -996,8 +997,13 @@ const PrjClass = class {
         console.log({ msg });
         return {}
      }
+     const tmpDir = path.join(self.tmpDirBase, 'bld', self.rootid, proj, target )
+     fsp.mkdir(tmpDir,{ recursive : true })
 
-     const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget}`
+     const sYaml = ''
+
+     const cmd = `${bldCmd} ${act} ${sCnf} ${sTarget} ${sYaml}`
+     console.log(`[PrjClass.act] cmd = ${cmd}`)
 
      const cmda = cmd.split(/\s+/)
      const exe =  cmda.shift()

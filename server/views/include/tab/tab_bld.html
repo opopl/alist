@@ -1,5 +1,5 @@
 
-{%- import "import/tbl.html" as tb -%}
+{%- import "import/tb.html" as tb -%}
 
 <div id="builds">
   <div style="{{ styles.row }}">
@@ -22,7 +22,6 @@
 {% set cols = tbl.builds.cols.all %}
 {% set coli = tbl.builds.cols.info %}
 {% set onlist = coli.onlist %}
-
 
   <div tbl="builds">
     {%- include "include/tab/tab_bld/cols.html" -%}
