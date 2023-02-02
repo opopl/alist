@@ -969,17 +969,13 @@ const PrjClass = class {
 
 
 //@@ act
-  async act (ref = {}) {
+  async act ({ act, cnf, target, proj, bldOpts }) {
      const self = this
 
-     const act = _.get(ref,'act')
-     const cnf = _.get(ref,'cnf','')
-     const target = _.get(ref,'target','')
+     proj = proj ? proj : self.proj
 
      const cnfa = cnf.split(',')
      const do_htlatex = cnfa.includes('htx')
-
-     const proj = _.get(ref, 'proj', self.proj)
 
      const sCnf = cnf ? `-c ${cnf}` : ''
      const sTarget = target ? `-t ${target}` : ''
@@ -998,7 +994,10 @@ const PrjClass = class {
         return {}
      }
      const tmpDir = path.join(self.tmpDirBase, 'bld', self.rootid, proj, target )
-     fsp.mkdir(tmpDir,{ recursive : true })
+     fsp.mkdir(tmpDir, { recursive : true })
+     if (bldOpts) {
+        const yBldOpts = yaml.dump(bldOpts)
+     }
 
      const sYaml = ''
 
