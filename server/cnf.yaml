@@ -144,6 +144,23 @@ prj:
                 '
               #- [ 'input submit@hidden@','','' ]
 
+###form_pdf_compile_options
+            'form_pdf_compile_options':
+ #missing method=POST and enctype=multipart/form-data on the form
+              attr:
+                method: 'POST'
+                enctype: 'multipart/form-data'
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - ' <div class="prj-form-row-title">
+                    Screenshots (Original)
+                  </div>
+                '
+              - [ 'label@@ Width:','','input text@name=orig_width' ]
+
 ###form_auth_new
             'form_auth_new':
               cols:
@@ -381,6 +398,11 @@ prj:
                 modal: true
                 width: 800
                 height: 700
+
+             dialog_pdf_compile_options:
+                title: "PDF Compile Options"
+                width: 400
+                height: 600
 
              dialog_checklist:
                 title: "Checklist"
