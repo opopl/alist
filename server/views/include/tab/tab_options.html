@@ -1,0 +1,5 @@
+
+{%- import "import/form.html" as form -%}
+
+{% set f = forms | get(formId) %}
+{{ form.formRaw(formId, formRows = f.rows, formCols = f.cols) }}

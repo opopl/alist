@@ -299,6 +299,7 @@ const c_PrjClass = class {
       } else if (req.method == 'POST') {
         whr = JSON.parse(req.body.data)
       }
+      delete whr.ts
 
       row = await self.prj.dbSecData(whr)
 
@@ -429,6 +430,17 @@ const c_PrjClass = class {
       const p = []
       const tagList = (await dbProc.all(self.dbc, q, p)).map(x => x.tag)
       res.send(tagList)
+    }
+  }
+
+//@@ jsonSecOptionsUpdate
+//@r POST prj/sec/options/update
+  jsonSecOptionsUpdate () {
+    const self = this
+
+    return async (req, res) => {
+       const body = req.body
+       const options = body.options
     }
   }
 
@@ -642,6 +654,10 @@ const c_PrjClass = class {
           row : `display: flex; width: 100%; height: ${rowHeight}; flex-direction: row;`
         }
         args = { styles, tbl }
+      }
+      else if (tabId == 'tab_options') {
+        formId = 'form_options'
+        args = { forms, formId }
       }
 
       html = tmplEnv.render(`include/tab/${tabId}.html`, args)
