@@ -1,7 +1,6 @@
 
 {%- import "import/util.html" as util -%}
-
-{%- include "import/form/include/cell_code.html"  -%}
+{%- import "import/form/cell.html" as form_cell -%}
 
 {%- macro cellRaw(key, attr, content) -%}
   {%- if key -%}
@@ -36,7 +35,7 @@ style='width: {{ value }}'
     {% endfor %}
 
   {% elif cell | isObj %}
-    {{ cellCodeObj(cell, colCnf, index) }}
+    {{ form_cell.cellCodeObj(cell, colCnf, index) }}
 
   {% else %}
     {%- set m = r/^\s*(?<key>[\w\s]+)\@(?<attr>[^@]*)(|\@(?<content>[^@]*))$/g.exec(cell) -%}
@@ -85,5 +84,4 @@ style='width: {{ value }}'
   </div>
 </form>
 {% endmacro %}
-
 
