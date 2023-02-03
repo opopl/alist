@@ -114,7 +114,15 @@ prj:
               - { width : '10%' }
               - { width : '60%' }
               rows:
-              - [ 'label@@ File:','','input file@name=file' ]
+              - [ 'label@@ Tex4HT exe:',
+                  'label@@ tex4ht.run.exe',
+                  {
+                    tag : 'select',
+                    attr : { name : 'tex4ht.run.exe' },
+                    options : ['htlatex','make4ht']
+                  }
+                ]
+              - [ 'button submit@@Submit', '', '' ]
 
 ###form_saved_import
             'form_saved_import':
