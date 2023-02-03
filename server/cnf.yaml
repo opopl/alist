@@ -107,6 +107,15 @@ prj:
               #- [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
               #- [ 'button submit@@Submit', '', '' ]
               #
+###form_options
+            'form_options':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ File:','','input file@name=file' ]
+
 ###form_saved_import
             'form_saved_import':
  #missing method=POST and enctype=multipart/form-data on the form
@@ -456,6 +465,11 @@ prj:
                     file:
                       required: true
 
+###ui.forms.form_options
+             form_options:
+                submit:
+                  url: "/prj/sec/options/update"
+
 ###ui.forms.form_auth_new
              form_auth_new:
                 fields:
@@ -470,6 +484,7 @@ prj:
                       required: true
                     author_id:
                       required: true
+
 
 ###ui.forms.form_sec_new
              form_sec_new:

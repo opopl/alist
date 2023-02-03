@@ -434,7 +434,7 @@ const c_PrjClass = class {
   }
 
 //@@ jsonSecOptionsUpdate
-//@r POST prj/sec/options/update
+//@r POST /prj/sec/options/update
   jsonSecOptionsUpdate () {
     const self = this
 

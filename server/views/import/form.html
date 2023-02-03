@@ -1,6 +1,8 @@
 
 {%- import "import/util.html" as util -%}
 
+{%- include "import/form/include/cell_code.html"  -%}
+
 {%- macro cellRaw(key, attr, content) -%}
   {%- if key -%}
     {%- set akey = key.split(' ') -%}
@@ -25,12 +27,17 @@ style='width: {{ value }}'
   {%- endif -%}
 {%- endmacro -%}
 
+
 {%- macro cellCode(cell, colCnf, index) -%}
 
   {% if cell | isArr %}
     {% for item in cell %}
       {{ cellCode(item, colCnf, index) }}
     {% endfor %}
+
+  {% elif cell | isObj %}
+    {{ cellCodeObj(cell, colCnf, index) }}
+
   {% else %}
     {%- set m = r/^\s*(?<key>[\w\s]+)\@(?<attr>[^@]*)(|\@(?<content>[^@]*))$/g.exec(cell) -%}
 
