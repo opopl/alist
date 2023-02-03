@@ -205,8 +205,6 @@ const c_ImgClass = class {
        })
        await Promise.all(p_pics)
 
-       console.log({ pics })
-
        const tmplEnv = self.tmplEnv
        const html = tmplEnv.render('include/piece/img_fetched.html',{ picUrlList, picDone })
        return res.send(html)

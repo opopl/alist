@@ -16,7 +16,7 @@
     {% set caption = pic.caption %}
   
     <figure class="prj-img-figure">
-      {% set attrs = attrStr(pic, [ 'src', 'url', 'md5' ]) %}
+      {% set attrs = attrStr(pic, [ 'src', 'url', 'md5', 'caption' ]) %}
       <img class="prj-img-small prj-img-fetched" {{ attrs | safe }} />
   
       <figcaption> {{ caption }} </figcaption>
