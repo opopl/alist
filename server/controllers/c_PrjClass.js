@@ -440,7 +440,21 @@ const c_PrjClass = class {
 
     return async (req, res) => {
        const body = req.body
-       const options = body.options
+       const query = req.query
+
+       const { sec, proj } = srvUtil.dictGet(query,'sec proj')
+
+       const optJson = body.data
+       const options = JSON.parse(optJson)
+
+       const q = update(`projs`)
+           .set({ options: optJson })
+           .where({ sec, proj })
+           .toParams({placeholder: '?%d'})
+
+       await dbProc.run(self.prj.dbc, q.text, q.values)
+
+       return res.send({})
     }
   }
 

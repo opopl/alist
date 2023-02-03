@@ -107,7 +107,7 @@ prj:
               #- [ 'label@@ Date:'    , '', 'input date@ id=input_sec_new_date name=date', '' ]
               #- [ 'button submit@@Submit', '', '' ]
               #
-###form_options
+###form_options {
             'form_options':
               cols:
               - { width : '10%' }
@@ -119,10 +119,20 @@ prj:
                   {
                     tag : 'select',
                     attr : { name : 'tex4ht.run.exe' },
-                    options : ['htlatex','make4ht']
+                    options : ['make4ht','htlatex']
                   }
                 ]
+              - [ 'label@@ RunTex shell:',
+                  'label@@ run_tex.shell',
+                  {
+                    tag : 'select',
+                    attr : { name : 'run_tex.shell' },
+                    options : ['capture','system']
+                  }
+                ]
+
               - [ 'button submit@@Submit', '', '' ]
+#end: form_options }
 
 ###form_saved_import
             'form_saved_import':
@@ -476,7 +486,11 @@ prj:
 ###ui.forms.form_options
              form_options:
                 submit:
-                  url: "/prj/sec/options/update"
+                  url:
+                    path: "/prj/sec/options/update"
+                    query:
+                      sec : '@@sec'
+                      proj : '@@proj'
 
 ###ui.forms.form_auth_new
              form_auth_new:
