@@ -119,7 +119,7 @@ prj:
                   {
                     tag : 'select',
                     attr : { name : 'tex4ht.run.exe' },
-                    options : ['make4ht','htlatex']
+                    options : [ 'htlatex', 'make4ht' ]
                   }
                 ]
               - [ 'label@@ RunTex shell:',
@@ -127,7 +127,7 @@ prj:
                   {
                     tag : 'select',
                     attr : { name : 'run_tex.shell' },
-                    options : ['capture','system']
+                    options : [ 'capture', 'system' ]
                   }
                 ]
 
@@ -200,7 +200,7 @@ prj:
               - [ 'label@@ URL:','','input text@class=prj-input-url name=url' ]
               - [ 'input submit@hidden@','','' ]
 
-###form_pics_upload
+###form_pics_upload {
             'form_pics_upload':
               cols:
               - { width : '10%' }
@@ -208,12 +208,15 @@ prj:
               - { width : '60%' }
               rows:
               - [ 'label@@ URL:','','input text@ class=prj-input-url id=input_pic_url name=url' ]
+              - [ 'label@@ Caption:','','input text@ name=caption' ]
               - [
                     'button button@ id=btn_pic_upload @Upload', '',
                     'button button@ id=btn_pic_clear  @Clear Pics', '',
                 ]
 
               - [ 'button button@ name=load_scrn_fs @Load Screenshots From Filesystem','','' ]
+#end: form_pics_upload }
+
 ###form_img_edit
             'form_img_edit':
               cols:
