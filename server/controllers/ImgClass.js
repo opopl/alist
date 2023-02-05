@@ -1,5 +1,6 @@
 
 
+const _ = require('lodash')
 const db = require('./../db')
 const dbProc = require('./../dbproc')
 
@@ -33,6 +34,40 @@ const ImgClass = class {
     this.imgRoot  = path.join(process.env.IMG_ROOT)
 
     Object.assign(this,ref)
+
+    this.initDb()
+  }
+
+//@@ initDb
+  async initDb(){
+    const self = this
+
+    const info = {}
+
+    const q = `
+        SELECT
+            m.name as tbl,
+            p.name as col
+        FROM
+            sqlite_master m
+        LEFT OUTER JOIN
+            pragma_table_info((m.name)) p
+        ON m.name <> p.name
+        ORDER BY tbl, col
+    `
+
+    const rows = await dbProc.all(self.dbc, q, [])
+    for(let rw of rows){
+      const tbl = rw.tbl
+      const col = rw.col
+      if (/^sqlite_/.test(tbl)) { continue }
+      if (info[tbl] === undefined) { info[tbl] = { cols : [] } }
+      info[tbl].cols.push(col)
+    }
+
+    self.tableInfo = info
+
+    return self
   }
 
 //@@ _uriData2buf
@@ -67,10 +102,22 @@ const ImgClass = class {
   async dbImgData (whr={}) {
     const self = this
 
-    const q_data = select('*')
-                .from('imgs')
+    const cols = _.get(self, 'tableInfo.imgs.cols', [])
+    const fi = cols.map((x) => {
+      const str = x == 'url' ? `um.url AS url` : `i.${x} AS ${x}`
+      return str
+    }).join(',')
+    if ('url' in whr) {
+        whr['um.url'] = whr.url
+        delete whr.url
+    }
+    const q_data = select(fi)
+                .from('url2md5 AS um')
+                .innerJoin('imgs AS i')
+                .on({ 'um.md5' : 'i.md5' })
                 .where(whr)
                 .toParams({placeholder: '?%d'})
+    const q = q_data.text
 
     const rw = await dbProc.get(self.dbc, q_data.text, q_data.values)
     if (rw) {
