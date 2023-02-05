@@ -599,9 +599,20 @@ const PrjClass = class {
        const sdc = await self.dbSecData({ proj, sec: child })
        if (!sdc) { continue }
 
-       const q = select('sec, url, caption, name').from('imgs')
-                .where({ proj, sec: child })
-                .orderBy('mtime')
+       //const q = select('sec, url, caption, name').from('imgs')
+                //.where({ proj, sec: child })
+                //.orderBy('mtime')
+                //.toParams({placeholder: '?%d'})
+
+       const fi = ['sec','url','caption','name'].map(x => {
+         const str = x == 'url' ? `um.url url` : `i.${x} ${x}`
+         return str
+       })
+       const q = select(fi).from('url2md5 um')
+                .innerJoin('imgs i')
+                .on({ 'um.md5' : 'i.md5' })
+                .where({ 'um.proj' : proj, 'um.sec': child })
+                .orderBy('i.mtime')
                 .toParams({placeholder: '?%d'})
 
        const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
@@ -625,7 +636,7 @@ const PrjClass = class {
        iiList.push(...children)
     }
 
-    return picData;
+    return picData
   }
 
 //@@ getSecPdfInfo

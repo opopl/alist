@@ -400,7 +400,6 @@ const c_PrjClass = class {
       var data = await self.prj.dbSecPicData(ref)
 
       if (data) {
-        console.log({ data });
         res.status(200).json(data)
       }else{
         res.status(500).send({ 'msg' : 'no pics data!' })
