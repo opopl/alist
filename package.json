@@ -42,7 +42,9 @@
     "build": "node ./buildScript",
     "build-front": "react-scripts build",
     "eject": "react-scripts eject",
-    "start-server": "nodemon server/server.js --watch server/**/*.js",
+    "start-server": "nodemon --trace-warnings server/server.js --watch server/**/*.js",
+    "d0": "NODE_INSPECT_RESUME_ON_START=1 node inspect ./node_modules/nodemon/bin/nodemon.js server/server.js localhost:5000 --watch server/**/*.js",
+    "d": "nodemon --inspect server/server.js localhost:5000 --watch server/**/*.js",
     "start-front": "react-scripts start",
     "start": "concurrently \"npm run start-server\" \"npm run start-front\" --kill-others --kill-others-on-fail",
     "test": "react-scripts test --env=jsdom"

@@ -351,16 +351,10 @@ const ImgClass = class {
     const size = iBuf.length
 
     const tInfo = '_info_imgs_tags'
+
     if (!saved) {
 
-      if (saved_md5) {
-        const { sec, proj } = { ...idb }
-        const q = insert('url2md5',{ url, md5, sec, proj })
-                    .toParams({placeholder: '?%d'})
-
-        await dbProc.run(self.dbc, q.text, q.values)
-
-      }else{
+      if (!saved_md5) {
         const ins = {
           ...idb,
           url,
@@ -374,6 +368,11 @@ const ImgClass = class {
         await dbProc.run(self.dbc, q.text, q.values)
       }
 
+      const { sec, proj } = { ...idb }
+      const qum = insert('url2md5',{ url, md5, sec, proj })
+                    .toParams({placeholder: '?%d'})
+      await dbProc.run(self.dbc, qum.text, qum.values)
+
     }else{
       const upd = { mtime, ...idb }
       const q = update('imgs',upd)
@@ -381,9 +380,7 @@ const ImgClass = class {
                   .toParams({placeholder: '?%d'})
 
       await dbProc.run(self.dbc, q.text, q.values)
-
       await dbProc.run(self.dbc, `delete from ${tInfo} where url = ?`, [url])
-
     }
 
     const { tags } = srvUtil.dictGet(idb,'tags')
