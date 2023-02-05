@@ -305,9 +305,10 @@ const ImgClass = class {
     const md5 = srvUtil.md5hex(iBuf)
 
     let saved
+    const saved_md5 = await self.dbImgData({ md5 })
 
     if (!url) {
-      saved = await self.dbImgData({ md5 })
+      saved = saved_md5
       if (saved) {
         if (!force) { return self }
 
@@ -335,8 +336,10 @@ const ImgClass = class {
     const img =`${inum}.${ext}`
     const local = path.join(self.imgRoot, img)
 
-    const writer = fs.createWriteStream(local)
-    writer.write(iBuf)
+    if(!fs.existsSync(local) || !saved_md5){
+      const writer = fs.createWriteStream(local)
+      writer.write(iBuf)
+    }
 
     //const e = exifReader.load(buf,{expanded: true, includeUnknown: true})
 
@@ -344,17 +347,26 @@ const ImgClass = class {
 
     const tInfo = '_info_imgs_tags'
     if (!saved) {
-      const ins = {
-        ...idb,
-        url,
-        inum, img, ext, width, height,
-        md5, size, mtime
+
+      if (saved_md5) {
+        const { sec, proj } = { ...idb }
+        const q = insert('url2md5',{ url, md5, sec, proj })
+                    .toParams({placeholder: '?%d'})
+        await dbProc.run(self.dbc, q.text, q.values)
+
+      }else{
+        const ins = {
+          ...idb,
+          url,
+          inum, img, ext, width, height,
+          md5, size, mtime
+        }
+
+        const q = insert('imgs',ins)
+                    .toParams({placeholder: '?%d'})
+
+        await dbProc.run(self.dbc, q.text, q.values)
       }
-
-      const q = insert('imgs',ins)
-                  .toParams({placeholder: '?%d'})
-
-      await dbProc.run(self.dbc, q.text, q.values)
 
     }else{
       const upd = { mtime, ...idb }
