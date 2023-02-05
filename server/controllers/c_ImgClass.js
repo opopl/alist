@@ -31,6 +31,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonCount
+//@r GET /img/count
   jsonCount(){
     const self = this
 
@@ -44,6 +45,7 @@ const c_ImgClass = class {
   }
 
 //@@ rawImg
+//@r GET /img/raw/:inum
   rawImg(){
     const self = this
 
@@ -71,6 +73,7 @@ const c_ImgClass = class {
   }
 
 //@@ rawImgUrl
+//@r GET /img/raw/url/:url
   rawImgUrl(){
     const self = this
 
@@ -102,7 +105,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgDelete
-// post /img/delete
+//@r POST /img/delete
   jsonImgDelete(){
     const self = this
 
@@ -116,7 +119,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgDataUpdate
-// post /img/data/update
+//@r POST /img/data/update
   jsonImgDataUpdate(){
     const self = this
 
@@ -148,6 +151,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgDataUrl
+//@r GET /img/data/url/:url
   jsonImgDataUrl(){
     const self = this
 
@@ -182,7 +186,7 @@ const c_ImgClass = class {
   }
 
 //@@ htmlImgFetch
-//  POST
+//@r POST /img/fetch/html
   htmlImgFetch () {
     const self = this
 
@@ -212,7 +216,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgNew
-//  POST
+//@r POST /img/new
   jsonImgNew () {
     const self = this
 
@@ -237,6 +241,8 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgData
+//@r POST /img/data
+//@r GET /img/data/:inum
   jsonImgData(){
     const self = this
 
@@ -261,6 +267,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgTagList
+//@r GET /img/tag/list
   jsonImgTagList(){
     const self = this
 
@@ -274,6 +281,7 @@ const c_ImgClass = class {
   }
 
 //@@ jsonImgDataAll
+//@r POST /img/data/all
   jsonImgDataAll(){
     const self = this
 
