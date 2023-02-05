@@ -383,7 +383,8 @@ const c_PrjClass = class {
   }
 
 //@@ jsonSecPicData
-//@r /prj/sec/pic/data
+//@r POST /prj/sec/pic/data
+//@r GET /prj/sec/pic/data
   jsonSecPicData () {
     const self = this
 
@@ -557,7 +558,7 @@ const c_PrjClass = class {
   }
 
 //@@ htmlImgSearch
-// GET /prj/img/search/html
+//@r GET /prj/img/search/html
   htmlImgSearch () {
     const self = this
     return async (req, res) => {
@@ -1220,7 +1221,7 @@ const c_PrjClass = class {
   }
 
 //@@ uploadSecPicUrl
-// post /prj/sec/pic/upload/url
+//@r POST /prj/sec/pic/upload/url
   uploadSecPicUrl ()  {
     const self = this
 
