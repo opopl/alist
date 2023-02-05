@@ -103,14 +103,19 @@ const ImgClass = class {
     const self = this
 
     const cols = _.get(self, 'tableInfo.imgs.cols', [])
+    const colsEq = ['url','md5','sec','proj']
     const fi = cols.map((x) => {
-      const str = x == 'url' ? `um.url AS url` : `i.${x} AS ${x}`
+      const str = colsEq.includes(x) ? `um.${x} AS ${x}` : `i.${x} AS ${x}`
       return str
     }).join(',')
-    if ('url' in whr) {
-        whr['um.url'] = whr.url
-        delete whr.url
+
+    for (let [col, value] of Object.entries(whr)) {
+      if (colsEq.includes(col)) {
+        whr[`um.${col}`] = whr[col]
+        delete whr[col]
+      }
     }
+
     const q_data = select(fi)
                 .from('url2md5 AS um')
                 .innerJoin('imgs AS i')
@@ -352,6 +357,7 @@ const ImgClass = class {
         const { sec, proj } = { ...idb }
         const q = insert('url2md5',{ url, md5, sec, proj })
                     .toParams({placeholder: '?%d'})
+
         await dbProc.run(self.dbc, q.text, q.values)
 
       }else{
