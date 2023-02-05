@@ -1221,6 +1221,14 @@ const c_PrjClass = class {
 
 //@@ uploadSecPicUrl
 //@r POST /prj/sec/pic/upload/url
+// ----------------------------------
+// call tree
+//  POST /prj/sec/pic/upload/url
+//    uploadSecPicUrl
+//      self.prj.secPicImport
+//        self.prj.imgman.dbImgStoreUrl
+//          self.prj.imgman.dbImgData - check if exist
+//          self.prj.imgman.dbImgStoreBuf
   uploadSecPicUrl ()  {
     const self = this
 
