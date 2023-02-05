@@ -87,14 +87,10 @@ const c_ImgClass = class {
 
       const url = decodeURIComponent(urlEnc)
 
-      const q_file = select('img')
-                  .from('imgs')
-                  .where({ url })
-                  .toParams({placeholder: '?%d'})
+      const rw = await self.imgman.dbImgData({ url })
 
-      var rw = await dbProc.get(self.dbc, q_file.text, q_file.values)
-      var img = _.get(rw,'img')
-      var imgFile = path.join(self.imgRoot, img || '')
+      const img = _.get(rw,'img')
+      const imgFile = path.join(self.imgRoot, img || '')
 
       if (img && fs.existsSync(imgFile)) {
          res.status(200).sendFile(imgFile)
@@ -171,12 +167,8 @@ const c_ImgClass = class {
       //orig:
       /*https://scontent-ams4-1.xx.fbcdn.net/v/t39.30808-6/322740431_662461328946722_3777360133708458065_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=730e14&_nc_ohc=lMdO15igeS0AX8XosY9&_nc_ht=scontent-ams4-1.xx&oh=00_AfCEWMt46d4g3IpxwYUhvQZkRC8XK3RuGQSCvcJMSQA6JA&oe=63BA9699*/
 
-      const q = select('*')
-                  .from('imgs')
-                  .where({ url })
-                  .toParams({placeholder: '?%d'})
+      const rw = await self.imgman.dbImgData({ url })
 
-      var rw = await dbProc.get(self.dbc, q.text, q.values)
       if (rw) {
         res.send(rw)
       }else{
