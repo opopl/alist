@@ -239,25 +239,74 @@ const ImgClass = class {
     return inum
   }
 
+//@@ imgDeleteCopyUrl
+  async imgDeleteCopyUrl ({ url, md5, imgFile, imgFileEx }){
+    const self = this
+    let ok = true
+    ok = ok && url && md5
+    ok = ok && imgFile && imgFileEx
+    if (!ok) { return self }
+    const tInfo = '_info_imgs_tags'
+    const rwMain = await dbProc.get(self.dbc, `SELECT * FROM imgs WHERE url = ?`, [ url ])
+    if (rwMain) {
+      // delete all tag entries for all urls
+      await dbProc.run(self.dbc, `
+            DELETE FROM ${tInfo}
+            WHERE url IN (SELECT url FROM url2md5 WHERE md5 = ? )`, [ md5 ])
+      await dbProc.run(self.dbc, `DELETE FROM imgs WHERE url = ?`, [ url ])
+      await dbProc.run(self.dbc, `DELETE FROM url2md5 WHERE md5 = ?`, [ md5 ])
+      // delete local file
+      await fsFileRemove(imgFile)
+    }else{
+      // delete tag entries for this url
+      await dbProc.run(self.dbc, `
+            DELETE FROM ${tInfo}
+            WHERE url = ? `, [ url ])
+      await dbProc.run(self.dbc, `DELETE FROM url2md5 WHERE url = ?`, [ url ])
+    }
+
+    return self
+  }
+
+//@@ imgDeleteSingle
+  async imgDeleteSingle ({ url, md5, imgFile, imgFileEx }){
+    const self = this
+    let ok = true
+    ok = ok && url && md5
+    ok = ok && imgFile && imgFileEx
+    if (!ok) { return self }
+
+    const tInfo = '_info_imgs_tags'
+
+    await dbProc.run(self.dbc, `DELETE FROM ${tInfo} WHERE url = ?`, [ url ])
+    await dbProc.run(self.dbc, `DELETE FROM url2md5 WHERE md5 = ?`, [ md5 ])
+    await dbProc.run(self.dbc, `DELETE FROM imgs WHERE md5 = ?`, [ md5 ])
+
+    await fsFileRemove(imgFile)
+
+    return self
+  }
+
 //@@ imgDelete
   async imgDelete ({ url } = {}){
     const self = this
 
-    let imgData, imgFile, imgFileEx
+    let imgData, md5, imgFile, imgFileEx
     if (url) {
       imgData = await self.dbImgData({ url })
       if (imgData) {
+        md5 = imgData.md5
         const img = imgData.img
         imgFile =  path.join(self.imgRoot, img)
         imgFileEx = fs.existsSync(imgFile)
       }
     }
-
-    if (url && imgData && imgFile && imgFileEx) {
-      await fsFileRemove(imgFile)
-
-      const q = `DELETE FROM imgs WHERE url = ?`
-      await dbProc.run(self.dbc, q, [ url ])
+    // single url
+    const { cnt } = await dbProc.get(self.dbc, `select count(*) cnt from url2md5 where md5 = ?`, [ md5 ])
+    if (cnt == 1) {
+      await self.imgDeleteSingle({ url, md5, imgFile, imgFileEx })
+    }else if (cnt > 1){
+      await self.imgDeleteCopyUrl({ url, md5, imgFile, imgFileEx })
     }
 
     return self

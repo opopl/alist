@@ -208,6 +208,14 @@ const c_PrjClass = class {
   }
 
 //@@ jsonSecFsLoadScrn
+//@r POST /prj/sec/fs/load/scrn
+// ----------------------------
+// call tree
+//   jsonSecFsLoadScrn
+//      dbSecData
+//      _secFsData
+//      prj.imgman.dbImgStoreFile
+//        prj.imgman.dbImgStoreBuf
   jsonSecFsLoadScrn () {
     const self = this
 
