@@ -73,9 +73,13 @@ style='width: {{ value }}'
         {%- endif -%}
 
       {%- elif row | isObj -%}
+            {% set html = row.html %}
+            {% if html %}
+              {{ html | safe }}
+            {% endif %}
       {% else %}
           <div class="prj-form-row">
-        {{ row | safe }}
+            {{ row | safe }}
           </div>
       {% endif %}
     {%- endfor -%}
