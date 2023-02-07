@@ -130,15 +130,16 @@ prj:
                   },
                   'label@@ run_tex.shell',
                 ]
-              - [ 'label@@ Exclude Screenshots (Comment)',
+# ------------------------------ exclude --------------------------
+              - [ 'label@@ Exclude Screenshots (Import)',
                   {
                     tag : 'input',
                     attr : {
                         type : 'checkbox',
-                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx'
+                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import'
                     }
                   },
-                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx' },
+                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import' },
                 ]
               - [ 'label@@ Exclude Screenshots (Original)',
                   {
@@ -150,15 +151,42 @@ prj:
                   },
                   { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.orig' },
                 ]
-              - [ 'label@@ Exclude Screenshots (Import)',
+              - [ 'label@@ Exclude Screenshots (Comment)',
                   {
                     tag : 'input',
                     attr : {
                         type : 'checkbox',
-                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import'
+                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx'
                     }
                   },
-                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import' },
+                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx' },
+                ]
+# ------------------------------ columns --------------------------
+              - [ 'label@@ Columns (Imported Pictures):',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.img.gen.ui_import.tab.cols' },
+                    options : [ 1,2,3,4 ]
+                  },
+                  'label@@ patch.vars.img.gen.ui_import.tab.cols',
+                ]
+
+              - [ 'label@@ Columns (Original Screenshots):',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.img.gen.orig.tab.cols' },
+                    options : [ 1,2,3,4 ]
+                  },
+                  'label@@ patch.vars.img.gen.orig.tab.cols',
+                ]
+
+              - [ 'label@@ Columns (Comment Screenshots):',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.img.gen.cmtx.tab.cols' },
+                    options : [ 1,2,3,4 ]
+                  },
+                  'label@@ patch.vars.img.gen.cmtx.tab.cols',
                 ]
 
               - [ 'button submit@@Submit', '', '' ]
