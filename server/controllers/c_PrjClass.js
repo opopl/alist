@@ -305,7 +305,7 @@ const c_PrjClass = class {
       const proj = query.proj || self.proj
 
       const { tree } = await self.prj.dbSecTree({ sec, proj })
-      res.render('sec/tree',{ tree })
+      res.render('include/piece/sec_tree',{ tree })
     }
   }
 
@@ -320,7 +320,6 @@ const c_PrjClass = class {
       const proj = query.proj || self.proj
 
       const { tree } = await self.prj.dbSecTree({ sec, proj })
-      console.log({ tree })
       res.json(tree)
     }
   }

@@ -1,0 +1,20 @@
+
+{% macro ulTree(tree) %}
+  {% set sec = tree.sec %}
+  {% set childTrees = tree.chd %}
+
+  {% if sec %}
+    {{ sec }}
+  {% endif %}
+  {% if childTrees and childTrees | isArr and childTrees | length %}
+    <ul>
+      {% for childTree in childTrees %}
+        <li>{{ ulTree(childTree) | safe }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}
+
+{% if tree %}
+  {{ ulTree(tree) }}
+{% endif %}

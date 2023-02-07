@@ -120,7 +120,7 @@ prj:
                                 <li><a href="#tab_options_tex_engine">TeX Engine</a></li>
                                 <li><a href="#tab_options_exclude">Exclude</a></li>
                                 <li><a href="#tab_options_col_align">Column Alignment</a></li>
-                                <li><a href="#tab_options_children">Children</a></li>
+                                <li><a href="#tab_options_tree">Tree</a></li>
                             </ul>
                            '
                 }
@@ -269,8 +269,8 @@ prj:
 
               - { 'html' : '</div>' }
               # }
-###form_options.children {
-              - { 'html' : '<div id="tab_options_children">' }
+###form_options.tree {
+              - { 'html' : '<div id="tab_options_tree">' }
               - { 'html' : '</div>' }
               # }
 
