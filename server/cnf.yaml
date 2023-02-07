@@ -116,12 +116,33 @@ prj:
               rows:
               - { 'html' : '<div id="tab_options_tabs">' }
               - { 'html' : '<ul>
+                                <li><a href="#tab_options_layout">Layout</a></li>
                                 <li><a href="#tab_options_tex_engine">TeX Engine</a></li>
                                 <li><a href="#tab_options_exclude">Exclude</a></li>
                                 <li><a href="#tab_options_col_align">Column Alignment</a></li>
                             </ul>
                            '
                 }
+###form_options.layout {
+              - { 'html' : '<div id="tab_options_layout">' }
+              - [ 'label@@ Orientation:',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.layout.doc.orientation' },
+                    options : [ 'portrait', 'landscape' ]
+                  },
+                  'label@@ vars.layout.doc.orientation',
+                ]
+              - [ 'label@@ Font Size:',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.layout.doc.font.size' },
+                    options : [ '11pt', '12pt', '13pt' ]
+                  },
+                  'label@@ vars.layout.doc.font.size',
+                ]
+              - { 'html' : '</div>' }
+              # }
 ###form_options.tex_engine {
               - { 'html' : '<div id="tab_options_tex_engine">' }
               - [ 'label@@ Tex4HT exe:',
@@ -140,7 +161,7 @@ prj:
                   },
                   'label@@ run_tex.shell'
                 ]
-              # endof tab_options_tex_engine }
+              # }
               - { 'html' : '</div>' }
 # ------------------------------ exclude --------------------------
 ###form_options.exclude {
