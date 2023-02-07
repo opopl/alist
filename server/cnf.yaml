@@ -114,6 +114,7 @@ prj:
               - { width : '30%' }
               - { width : '40%' }
               rows:
+              - '<h3>TeX engine calls<h3>'
               - [ 'label@@ Tex4HT exe:',
                   {
                     tag : 'select',
@@ -131,37 +132,54 @@ prj:
                   'label@@ run_tex.shell',
                 ]
 # ------------------------------ exclude --------------------------
-              - [ 'label@@ Exclude Screenshots (Import)',
+              - '<h3>Exclude<h3>'
+              - [ 'label@@ Exclude Pictures (Import)',
                   {
                     tag : 'input',
+                    wrap : [
+                        '<div class="prj-toggle">',
+                        '<label for="cbx_exclude_ui_import">excluded</label></div>'
+                    ],
                     attr : {
                         type : 'checkbox',
-                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import'
+                        name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.pic.ui_import',
+                        id : 'cbx_exclude_ui_import',
                     }
                   },
-                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import' },
+                  { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.pic.ui_import' },
                 ]
               - [ 'label@@ Exclude Screenshots (Original)',
                   {
                     tag : 'input',
+                    wrap : [
+                        '<div class="prj-toggle">',
+                        '<label for="cbx_exclude_orig">excluded</label></div>'
+                    ],
                     attr : {
                         type : 'checkbox',
-                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.orig'
+                        name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.orig',
+                        id : 'cbx_exclude_orig',
                     }
                   },
-                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.orig' },
+                  { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.orig' },
                 ]
               - [ 'label@@ Exclude Screenshots (Comment)',
                   {
                     tag : 'input',
+                    wrap : [
+                        '<div class="prj-toggle">',
+                        '<label for="cbx_exclude_cmtx">excluded</label></div>'
+                    ],
                     attr : {
                         type : 'checkbox',
-                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx'
+                        name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.cmtx',
+                        id : 'cbx_exclude_cmtx',
                     }
                   },
-                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx' },
+                  { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.cmtx' },
                 ]
 # ------------------------------ columns --------------------------
+              - '<h3>Column Alignment<h3>'
               - [ 'label@@ Columns (Imported Pictures):',
                   {
                     tag : 'select',

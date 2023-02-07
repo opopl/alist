@@ -5,6 +5,11 @@
   {% set tag = cell.tag %}
   {% set attr = cell.attr %}
   {% set inner = cell.inner %}
+  {% set wrap = cell.wrap %}
+
+  {% if wrap and wrap | isArr and wrap | length == 2 %}
+    {{ wrap[0] | safe }}
+  {% endif %}
 
   <{{ tag }} {{ util.attrStr(attr) | safe }}>
   {% if inner and inner | isStr %}
@@ -21,5 +26,9 @@
   {% endif %}
 
   </{{ tag }}>
+
+  {% if wrap and wrap | isArr and wrap | length == 2 %}
+    {{ wrap[1] | safe }}
+  {% endif %}
 
 {% endmacro %}
