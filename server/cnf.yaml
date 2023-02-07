@@ -135,10 +135,30 @@ prj:
                     tag : 'input',
                     attr : {
                         type : 'checkbox',
-                        name : 'patch@opts_maker@join_lines@ii@exclude@$var{sec}.cmtx'
+                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx'
                     }
                   },
-                  { tag : 'label', inner: 'patch@opts_maker@join_lines@ii@exclude@$var{sec}.cmtx' },
+                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.cmtx' },
+                ]
+              - [ 'label@@ Exclude Screenshots (Original)',
+                  {
+                    tag : 'input',
+                    attr : {
+                        type : 'checkbox',
+                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.orig'
+                    }
+                  },
+                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.orig' },
+                ]
+              - [ 'label@@ Exclude Screenshots (Import)',
+                  {
+                    tag : 'input',
+                    attr : {
+                        type : 'checkbox',
+                        name : 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import'
+                    }
+                  },
+                  { tag : 'label', inner: 'patch%opts_maker%join_lines%ii%exclude%$var{sec}.pic.ui_import' },
                 ]
 
               - [ 'button submit@@Submit', '', '' ]
