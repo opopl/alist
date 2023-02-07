@@ -4,16 +4,22 @@
 {%- macro cellCodeObj(cell, colCnf, index) -%}
   {% set tag = cell.tag %}
   {% set attr = cell.attr %}
+  {% set inner = cell.inner %}
+
+  <{{ tag }} {{ util.attrStr(attr) | safe }}>
+  {% if inner and inner | isStr %}
+    {{ inner | safe }}
+  {% endif %}
 
   {% if tag == 'select' %}
     {% set options = cell.options %}
     {% if options %}
-      <{{ tag }} {{ util.attrStr(attr) | safe }}>
          {% for option in options %}
             <option value="{{ option }}">{{ option }}</option>
          {% endfor %}
-       </{{ tag }}>
     {% endif %}
   {% endif %}
+
+  </{{ tag }}>
 
 {% endmacro %}

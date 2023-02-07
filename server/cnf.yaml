@@ -110,25 +110,35 @@ prj:
 ###form_options {
             'form_options':
               cols:
-              - { width : '10%' }
-              - { width : '10%' }
-              - { width : '60%' }
+              - { width : '20%' }
+              - { width : '30%' }
+              - { width : '40%' }
               rows:
               - [ 'label@@ Tex4HT exe:',
-                  'label@@ tex4ht.run.exe',
                   {
                     tag : 'select',
-                    attr : { name : 'tex4ht.run.exe' },
+                    attr : { name : 'patch.tex4ht.run.exe' },
                     options : [ 'htlatex', 'make4ht' ]
-                  }
+                  },
+                  'label@@ tex4ht.run.exe',
                 ]
               - [ 'label@@ RunTex shell:',
-                  'label@@ run_tex.shell',
                   {
                     tag : 'select',
-                    attr : { name : 'run_tex.shell' },
+                    attr : { name : 'patch.run_tex.shell' },
                     options : [ 'capture', 'system' ]
-                  }
+                  },
+                  'label@@ run_tex.shell',
+                ]
+              - [ 'label@@ Exclude Screenshots (Comment)',
+                  {
+                    tag : 'input',
+                    attr : {
+                        type : 'checkbox',
+                        name : 'patch@opts_maker@join_lines@ii@exclude@$var{sec}.cmtx'
+                    }
+                  },
+                  { tag : 'label', inner: 'patch@opts_maker@join_lines@ii@exclude@$var{sec}.cmtx' },
                 ]
 
               - [ 'button submit@@Submit', '', '' ]

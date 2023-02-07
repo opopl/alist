@@ -455,6 +455,8 @@ const c_PrjClass = class {
        const optJson = body.data
        const options = JSON.parse(optJson)
 
+       console.log({ options })
+
        const q = update(`projs`)
            .set({ options: optJson })
            .where({ sec, proj })

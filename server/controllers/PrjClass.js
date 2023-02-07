@@ -958,6 +958,9 @@ const PrjClass = class {
          output_ex : htmlEx,
      }
 
+     const options = row.options
+     if (options) { row.options = JSON.parse(options) }
+
      const qt = ` SELECT td.tag, td.name FROM _info_projs_tags AS it
                   INNER JOIN tag_details AS td
                   ON it.tag = td.tag
