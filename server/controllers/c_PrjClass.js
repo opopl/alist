@@ -294,7 +294,40 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlSecTree
+//@r GET /prj/sec/tree/html
+  htmlSecTree () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+      const sec = query.sec
+      const proj = query.proj || self.proj
+
+      const { tree } = await self.prj.dbSecTree({ sec, proj })
+      res.render('sec/tree',{ tree })
+    }
+  }
+
+//@@ jsonSecTree
+//@r GET /prj/sec/tree
+  jsonSecTree () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+      const sec = query.sec
+      const proj = query.proj || self.proj
+
+      const { tree } = await self.prj.dbSecTree({ sec, proj })
+      console.log({ tree })
+      res.json(tree)
+    }
+  }
+
 //@@ jsonSecData
+//@r GET /prj/sec/data
+//@r POST /prj/sec/data
   jsonSecData () {
     const self = this
 
@@ -307,12 +340,16 @@ const c_PrjClass = class {
       } else if (req.method == 'POST') {
         whr = JSON.parse(req.body.data)
       }
-      delete whr.ts
+      let do_tree = _.get(whr, 'do_tree', false)
+
+      for(let x of ['ts','do_tree']){
+        delete whr[x]
+      }
 
       row = await self.prj.dbSecData(whr)
 
       if (row) {
-        await self.prj.secRowUpdate({ row })
+        await self.prj.secRowUpdate({ row, do_tree })
         res.json(row)
       }else{
         res.status(500).send({ 'msg' : 'no section data!' })
@@ -664,7 +701,7 @@ const c_PrjClass = class {
         const tbl = {
           builds : {
             //cols : ['bid','buuid','duration','status','plan']
-            cols: { 
+            cols: {
               all : [ "bid", "buuid", "cmd", "proj", "target", "target_ext", "plan", "status", "duration", "start", "sec", "err" ],
               info : {
                 onlist : [ 'bid', 'buuid', 'plan', 'status', 'duration', 'err' ]
@@ -938,7 +975,7 @@ const c_PrjClass = class {
       const m = re.exec(sec)
       if (m) { sec_num = m.groups.num }
       //if (!sec_auth && auth_ids.length) { sec_auth = auth_ids[0] }
-      
+
       //const sec_auth = sd.author_id
 
       console.log({ sd })

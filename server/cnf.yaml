@@ -120,6 +120,7 @@ prj:
                                 <li><a href="#tab_options_tex_engine">TeX Engine</a></li>
                                 <li><a href="#tab_options_exclude">Exclude</a></li>
                                 <li><a href="#tab_options_col_align">Column Alignment</a></li>
+                                <li><a href="#tab_options_children">Children</a></li>
                             </ul>
                            '
                 }
@@ -137,9 +138,17 @@ prj:
                   {
                     tag : 'select',
                     attr : { name : 'patch.vars.layout.doc.font.size' },
-                    options : [ '11pt', '12pt', '13pt' ]
+                    options : [ '11pt', '12pt', '13pt', '20pt' ]
                   },
                   'label@@ vars.layout.doc.font.size',
+                ]
+              - [ 'label@@ Document Class:',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.layout.doc.class' },
+                    options : [ 'extreport', 'article', 'report', 'book' ]
+                  },
+                  'label@@ vars.layout.doc.class',
                 ]
               - { 'html' : '</div>' }
               # }
@@ -166,6 +175,21 @@ prj:
 # ------------------------------ exclude --------------------------
 ###form_options.exclude {
               - { 'html' : '<div id="tab_options_exclude">' }
+              - [ 'label@@ Exclude Comments',
+                  {
+                    tag : 'input',
+                    wrap : [
+                        '<div class="prj-toggle">',
+                        '<label for="cbx_exclude_cmt">excluded</label></div>'
+                    ],
+                    attr : {
+                        type : 'checkbox',
+                        name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.cmt',
+                        id : 'cbx_exclude_cmt',
+                    }
+                  },
+                  { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.pic.ui_import' },
+                ]
               - [ 'label@@ Exclude Pictures (Import)',
                   {
                     tag : 'input',
@@ -243,6 +267,10 @@ prj:
                   'label@@ patch.vars.img.gen.cmtx.tab.cols',
                 ]
 
+              - { 'html' : '</div>' }
+              # }
+###form_options.children {
+              - { 'html' : '<div id="tab_options_children">' }
               - { 'html' : '</div>' }
               # }
 

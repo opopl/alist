@@ -800,6 +800,26 @@ const PrjClass = class {
     return { authors }
   }
 
+//@@ dbSecTree
+  async dbSecTree ({ sec, proj, sd })  {
+    const self = this
+
+    proj = proj ? proj : self.proj
+    if (!sd) { sd = await self.dbSecData({ sec, proj })}
+
+    let children = sd.children
+    let tree = { sec, chd : [] }
+
+    if (children.length) {
+      for(let child of children){
+        const tr = await self.dbSecTree({ sec: child, proj })
+        if (tr && tr.tree) { tree.chd.push(tr.tree) }
+      }
+    }
+
+    return { tree }
+  }
+
 //@@ dbSecData
   async dbSecData (whr={})  {
     const self = this
@@ -933,7 +953,7 @@ const PrjClass = class {
   }
 
 //@@ secRowUpdate
-  async secRowUpdate ({ row, proj }) {
+  async secRowUpdate ({ row, proj, do_tree }) {
      const self = this
 
      const sec  = row.sec
@@ -977,6 +997,9 @@ const PrjClass = class {
      const author_ids = (await dbProc.all(self.dbc, qa, pf)).map((x) => { return x.author_id })
      const { authors } = await self.auth.dbAuth({ author_ids })
      row.authors = authors || []
+
+     if (do_tree) {
+     }
 
      return self
   }

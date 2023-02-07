@@ -114,6 +114,9 @@ class routerFactory {
     router.get('/prj/sec/data'  , self.c_Prj.jsonSecData())
     router.post('/prj/sec/data' , self.c_Prj.jsonSecData())
 
+    router.get('/prj/sec/tree'  , self.c_Prj.jsonSecTree())
+    router.get('/prj/sec/tree/html'  , self.c_Prj.htmlSecTree())
+
     router.post('/prj/sec/list', self.c_Prj.jsonSecList())
 
     router.get('/prj/sec/checklist/html' , self.c_Prj.htmlSecCheckList())
