@@ -945,7 +945,7 @@ const c_PrjClass = class {
       console.log({ sec_auth })
 
       // pdftk stage, overwrite extracted pages
-      const rwPdf = _.get(req, 'body.rwPdf', 0)
+      const rwPdf = _.get(req, 'body.rwPdf', 1)
 
       let minPage = _.get(req, 'body.minPage', 1); minPage = parseInt(minPage)
       let maxPage = _.get(req, 'body.maxPage', 5); maxPage = parseInt(maxPage)
