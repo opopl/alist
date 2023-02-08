@@ -305,7 +305,12 @@ const c_PrjClass = class {
       const proj = query.proj || self.proj
 
       const { tree } = await self.prj.dbSecTree({ sec, proj })
-      res.render('include/piece/sec_tree',{ tree })
+      const styles = {
+        wrap : {
+          btn : 'padding: 2px'
+        }
+      }
+      res.render('include/piece/sec_tree',{ tree, styles })
     }
   }
 

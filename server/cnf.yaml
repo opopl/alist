@@ -114,6 +114,8 @@ prj:
               - { width : '30%' }
               - { width : '40%' }
               rows:
+              - [ 'button submit@@Submit', '', '' ]
+
               - { 'html' : '<div id="tab_options_tabs">' }
               - { 'html' : '<ul>
                                 <li><a href="#tab_options_layout">Layout</a></li>
@@ -276,7 +278,6 @@ prj:
               - { 'html' : '</div>' }
               # }
 
-              - [ 'button submit@@Submit', '', '' ]
 
 #end: form_options }
 

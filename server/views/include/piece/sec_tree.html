@@ -1,10 +1,20 @@
 
+{% macro secWrap(sec) %}
+  <div class="prj-sec-bare" sec="{{ sec }}">
+     <div class="prj-sec-bare-ctl">
+        <button type="button" style="{{ styles.wrap.btn }}" act="expand" hidden>Expand</button>
+        <button type="button" style="{{ styles.wrap.btn }}" act="collapse">Collapse</button>
+        <span> {{ sec }} </span>
+     </div>
+  </div>
+{% endmacro %}
+
 {% macro ulTree(tree) %}
   {% set sec = tree.sec %}
   {% set childTrees = tree.chd %}
 
   {% if sec %}
-    {{ sec }}
+    {{ secWrap(sec) }}
   {% endif %}
   {% if childTrees and childTrees | isArr and childTrees | length %}
     <ul>
@@ -15,6 +25,16 @@
   {% endif %}
 {% endmacro %}
 
+<div class="prj-flex-row prj-sec-tree-control">
+    <button type="button">Collapse</button>
+    <button type="button">Expand</button>
+    <button type="button">Select All</button>
+    <button type="button">Clear Selection</button>
+    <button type="button">Exclude Selected</button>
+</div>
+
 {% if tree %}
+<div class="prj-sec-tree">
   {{ ulTree(tree) }}
+</div>
 {% endif %}
