@@ -114,7 +114,8 @@ prj:
               - { width : '30%' }
               - { width : '40%' }
               rows:
-              - [ 'button submit@@Submit', '', '' ]
+              - [ [ 'button submit@@Submit', 'button button@act=clear@Clear' ],
+                '','' ]
 
               - { 'html' : '<div id="tab_options_tabs">' }
               - { 'html' : '<ul>
@@ -123,6 +124,7 @@ prj:
                                 <li><a href="#tab_options_exclude">Exclude</a></li>
                                 <li><a href="#tab_options_col_align">Column Alignment</a></li>
                                 <li><a href="#tab_options_tree">Tree</a></li>
+                                <li><a href="#tab_options_pictures">Pictures</a></li>
                             </ul>
                            '
                 }
@@ -140,7 +142,7 @@ prj:
                   {
                     tag : 'select',
                     attr : { name : 'patch.vars.layout.doc.font.size' },
-                    options : [ '11pt', '12pt', '13pt', '20pt' ]
+                    options : [ '11pt', '12pt', '14pt', '17pt', '2pt' ]
                   },
                   'label@@ vars.layout.doc.font.size',
                 ]
@@ -177,21 +179,21 @@ prj:
 # ------------------------------ exclude --------------------------
 ###form_options.exclude {
               - { 'html' : '<div id="tab_options_exclude">' }
-              - [ 'label@@ Exclude Comments',
-                  {
-                    tag : 'input',
-                    wrap : [
-                        '<div class="prj-toggle">',
-                        '<label for="cbx_exclude_cmt">excluded</label></div>'
-                    ],
-                    attr : {
-                        type : 'checkbox',
-                        name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.cmt',
-                        id : 'cbx_exclude_cmt',
-                    }
-                  },
-                  { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.pic.ui_import' },
-                ]
+#              - [ 'label@@ Exclude Comments',
+                  #{
+                    #tag : 'input',
+                    #wrap : [
+                        #'<div class="prj-toggle">',
+                        #'<label for="cbx_exclude_cmt">excluded</label></div>'
+                    #],
+                    #attr : {
+                        #type : 'checkbox',
+                        #name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.cmt',
+                        #id : 'cbx_exclude_cmt',
+                    #}
+                  #},
+                  #{ tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.cmt' },
+                #]
               - [ 'label@@ Exclude Pictures (Import)',
                   {
                     tag : 'input',
@@ -277,7 +279,31 @@ prj:
               - { 'html' : '    </div>' }
               - { 'html' : '</div>' }
               # }
+              #
+###form_options.pictures {
+              - { 'html' : '<div id="tab_options_pictures">' }
+              # ------------------
+              - { 'html' : '<h3>UI Import</h3>' }
+              - [ 'label@@ Limit:',
+                    { 'tag' : 'input',
+                      'attr' : {
+                         'type' : 'text',
+                         'value' : '0',
+                         'name' : 'patch.vars.img.gen.sql.ui_import.limit'
+                       }
+                    }, '' ]
+              - [ 'label@@ Offset:',
+                    { 'tag' : 'input',
+                      'attr' : {
+                         'type' : 'text',
+                         'value' : '0',
+                         'name' : 'patch.vars.img.gen.sql.ui_import.offset'
+                       }
+                    }, '' ]
 
+              # ------------------
+              - { 'html' : '</div>' }
+              # }
 
 #end: form_options }
 
