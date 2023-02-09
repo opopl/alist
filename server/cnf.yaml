@@ -283,8 +283,21 @@ prj:
 ###form_options.pictures {
               - { 'html' : '<div id="tab_options_pictures">' }
               # ------------------
+              - { 'html' : '<h3>All</h3>' }
+              - [ 'label@@ Caption numbers:',
+                  {
+                    tag : 'select',
+                    attr : { 
+                        name : 'patch/opts_maker/processor/_d2tex/caption/numbering',
+                        disabled : 1,
+                    },
+                    options : [ 1, 0 ]
+                  },
+                  'label@@ patch/opts_maker/processor/_d2tex/caption/numbering',
+              ]
+              #
               - { 'html' : '<h3>UI Import</h3>' }
-              - [ 'label@@ Limit:',
+              - [ 'label@@ (SQL) Limit:',
                     { 'tag' : 'input',
                       'attr' : {
                          'type' : 'text',
@@ -292,12 +305,20 @@ prj:
                          'name' : 'patch.vars.img.gen.sql.ui_import.limit'
                        }
                     }, '' ]
-              - [ 'label@@ Offset:',
+              - [ 'label@@ (SQL) Offset:',
                     { 'tag' : 'input',
                       'attr' : {
                          'type' : 'text',
                          'value' : '0',
                          'name' : 'patch.vars.img.gen.sql.ui_import.offset'
+                       }
+                    }, '' ]
+              - [ 'label@@ Layout:',
+                    { 'tag' : 'input',
+                      'attr' : {
+                         'type' : 'text',
+                         'value' : '',
+                         'name' : 'patch.vars.img.gen.ui_import.tab.layout'
                        }
                     }, '' ]
 
