@@ -1,0 +1,50 @@
+
+<div class="prj-flex-row-bare">
+  <button type="button" act="toggle_author_info" title_hidden="Show" title_shown="Hide">Hide</button>
+  <h3>Info</h3>
+</div>
+
+<div class="prj-author-info">
+  <div class="prj-form">
+
+    <div class="prj-form-row">
+      <div class="prj-form-col" col=1 style="width: 10%">
+         <label for="plain"> Id: </label>
+      </div>
+      <div class="prj-form-col" col=2 style="width: 30%">
+         <input type="text" name='plain' value="{{ author.id }}" disabled>
+      </div>
+    </div>
+
+    <div class="prj-form-row">
+      <div class="prj-form-col" col=1 style="width: 10%">
+         <label for="plain"> Plain: </label>
+      </div>
+      <div class="prj-form-col" col=2 style="width: 30%">
+         <input type="text" name='plain' value="{{ author.plain }}">
+      </div>
+    </div>
+
+    <div class="prj-form-row">
+      <div class="prj-form-col" col=1 style="width: 10%">
+         <label for="plain"> Name: </label>
+      </div>
+      <div class="prj-form-col" col=2 style="width: 30%">
+         <input type="text" name='name' value="{{ author.name }}">
+      </div>
+    </div>
+
+    <div class="prj-form-row">
+      <div class="prj-form-col" col=1 style="width: 10%">
+         <label for="plain"> URL: </label>
+      </div>
+      <div class="prj-form-col" col=2 style="width: 30%">
+         <input type="text" name='name' value="{{ author.url }}">
+      </div>
+    </div>
+
+  </div>
+
+{{ author | dump }}
+</div>
+

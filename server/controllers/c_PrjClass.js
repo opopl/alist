@@ -1262,11 +1262,22 @@ const c_PrjClass = class {
     }
   }
 
-//@@ tmplAuthInfo
-  tmplAuthInfo ()  {
+//@@ jsonAuthInfo
+  jsonAuthInfo ()  {
     const self = this
 
     return async (req, res) => {
+      const id = req.query.id
+
+      const q = `SELECT * FROM authors
+        INNER JOIN auth_details
+        ON authors.id = auth_details.id
+        WHERE authors.id = ?
+      `
+      const p  = [ id ]
+
+      const info = await dbProc.get(self.dbc, q, p)
+      return res.send(info)
     }
   }
 

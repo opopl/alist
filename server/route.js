@@ -165,7 +165,7 @@ class routerFactory {
     // json - create new author
     router.post('/prj/auth/new', self.c_Prj.jsonAuthNew())
 
-    router.get('/prj/auth/info/tmpl', self.c_Prj.tmplAuthInfo())
+    router.get('/prj/auth/info', self.c_Prj.jsonAuthInfo())
 
 //@@ Tags
     router.get('/prj/tag/html', self.c_Prj.htmlTagSecs())

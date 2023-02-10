@@ -3,7 +3,13 @@
 {% import "import/sec_list_table.html" as slt with context %}
 
 {% block content %}
+
   <h1>{{author.plain}}</h1>
+
+  {% include "include/piece/author_info.html" %}
+
+  <h3>Publications</h3>
+
   {{ slt.table(secRows, cols, header) }}
  
 <!---->
