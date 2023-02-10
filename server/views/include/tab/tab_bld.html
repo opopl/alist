@@ -3,7 +3,13 @@
 
 <div id="builds">
   <div style="{{ styles.row }}">
-    <button name="btn_delete_all" class="prj-btn">Delete All</button>
+    <button act="delete" class="prj-btn">Delete</button>
+		<select name="delete_options">
+			<option value="all" selected>All</option>
+			<option value="running">Running</option>
+			<option value="fail">Failed</option>
+			<option value="success">Success</option>
+		</select>
 
     <div class='prj-radio-group prj-toggle'>
       <input type="radio" id="radio_bld_run" name="bld">

@@ -289,7 +289,7 @@ prj:
                     tag : 'select',
                     attr : { 
                         name : 'patch/opts_maker/processor/_d2tex/caption/numbering',
-                        disabled : 1,
+                        #disabled : 1,
                     },
                     options : [ 1, 0 ]
                   },
