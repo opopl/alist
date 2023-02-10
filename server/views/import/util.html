@@ -1,6 +1,8 @@
 
 {% macro attrStr(dict={}) %}
-  {% for key, value in dict %}
-    {{ key }} = "{{ value }}" 
-  {% endfor %}
+  {% if dict and dict | isObj %}
+    {% for key, value in dict %}
+      {{ key }} = "{{ value }}"
+    {% endfor %}
+  {% endif %}
 {% endmacro %}

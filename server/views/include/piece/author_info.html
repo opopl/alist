@@ -1,4 +1,5 @@
 
+
 <div class="prj-flex-row-bare">
   <button type="button" act="toggle_author_info" title_hidden="Show" title_shown="Hide">Hide</button>
   <h3>Info</h3>
@@ -6,45 +7,31 @@
 
 <div class="prj-author-info">
   <div class="prj-form">
+    {% set form = authInfoForm %}
+    {% set rows = form.rows %}
 
-    <div class="prj-form-row">
-      <div class="prj-form-col" col=1 style="width: 10%">
-         <label for="plain"> Id: </label>
-      </div>
-      <div class="prj-form-col" col=2 style="width: 30%">
-         <input type="text" name='plain' value="{{ author.id }}" disabled>
-      </div>
-    </div>
+    {% for row in rows %}
+      {% set label = row.label %}
+      {% set key = row.key %}
+      {% set type = row.type %}
+      {% set attr = row.attr %}
+      {% set attrStr = util.attrStr(row.attr) %}
 
-    <div class="prj-form-row">
-      <div class="prj-form-col" col=1 style="width: 10%">
-         <label for="plain"> Plain: </label>
+      <div class="prj-form-row">
+        <div class="prj-form-col" col=1 style="width: 10%">
+           <label for="plain"> {{ label }} </label>
+        </div>
+        <div class="prj-form-col" col=2 style="width: 30%">
+           {% if type == 'url' %}
+              {% set url = author | get(key)  %}
+              <a href="{{ url }}" name="{{ key }}" target="_blank">{{ url }}</a>
+           {% else %}
+              <input type="text" name="{{ key }}" value="{{ author | get(key) }}" {{ attrStr | safe }}>
+           {% endif %}
+        </div>
       </div>
-      <div class="prj-form-col" col=2 style="width: 30%">
-         <input type="text" name='plain' value="{{ author.plain }}">
-      </div>
-    </div>
-
-    <div class="prj-form-row">
-      <div class="prj-form-col" col=1 style="width: 10%">
-         <label for="plain"> Name: </label>
-      </div>
-      <div class="prj-form-col" col=2 style="width: 30%">
-         <input type="text" name='name' value="{{ author.name }}">
-      </div>
-    </div>
-
-    <div class="prj-form-row">
-      <div class="prj-form-col" col=1 style="width: 10%">
-         <label for="plain"> URL: </label>
-      </div>
-      <div class="prj-form-col" col=2 style="width: 30%">
-         <input type="text" name='name' value="{{ author.url }}">
-      </div>
-    </div>
+    {% endfor %}
 
   </div>
-
-{{ author | dump }}
 </div>
 

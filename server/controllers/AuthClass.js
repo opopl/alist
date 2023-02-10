@@ -33,7 +33,9 @@ const AuthClass = class {
      }else if(author_id){
        const q_auth = select(`*`)
               .from('authors')
-              .where({ id : author_id })
+              .innerJoin('auth_details')
+              .on({ 'authors.id' : 'auth_details.id' })
+              .where({ 'authors.id' : author_id })
               .toParams({placeholder: '?%d'})
 
        const author = await dbProc.get(self.dbc, q_auth.text, q_auth.values)

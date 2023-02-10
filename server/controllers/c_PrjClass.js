@@ -1258,7 +1258,9 @@ const c_PrjClass = class {
         await self.prj.secRowUpdate({ row })
       }
 
-      return res.render('auth_secs.html',{ secRows, header, cols, author, _get })
+      const authInfoForm = self.getConfig({ path : 'methods.htmlAuthSecs.authInfoForm' }) || []
+
+      return res.render('auth_secs.html',{ secRows, header, cols, author, authInfoForm })
     }
   }
 

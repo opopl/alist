@@ -287,7 +287,7 @@ prj:
               - [ 'label@@ Caption numbers:',
                   {
                     tag : 'select',
-                    attr : { 
+                    attr : {
                         name : 'patch/opts_maker/processor/_d2tex/caption/numbering',
                         #disabled : 1,
                     },
@@ -529,6 +529,26 @@ prj:
                _html : 'html'
                _pdf : 'pdf'
                _check : ''
+             authInfoForm:
+               rows:
+               - key: 'id'
+                 label: 'Id'
+                 attr: { disabled : 1 }
+               - key: 'name'
+                 label: 'Name'
+               - key: 'plain'
+                 label: 'Plain'
+               - key: 'url'
+                 label: 'URL'
+                 type: 'url'
+               - key: 'fb_url'
+                 label: 'Facebook URL'
+                 type : 'url'
+               - key: 'fb_id'
+                 label: 'Facebook Id'
+               - key: 'description'
+                 label: 'Description'
+
           htmlTagSecs:
              cols:
                db:
