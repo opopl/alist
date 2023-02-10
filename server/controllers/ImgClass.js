@@ -346,7 +346,7 @@ const ImgClass = class {
 
     if(Array.isArray(iBuf)){
       for(let b of iBuf){
-         self.dbImgStoreBuf({ iBuf: b, force, ...idb })
+         await self.dbImgStoreBuf({ iBuf: b, force, ...idb })
       }
       return self
     }
@@ -391,8 +391,19 @@ const ImgClass = class {
     const local = path.join(self.imgRoot, img)
 
     if(!fs.existsSync(local) || !saved_md5){
-      const writer = fs.createWriteStream(local)
-      writer.write(iBuf)
+      console.log({ msg : '[ImgClass.dbImgStoreBuf] - write file' })
+      const ws = new Promise((resolve, reject) => {
+        const stream = fs.createWriteStream(local)
+        stream.on('open',() => {
+          stream.write(iBuf)
+          resolve('done')
+        })
+        //.on('finish',() => {
+          //console.log({ msg : 'stream finish' })
+          //resolve('done')
+        //})
+      })
+      await ws
     }
 
     //const e = exifReader.load(buf,{expanded: true, includeUnknown: true})
@@ -402,6 +413,7 @@ const ImgClass = class {
     const tInfo = '_info_imgs_tags'
 
     if (!saved) {
+      console.log({ msg : '[ImgClass.dbImgStoreBuf] - insert => db' })
 
       if (!saved_md5) {
         const ins = {
@@ -452,7 +464,7 @@ const ImgClass = class {
 
     if(Array.isArray(iFile)){
       for(let f of iFile){
-         self.dbImgStoreFile({ iFile: f, ...idb })
+         await self.dbImgStoreFile({ iFile: f, ...idb })
       }
       return self
     }

@@ -401,6 +401,8 @@ prj:
               - { width : '10%' }
               - { width : '60%' }
               rows:
+              - { 'html' : '<h3>Pictures by URL</h3>' }
+              - { 'html' : '  <div id="upload_pics_by_url">' }
               - [ 'label@@ URL:','','input text@ class=prj-input-url id=input_pic_url name=url' ]
               - [ 'label@@ Caption:','','input text@ name=caption' ]
               - [
@@ -408,7 +410,13 @@ prj:
                     'button button@ id=btn_pic_clear  @Clear Pics', '',
                 ]
 
-              - [ 'button button@ name=load_scrn_fs @Load Screenshots From Filesystem','','' ]
+              - { 'html' : '  </div>' }
+              - { 'html' : '<h3>Screenshots from FS</h3>' }
+              - { 'html' : '  <div id="upload_scrn_from_fs">' }
+              - [ 'button button@ name=load_scrn_fs @Load Screenshots From Filesystem', '','' ]
+              - [ 'label@@Scrn Limit:', '', 'input text@name=scrn_limit']
+
+              - { 'html' : '  </div>' }
 #end: form_pics_upload }
 
 ###form_img_edit

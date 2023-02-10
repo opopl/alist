@@ -275,7 +275,7 @@ const c_PrjClass = class {
             const bn = path.basename(iFile)
 
             i+=1
-            //if (i == 5) { break}
+            //if (i == 40) { break}
 
             console.log(`[jsonSecFsLoadScrn] Processing file: ${bn}`)
             console.log(`[jsonSecFsLoadScrn]  mtimeMs: ${stats.mtimeMs}`)
