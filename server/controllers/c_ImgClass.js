@@ -263,6 +263,16 @@ const c_ImgClass = class {
     }
   }
 
+//@@ jsonImgInfo
+//@r POST /img/info
+  jsonImgInfo(){
+    const self = this
+
+    return async (req, res) => {
+      whr = req.body
+    }
+  }
+
 //@@ jsonImgData
 //@r POST /img/data
 //@r GET /img/data/:inum

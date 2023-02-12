@@ -443,6 +443,14 @@ prj:
                            '
                 }
               - { 'html' : '<div id="form_img_data_tab_db">' }
+              - { 'html' : '<div class="prj-toggle">
+                              <input type="radio" id="cbx_img_main" name="slc">
+                              <label for="cbx_img_main">Main</label>
+
+                              <input type="radio" id="cbx_img_dpl" name="slc">
+                              <label for="cbx_img_dpl">Duplicate</label>
+                            </div>
+                '}
               - [ 'label@@ url','button button@@copy','input text@ name=url disabled' ]
               - [ 'label@@ url md5','','input text@ name=md5_url disabled' ]
               - [ 'label@@ inum','','input text@name=inum disabled' ]
