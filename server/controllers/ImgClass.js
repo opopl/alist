@@ -132,13 +132,13 @@ const ImgClass = class {
     return self
   }
 
-//@@ dbImgData
-  async dbImgData (whr={}) {
+  dbImgUm ({ whr, cols, colsUm }) {
     const self = this
 
-    const cols = _.get(self, 'tableInfo.imgs.cols', [])
-    const colsUm = _.get(self, 'tableInfo.url2md5.cols', [])
+    if(!colsUm) { colsUm = _.get(self, 'tableInfo.url2md5.cols', []) }
     //const colsUm = ['url','md5','mtime','sec','proj']
+    if(!cols){ cols = _.get(self, 'tableInfo.imgs.cols', []) }
+
     const fi = cols.map((x) => {
       const str = colsUm.includes(x) ? `um.${x} AS ${x}` : `i.${x} AS ${x}`
       return str
@@ -150,6 +150,16 @@ const ImgClass = class {
         delete whr[col]
       }
     }
+
+    return { whr, fi }
+  }
+
+//@@ dbImgData
+  async dbImgData (whr={}) {
+    const self = this
+
+
+    const { fi } = self.dbImgUm({ whr })
 
     const q_data = select(fi)
                 .from('url2md5 AS um')
