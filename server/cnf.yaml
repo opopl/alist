@@ -428,13 +428,21 @@ prj:
               rows:
               - [ 'label@@ Caption','','input text@ class=prj-img-caption name=caption' ]
               - [ 'label@@ URL','button button@@Copy','input text@ class=prj-img-url name=url disabled' ]
-###form_img_data
+###form_img_data {
             'form_img_data':
               cols:
               - { width : '10%' }
               - { width : '20%' }
               - { width : '60%' }
               rows:
+              - { 'html' : '<div id="form_img_data_tabs">' }
+              - { 'html' : '<ul>
+                                <li><a href="#form_img_data_tab_db">Database</a></li>
+                                <li><a href="#form_img_data_tab_info">Image Info</a></li>
+                            </ul>
+                           '
+                }
+              - { 'html' : '<div id="form_img_data_tab_db">' }
               - [ 'label@@ url','button button@@copy','input text@ name=url disabled' ]
               - [ 'label@@ url md5','','input text@ name=md5_url disabled' ]
               - [ 'label@@ inum','','input text@name=inum disabled' ]
@@ -468,6 +476,12 @@ prj:
               - [ 'label@@ proj','','input text@name=proj disabled' ]
               - [ 'label@@ sec','','input text@name=sec disabled' ]
               - [ 'label@@ rootid','','input text@name=rootid disabled' ]
+
+              - { 'html' : '</div>' }
+              - { 'html' : '<div id="form_img_data_tab_info">' }
+              - { 'html' : '</div>' }
+              - { 'html' : '</div>' }
+#           }
 ###form_img_search
             'form_img_search':
               cols:
@@ -681,7 +695,7 @@ prj:
                 height: 100
 
              dialog_img_data:
-                title: "Image Database Data"
+                title: "Image Data"
 
              dialog_img_edit:
                 title: "Image Edit"
