@@ -11,12 +11,15 @@
     {{ wrap[0] | safe }}
   {% endif %}
 
-  <{{ tag }} {{ util.attrStr(attr) | safe }}>
+  {% if tag %}
+    <{{ tag }} {{ util.attrStr(attr) | safe }}>
+  {% endif %}
+
   {% if inner and inner | isStr %}
     {{ inner | safe }}
   {% endif %}
 
-  {% if tag == 'select' %}
+  {% if tag and tag == 'select' %}
     {% set options = cell.options %}
     {% if options %}
          {% for option in options %}
@@ -25,7 +28,9 @@
     {% endif %}
   {% endif %}
 
-  </{{ tag }}>
+  {% if tag %}
+    </{{ tag }}>
+  {% endif %}
 
   {% if wrap and wrap | isArr and wrap | length == 2 %}
     {{ wrap[1] | safe }}

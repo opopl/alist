@@ -125,6 +125,7 @@ const c_ImgClass = class {
 
       const whr = _.get(data,'where',{})
       const upd = _.get(data,'update',{})
+      const act = _.get(data,'act','')
 
       const canUpdate = [ 'caption', 'name', 'name_orig', 'tags' ]
       for(var key in upd){
@@ -132,6 +133,18 @@ const c_ImgClass = class {
           delete upd[key]
         }
       }
+
+      if (act == 'update_mtime_fs') {
+        const imgData = await self.imgman.dbImgData(whr)
+        const imgFile = path.join(self.imgRoot, imgData.img)
+        const stats = fs.statSync(imgFile)
+        const mtime_fs = Math.trunc(stats.mtimeMs/1000)
+        const mtime_db = imgData.mtime
+        if (mtime_fs !== mtime_db) { }
+        return res.status(200).send({ 'msg' : 'update ok', imgData })
+      }
+
+      return res.send({})
 
       const q = update('imgs',upd)
                   .where(whr)

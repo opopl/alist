@@ -103,7 +103,7 @@ const ImgClass = class {
     const self = this
 
     const cols = _.get(self, 'tableInfo.imgs.cols', [])
-    const colsEq = ['url','md5','sec','proj']
+    const colsEq = ['url','md5','mtime','sec','proj']
     const fi = cols.map((x) => {
       const str = colsEq.includes(x) ? `um.${x} AS ${x}` : `i.${x} AS ${x}`
       return str

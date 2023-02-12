@@ -604,16 +604,22 @@ const PrjClass = class {
                 //.orderBy('mtime')
                 //.toParams({placeholder: '?%d'})
 
-       const fi = ['sec','url','caption','name'].map(x => {
+       const fi = ['sec','url','caption','name','mtime'].map(x => {
          const str = x == 'url' ? `um.url url` : `i.${x} ${x}`
          return str
        })
+       const w = {
+          'um.proj' : proj,
+          'um.sec': child,
+          //'um.md5' : '49674ec7441bc69afa6c1e4a09952af9'
+       }
        const q = select(fi).from('url2md5 um')
                 .innerJoin('imgs i')
                 .on({ 'um.md5' : 'i.md5' })
-                .where({ 'um.proj' : proj, 'um.sec': child })
-                .orderBy('i.mtime')
+                .where(w)
+                .orderBy('um.mtime')
                 .toParams({placeholder: '?%d'})
+       console.log({ txt: q.text, para : q.values })
 
        const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
        for(let rw of rows){

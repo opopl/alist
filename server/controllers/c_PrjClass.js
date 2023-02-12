@@ -446,7 +446,8 @@ const c_PrjClass = class {
         ref = JSON.parse(data)
       }
 
-      var data = await self.prj.dbSecPicData(ref)
+      const data = await self.prj.dbSecPicData(ref)
+      console.log({ cnt : data.length })
 
       if (data) {
         res.status(200).json(data)

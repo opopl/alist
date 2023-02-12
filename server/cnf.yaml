@@ -432,7 +432,7 @@ prj:
             'form_img_data':
               cols:
               - { width : '10%' }
-              - { width : '10%' }
+              - { width : '20%' }
               - { width : '60%' }
               rows:
               - [ 'label@@ url','button button@@copy','input text@ name=url disabled' ]
@@ -452,7 +452,19 @@ prj:
               - [ 'label@@ height','','input text@name=height disabled' ]
 
               - [ 'label@@ url_parent','','input text@name=url_parent disabled' ]
-              - [ 'label@@ mtime','','input text@name=mtime disabled' ]
+              - [
+                  'label@@ mtime',
+                  #{ 'tag' : 'select', attr: { 'act' : 'update_mtime' }, options : [ 'now', 'fs' ] },
+                  { 'inner' : '
+                          <div class="prj-flex-row-bare">
+                              <button type="button" act="update_mtime">update</button>
+                              <select>
+                                  <option value="fs">fs</option>
+                                  <option value="now">now</option>
+                              </select>
+                          </div>' },
+                  'input text@name=mtime disabled'
+                ]
               - [ 'label@@ proj','','input text@name=proj disabled' ]
               - [ 'label@@ sec','','input text@name=sec disabled' ]
               - [ 'label@@ rootid','','input text@name=rootid disabled' ]
