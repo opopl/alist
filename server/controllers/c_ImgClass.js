@@ -128,11 +128,6 @@ const c_ImgClass = class {
       const act = _.get(data,'act','')
 
       const canUpdate = [ 'caption', 'name', 'name_orig', 'tags' ]
-      for(var key in upd){
-        if (!canUpdate.includes(key)) {
-          delete upd[key]
-        }
-      }
 
       if (act == 'update_mtime_fs') {
         const imgData = await self.imgman.dbImgData(whr)
@@ -140,22 +135,26 @@ const c_ImgClass = class {
         const stats = fs.statSync(imgFile)
         const mtime_fs = Math.trunc(stats.mtimeMs/1000)
         const mtime_db = imgData.mtime
-        if (mtime_fs !== mtime_db) { }
-        return res.status(200).send({ 'msg' : 'update ok', imgData })
+        if (mtime_fs !== mtime_db) {
+          await self.imgman.dbImgUpdate({ whr,
+            upd : { mtime : mtime_fs },
+            on_success : async () => {
+              const idata = await self.imgman.dbImgData(whr)
+              res.status(200).send({ 'msg' : 'update ok', imgData : idata })
+            }
+          })
+        }
+        return
       }
 
-      return res.send({})
-
-      const q = update('imgs',upd)
-                  .where(whr)
-                  .toParams({ placeholder: '?%d' })
-
-      try {
-        await dbProc.run(self.dbc, q.text, q.values)
-        return res.status(200).send({ 'msg' : 'update ok'})
-      } catch(e) {
-        return res.status(404).send({ 'msg' : 'update fail'})
+      const on_success = () => {
+        return res.status(200).send({ 'msg' : 'img update ok'})
       }
+      const on_fail = (e) => {
+        return res.status(500).send({ 'msg' : `img update fail: ${e}` })
+      }
+
+      await self.imgman.dbImgUpdate({ whr, upd, canUpdate, on_success, on_fail })
     }
   }
 

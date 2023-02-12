@@ -98,19 +98,54 @@ const ImgClass = class {
     return buf
   }
 
+//@@ dbImgUpdate
+// mandatory: upd {}, whr {}
+// optional: canUpdate [], on_success func, on_fail func
+  async dbImgUpdate ({ upd, whr, canUpdate, on_success, on_fail }) {
+    const self = this
+
+    let ok = true; ok = ok && upd && whr
+    if (!ok) { return self }
+
+    if (canUpdate && Array.isArray(canUpdate) && canUpdate.length) {
+      for(var key in upd){
+        if (!canUpdate.includes(key)) {
+          delete upd[key]
+        }
+      }
+    }
+
+    const qq = []
+    qq.push(update('imgs',upd)
+                .where(whr)
+                .toParams({ placeholder: '?%d' }))
+
+    try {
+      for(let q of qq){
+        await dbProc.run(self.dbc, q.text, q.values)
+      }
+      if (on_success) { on_success() }
+    } catch(e) {
+      if (on_fail) { on_fail(e) }
+    }
+
+    return self
+  }
+
 //@@ dbImgData
   async dbImgData (whr={}) {
     const self = this
 
     const cols = _.get(self, 'tableInfo.imgs.cols', [])
-    const colsEq = ['url','md5','mtime','sec','proj']
+    const colsUm = _.get(self, 'tableInfo.url2md5.cols', [])
+    //const colsUm = ['url','md5','mtime','sec','proj']
     const fi = cols.map((x) => {
-      const str = colsEq.includes(x) ? `um.${x} AS ${x}` : `i.${x} AS ${x}`
+      const str = colsUm.includes(x) ? `um.${x} AS ${x}` : `i.${x} AS ${x}`
       return str
     }).join(',')
 
     for (let [col, value] of Object.entries(whr)) {
-      if (colsEq.includes(col)) {
+      if (colsUm.includes(col)) {
         whr[`um.${col}`] = whr[col]
         delete whr[col]
       }
