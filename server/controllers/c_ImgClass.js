@@ -126,20 +126,39 @@ const c_ImgClass = class {
       const whr = _.get(data,'where',{})
       const upd = _.get(data,'update',{})
       const act = _.get(data,'act','')
+      const actOpts = _.get(data,'actOpts',{})
 
       const canUpdate = [ 'caption', 'name', 'name_orig', 'tags' ]
 
-      if (act == 'update_mtime_fs') {
+      if (act == 'update_mtime') {
         const imgData = await self.imgman.dbImgData(whr)
         const imgFile = path.join(self.imgRoot, imgData.img)
-        const stats = fs.statSync(imgFile)
-        const mtime_fs = Math.trunc(stats.mtimeMs/1000)
+
+        const mode = _.get(actOpts, 'mode', '')
+        if (!mode) { return res.status(500).send({ 'msg' : 'no update_mtime mode!' }) }
+
+        let ok = true, upda = {}
+
         const mtime_db = imgData.mtime
-        if (mtime_fs !== mtime_db) {
-          await self.imgman.dbImgUpdate({ whr,
-            upd : { mtime : mtime_fs },
+        if (mode == 'fs') {
+          const stats = fs.statSync(imgFile)
+          const mtime_fs = Math.trunc(stats.mtimeMs/1000)
+          ok = ok && (mtime_fs !== mtime_db)
+          upda = { mtime : mtime_fs }
+        }else if (mode == 'now') {
+          const mtimeNowJs = Date.now()
+          const mtimeNow = Math.trunc(mtimeNowJs/1000)
+          upda = { mtime : mtimeNow }
+        }else{
+          ok = false
+          return res.status(500).send({ 'msg' : `update_mtime mode: ${mode} not implemented!` })
+        }
+
+        if (ok) {
+          await self.imgman.dbImgUpdate({ whr, upd : upda,
             on_success : async () => {
               const idata = await self.imgman.dbImgData(whr)
+              console.log({ msg : 'success update_mtime' })
               res.status(200).send({ 'msg' : 'update ok', imgData : idata })
             }
           })

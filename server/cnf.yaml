@@ -459,8 +459,8 @@ prj:
                           <div class="prj-flex-row-bare">
                               <button type="button" act="update_mtime">update</button>
                               <select>
-                                  <option value="fs">fs</option>
                                   <option value="now">now</option>
+                                  <option value="fs">fs</option>
                               </select>
                           </div>' },
                   'input text@name=mtime disabled'

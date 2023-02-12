@@ -114,11 +114,25 @@ const ImgClass = class {
         }
       }
     }
-
     const qq = []
     qq.push(update('imgs',upd)
                 .where(whr)
                 .toParams({ placeholder: '?%d' }))
+
+    const colsUm = _.get(self, 'tableInfo.url2md5.cols', [])
+    let ok_um, ok_um_upd, ok_um_whr
+    for(let col of colsUm){
+      if (col in whr) { ok_um_whr = true }
+      if (col in upd) { ok_um_upd = true }
+
+      if (ok_um_whr && ok_um_upd) { ok_um = true; break }
+    }
+
+    if (ok_um) {
+        qq.push(update('url2md5',upd)
+              .where(whr)
+              .toParams({ placeholder: '?%d' }))
+    }
 
     try {
       for(let q of qq){
@@ -132,6 +146,7 @@ const ImgClass = class {
     return self
   }
 
+//@@ dbImgUm
   dbImgUm ({ whr, cols, colsUm }) {
     const self = this
 
@@ -139,33 +154,34 @@ const ImgClass = class {
     //const colsUm = ['url','md5','mtime','sec','proj']
     if(!cols){ cols = _.get(self, 'tableInfo.imgs.cols', []) }
 
+    const whrUm = { ...whr }
+
     const fi = cols.map((x) => {
       const str = colsUm.includes(x) ? `um.${x} AS ${x}` : `i.${x} AS ${x}`
       return str
     }).join(',')
 
-    for (let [col, value] of Object.entries(whr)) {
+    for (let [col, value] of Object.entries(whrUm)) {
       if (colsUm.includes(col)) {
-        whr[`um.${col}`] = whr[col]
-        delete whr[col]
+        whrUm[`um.${col}`] = whrUm[col]
+        delete whrUm[col]
       }
     }
 
-    return { whr, fi }
+    return { whrUm, fi }
   }
 
 //@@ dbImgData
   async dbImgData (whr={}) {
     const self = this
 
-
-    const { fi } = self.dbImgUm({ whr })
+    const { fi, whrUm } = self.dbImgUm({ whr })
 
     const q_data = select(fi)
                 .from('url2md5 AS um')
                 .innerJoin('imgs AS i')
                 .on({ 'um.md5' : 'i.md5' })
-                .where(whr)
+                .where(whrUm)
                 .toParams({placeholder: '?%d'})
     const q = q_data.text
 
