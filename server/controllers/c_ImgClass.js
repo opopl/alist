@@ -282,15 +282,18 @@ const c_ImgClass = class {
     return async (req, res) => {
       const params = req.params
 
-      let whr = {}
+      let whr = {}, more = {}
       if (req.method == 'GET') {
         const inum = _.get(params,'inum')
         whr = { inum }
       }else{
-        whr = req.body
+        const dataJson = req.body.data
+        const data = JSON.parse(dataJson)
+        whr = data.whr
+        more = data.more
       }
 
-      const rw = await self.imgman.dbImgData(whr)
+      const rw = await self.imgman.dbImgData(whr,more)
       if (rw) {
         res.send(rw)
       }else{

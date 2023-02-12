@@ -172,7 +172,7 @@ const ImgClass = class {
   }
 
 //@@ dbImgData
-  async dbImgData (whr={}) {
+  async dbImgData (whr={},more={}) {
     const self = this
 
     const { fi, whrUm } = self.dbImgUm({ whr })
@@ -186,8 +186,26 @@ const ImgClass = class {
     const q = q_data.text
 
     const rw = await dbProc.get(self.dbc, q_data.text, q_data.values)
-    if (rw) {
-      if (rw.url) { rw.md5_url = srvUtil.md5hex(rw.url) }
+    if (!rw) { return }
+
+    if (rw.url) { rw.md5_url = srvUtil.md5hex(rw.url) }
+    rw.more = {}
+
+    const { md5, url } = { ...rw }
+    if (more) {
+      if (more.dpl) {
+        const q_dpl = select('count(*) cnt')
+          .from('url2md5 um').where({ md5 })
+          .toParams({placeholder: '?%d'})
+        const rw_dpl = await dbProc.get(self.dbc, q_dpl.text, q_dpl.values)
+        const cnt = rw_dpl.cnt
+        rw.more.has_dpl = cnt > 1 ? true : false
+        const q_main = select('count(*) cnt')
+          .from('imgs').where({ url })
+          .toParams({placeholder: '?%d'})
+        const rw_main = await dbProc.get(self.dbc, q_main.text, q_main.values)
+        rw.more.is_main = rw_main.cnt ? true : false
+      }
     }
 
     return rw
