@@ -585,8 +585,8 @@ const PrjClass = class {
 
     if (!proj) { proj = self.proj }
 
-    offset = offset || 0
-    limit = limit || 0
+    offset = parseInt(offset || 1)
+    limit = parseInt(limit || 0)
 
     var picData = []
 
@@ -639,8 +639,8 @@ const PrjClass = class {
           if (!okt) { continue }
 
           var ok = true
-          ok = ok && (picIndex >= offset)
-          if (limit) { ok = ok && ((picIndex-offset) < limit) }
+          ok = ok && (picIndex >= (offset-1))
+          if (limit) { ok = ok && ((picIndex-offset+1) < limit) }
 
           rw = { ...rw, tags, picIndex }
           picIndex += 1
