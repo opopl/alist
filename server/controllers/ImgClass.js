@@ -509,7 +509,7 @@ const ImgClass = class {
       }
 
       const { sec, proj } = { ...idb }
-      const qum = insert('url2md5',{ url, md5, sec, proj })
+      const qum = insert('url2md5',{ url, md5, mtime, sec, proj })
                     .toParams({placeholder: '?%d'})
       await dbProc.run(self.dbc, qum.text, qum.values)
 
