@@ -580,10 +580,13 @@ const PrjClass = class {
   }
 
 //@@ dbSecPicData
-  async dbSecPicData ({ proj, sec, where })  {
+  async dbSecPicData ({ proj, sec, where, limit, offset })  {
     const self = this
 
     if (!proj) { proj = self.proj }
+
+    offset = offset || 0
+    limit = limit || 0
 
     var picData = []
 
@@ -592,8 +595,10 @@ const PrjClass = class {
 
     const w_tags = where ? _.get(where,'tags',[]) : []
 
-    var child, children
-    var iiList = [ sec ]
+    let child, children
+    let iiList = [ sec ]
+
+    let picIndex = 0
     while(iiList.length){
        child = iiList.shift()
        const sdc = await self.dbSecData({ proj, sec: child })
@@ -619,7 +624,6 @@ const PrjClass = class {
                 .where(w)
                 .orderBy('um.mtime')
                 .toParams({placeholder: '?%d'})
-       console.log({ txt: q.text, para : q.values })
 
        const rows = await dbProc.all(self.imgman.dbc, q.text, q.values)
        for(let rw of rows){
@@ -630,11 +634,18 @@ const PrjClass = class {
           const tags_r = await dbProc.all(self.imgman.dbc, q_tags.text, q_tags.values)
           const tags = tags_r.map((x) => { return x.tag })
 
+          var okt = true
+          w_tags.map((x) => { okt = okt && tags.includes(x) })
+          if (!okt) { continue }
+
           var ok = true
-          w_tags.map((x) => { ok = ok && tags.includes(x) })
+          ok = ok && (picIndex >= offset)
+          if (limit) { ok = ok && ((picIndex-offset) < limit) }
+
+          rw = { ...rw, tags, picIndex }
+          picIndex += 1
           if (!ok) { continue }
 
-          rw = { ...rw, tags }
           picData.push(rw)
        }
 

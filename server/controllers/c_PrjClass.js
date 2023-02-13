@@ -446,11 +446,11 @@ const c_PrjClass = class {
         ref = JSON.parse(data)
       }
 
-      const data = await self.prj.dbSecPicData(ref)
-      console.log({ cnt : data.length })
+      const picData = await self.prj.dbSecPicData(ref)
+      //console.log({ cnt : data.length })
 
       if (data) {
-        res.status(200).json(data)
+        res.status(200).json(picData)
       }else{
         res.status(500).send({ 'msg' : 'no pics data!' })
       }
