@@ -59,15 +59,18 @@ const c_ImgClass = class {
                   .where({ inum })
                   .toParams({placeholder: '?%d'})
 
-      if (inum) {
-         var rw = await dbProc.get(self.dbc, q_file.text, q_file.values)
-         var img = _.get(rw,'img')
-         var imgFile = path.join(self.imgRoot, img)
-         if (fs.existsSync(imgFile)) {
-            res.status(200).sendFile(imgFile)
-         }else{
-            res.status(500)
-         }
+      if (!inum) { return res.status(500).send({ msg : 'no inum!' }) }
+
+      //var rw = await dbProc.get(self.dbc, q_file.text, q_file.values)
+      const rw = await self.imgman.dbImgData({ inum })
+      if (!rw) { return res.status(500).send({ msg : 'no data!' }) }
+
+      var img = rw.img
+      var imgFile = path.join(self.imgRoot, img)
+      if (fs.existsSync(imgFile)) {
+         res.status(200).sendFile(imgFile)
+      }else{
+         res.status(500).send({ 'msg' : 'image file does not exist!' })
       }
     }
   }
