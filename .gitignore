@@ -1,5 +1,6 @@
 
 server/selenium/ui/js/dist
+server/selenium/cookies.json
 
 *.tags
 server/sqlite3-extras.*

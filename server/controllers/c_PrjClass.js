@@ -449,7 +449,7 @@ const c_PrjClass = class {
       const picData = await self.prj.dbSecPicData(ref)
       //console.log({ cnt : data.length })
 
-      if (data) {
+      if (picData) {
         res.status(200).json(picData)
       }else{
         res.status(500).send({ 'msg' : 'no pics data!' })
@@ -987,7 +987,7 @@ const c_PrjClass = class {
       console.log({ sec_auth })
 
       // pdftk stage, overwrite extracted pages
-      const rwPdf = _.get(req, 'body.rwPdf', 1)
+      const rwPdf = _.get(req, 'body.rwPdf', 0)
 
       let minPage = _.get(req, 'body.minPage', 1); minPage = parseInt(minPage)
       let maxPage = _.get(req, 'body.maxPage', 5); maxPage = parseInt(maxPage)

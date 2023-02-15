@@ -1,25 +1,16 @@
 
-{% macro attrStr(obj={}, attrNames=[]) %}
-  {% for attrName in attrNames %}
-    {% set attrVal = obj | get(attrName) %}
-    {% if attrVal %}
-      {{ attrName }} = {{ attrVal }}
-    {% endif %}
-  {% endfor %}
-{% endmacro %}
+{%- import "import/util.html" as util -%}
 
-<div id="img_fetched">
-  {% for url in picUrlList %}
-    {% set pic = picDone | get(url) %}
+{% for url in picUrlList %}
+  {% set pic = picDone | get(url) %}
 
-    {% set src = pic.src %}
-    {% set caption = pic.caption %}
-  
-    <figure class="prj-img-figure">
-      {% set attrs = attrStr(pic, [ 'src', 'url', 'md5', 'caption' ]) %}
-      <img class="prj-img-small prj-img-fetched" {{ attrs | safe }} />
-  
-      <figcaption> {{ caption }} </figcaption>
-    </figure>
-  {% endfor %}
-</div>
+  {% set src = pic.src %}
+  {% set caption = pic.caption %}
+
+  <figure class="prj-img-figure">
+    {% set attrs = util.attrStrCut(pic, [ 'src', 'url', 'md5', 'caption' ]) %}
+    <img class="prj-img-small prj-img-fetched" {{ attrs | safe }} />
+
+    <figcaption> {{ caption }} </figcaption>
+  </figure>
+{% endfor %}

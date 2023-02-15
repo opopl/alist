@@ -6,3 +6,12 @@
     {% endfor %}
   {% endif %}
 {% endmacro %}
+
+{% macro attrStrCut(obj={}, attrNames=[]) %}
+  {% for attrName in attrNames %}
+    {% set attrVal = obj | get(attrName) %}
+    {% if attrVal %}
+      {{ attrName }} = {{ attrVal }}
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
