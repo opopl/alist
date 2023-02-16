@@ -365,6 +365,25 @@ prj:
                 '
               #- [ 'input submit@hidden@','','' ]
 
+###form_pdf_export_zip {
+            'form_pdf_export_zip':
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@for=minPage@ minPage:','','input text@name=minPage value=1' ]
+              - [ 'label@for=maxPage@ maxPage:','','input text@name=maxPage value=1' ]
+              - [ 'label@for=file_fmt@ file name format:','',
+                    'input text@name=file_fmt value=@date.@auth.@num.%d.png' ]
+              - [ 'label@for=file_ext@ file extension:', '',
+                  { tag : 'select',
+                    options : [ 'png' ],
+                    attr : { disabled : 1, name : 'file_ext' }
+                  }
+                ]
+# }
+
 ###form_pdf_compile_options
             'form_pdf_compile_options':
  #missing method=POST and enctype=multipart/form-data on the form
