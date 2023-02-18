@@ -237,12 +237,13 @@ const c_PrjClass = class {
       const xMap = {
         orig : [ 'scrn', 'orig.post' ],
         cmt : [ 'scrn', 'orig.cmt' ],
+        video : [ 'scrn', 'orig.video' ],
       }
-      const xKeys = [ 'orig', 'cmt' ]
+      const xKeys = [ 'orig', 'cmt', 'video' ]
 
       for(let dir of [ secDirDone, secDirNew ]){
         for(let x of xKeys){
-          const tagList = _.get(xMap,x,[])
+          const tagList = _.get(xMap, x, [])
           const tags = tagList.join(',')
 
           const xDir = path.join(dir, x)
