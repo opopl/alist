@@ -209,6 +209,22 @@ prj:
                   },
                   { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.pic.ui_import' },
                 ]
+              - [ 'label@@ Exclude Screenshots (Video)',
+                  {
+                    tag : 'input',
+                    wrap : [
+                        '<div class="prj-toggle">',
+                        '<label for="cbx_exclude_video">excluded</label></div>'
+                    ],
+                    attr : {
+                        type : 'checkbox',
+                        name : 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.video',
+                        id : 'cbx_exclude_video',
+                    }
+                  },
+                  { tag : 'label', inner: 'patch/opts_maker/join_lines/ii/exclude/$var{sec}.video' },
+                ]
+
               - [ 'label@@ Exclude Screenshots (Original)',
                   {
                     tag : 'input',
@@ -251,6 +267,14 @@ prj:
                     options : [ 1,2,3,4 ]
                   },
                   'label@@ patch.vars.img.gen.ui_import.tab.cols',
+                ]
+              - [ 'label@@ Columns (Video Screenshots):',
+                  {
+                    tag : 'select',
+                    attr : { name : 'patch.vars.img.gen.video.tab.cols' },
+                    options : [ 1,2,3,4 ]
+                  },
+                  'label@@ patch.vars.img.gen.video.tab.cols',
                 ]
 
               - [ 'label@@ Columns (Original Screenshots):',
