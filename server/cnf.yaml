@@ -319,6 +319,28 @@ prj:
                   },
                   'label@@ patch/opts_maker/processor/_d2tex/caption/numbering',
               ]
+              - [ 'label@@ Caption texify:',
+                  {
+                    tag : 'select',
+                    attr : {
+                        name : 'patch/opts_maker/processor/_d2tex/caption/texify',
+                        #disabled : 1,
+                    },
+                    options : [ 1, 0 ]
+                  },
+                  'label@@ patch/opts_maker/processor/_d2tex/caption/texify',
+              ]
+              - [ 'label@@ Caption escape latex:',
+                  {
+                    tag : 'select',
+                    attr : {
+                        name : 'patch/opts_maker/processor/_d2tex/caption/escape_latex',
+                        #disabled : 1,
+                    },
+                    options : [ 1, 0 ]
+                  },
+                  'label@@ patch/opts_maker/processor/_d2tex/caption/escape_latex',
+              ]
               #
               - { 'html' : '<h3>UI Import</h3>' }
               - [ 'label@@ (SQL) Limit:',
