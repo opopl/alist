@@ -79,6 +79,9 @@ class routerFactory {
 //@@ Control
     router.get('/prj/control/html' , self.c_Prj.htmlControl())
 
+//@@ Databases
+    router.get('/prj/dbs/html' , self.c_Prj.htmlDatabases())
+
 //@@ Code
     router.get('/prj/code/tab/:tabId/html' , self.c_Prj.htmlCodeTab())
 

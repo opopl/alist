@@ -856,6 +856,17 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlDatabases
+  htmlDatabases () {
+    const self = this
+    return async (req, res) => {
+      const query = req.query
+
+      const databases = self.getConfig({ path: 'databases' })
+      res.render('databases', { databases })
+    }
+  }
+
 //@@ htmlControl
   htmlControl () {
     const self = this

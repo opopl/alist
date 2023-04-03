@@ -16,6 +16,12 @@ prj:
     rootid : p_sr
 ###@start.config
     config:
+###control
+       control:
+
+###databases
+       databases:
+
 ###topics
        topics:
        - name: 'Волонтерство'
