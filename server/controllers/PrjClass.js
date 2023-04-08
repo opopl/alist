@@ -837,6 +837,24 @@ const PrjClass = class {
     return { tree }
   }
 
+//@@ dbTargets
+  async dbTargets ({ proj } = {})  {
+    const self = this
+
+    if (!proj) { proj = self.proj }
+
+    const q_trg = select('*')
+                .from('targets')
+                .where({ proj })
+                .orderBy('target')
+                .toParams({placeholder: '?%d'})
+
+    const rows_trg =  await dbProc.all(self.dbc, q_trg.text, q_trg.values)
+    const targets = []
+    rows_trg.map((rw) => { targets.push(rw.target) })
+    return targets
+  }
+
 //@@ dbSecData
   async dbSecData (whr={})  {
     const self = this
