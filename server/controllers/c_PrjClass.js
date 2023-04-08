@@ -522,15 +522,16 @@ const c_PrjClass = class {
 
        const ct = new cyr2trans()
 
-       const { proj, url, title, date, tags } = srvUtil.dictGet(data,'proj url title date tags')
+       const { proj, url, title, date, tags, identifier } = srvUtil.dictGet(data,'proj url title date tags identifier')
 
        const { authId, authName, authPlain, prefii } = await self.prj.iiDataFromUrl({ url })
 
-       const secII = ct.transform(title, '_')
+       let secII = ct.transform(title, '_')
                        .toLowerCase()
                        .replace(/[\.,\-]+/g,'_')
                        .substring(0,20)
                        .replace(/[^a-zA-Z0-9_]+/g,'_')
+       if (identifier) { secII = identifier }
 
        const secPref = `${date}.${prefii}.${authId}`
        const secPrefRe = secPref.replace(/\./g,'\\.')
@@ -887,6 +888,19 @@ const c_PrjClass = class {
 
       const topics = self.getConfig({ path: 'topics' })
       res.render('topics', { topics })
+    }
+  }
+
+//@@ htmlTargets
+  htmlTargets () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      //const targets = self.getConfig({ path: 'targets' })
+      const targets = await self.prj.dbTargets()
+      res.render('targets', { targets })
     }
   }
 

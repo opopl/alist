@@ -1,0 +1,15 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<table>
+{% for target in targets %}
+  <tr>
+    <td> <a href="/prj/target/pdf?target={{target}}" target="_blank">PDF</a> </td>
+    <td> {{ target }} </td>
+  </tr>
+{% endfor %}
+</table>
+ 
+{% endblock %}

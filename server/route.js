@@ -73,6 +73,8 @@ class routerFactory {
     router.get('/prj/target/html', self.c_Prj.htmlTargetView())
     router.get('/prj/target/pdf' , self.c_Prj.pdfTargetView())
 
+    router.get('/prj/targets/html', self.c_Prj.htmlTargets())
+
 //@@ Topics
     router.get('/prj/topics/html' , self.c_Prj.htmlTopics())
 
