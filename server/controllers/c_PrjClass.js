@@ -1256,8 +1256,51 @@ const c_PrjClass = class {
     }
   }
 
+//@@ jsonAuthSecs
+//@r GET /prj/auth/secs
+  jsonAuthSecs ()  {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      const author_id = _.get(query, 'id', '')
+      const proj = _.get(query, 'proj', self.proj)
+      const mode = _.get(query, 'mode', 'simple')
+
+      let fields = ['*']
+      if (mode == 'simple') {
+        fields = ['sec']
+      }
+      const f_s = fields.map((x,i) => {
+        return `p.${x}`
+      }).join(',')
+
+      //const f =
+      const q = `
+        SELECT ${f_s} FROM projs AS p
+        INNER JOIN _info_projs_author_id AS ia
+        ON p.file = ia.file
+        WHERE ia.author_id = ? AND p.proj = ?
+      `
+      const p = [ author_id, proj ]
+
+      const { author } = await self.prj.auth.dbAuth({ author_id })
+
+      const secRows = await dbProc.all(self.dbc, q, p)
+
+      for(let row of secRows ){
+        if (mode == 'complex') {
+          await self.prj.secRowUpdate({ row })
+        }
+      }
+
+      return res.send({ secRows })
+    }
+  }
+
 //@@ htmlAuthSecs
-// GET /prj/auth/html
+//@r GET /prj/auth/html
   htmlAuthSecs ()  {
     const self = this
 
