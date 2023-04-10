@@ -58,6 +58,7 @@ prj:
                sandbox : 'allow-same-origin'
 
 ###templates.forms
+###forms {
           forms:
             'form_sec_new':
 ###form_sec_new
@@ -68,15 +69,17 @@ prj:
               - { width : '50%' }
               - { width : '20%' }
               rows:
+              - { 'html' : '<h3>Required</h3>' }
               - [ 'label@@ URL:',
                   'button button@class=prj-input-url-clear@Clear',
                   'input text@ class=prj-input-url name=url', '' ]
               - [ 'label@@ Title:'   , '', 'input text@ name=title', '' ]
-              - [ 'label@@ Identifier:', '', 'input text@ name=identifier', '' ]
+              - [ 'label@@ Date:'    , '', 'input text@ name=date class=prj-input-date', '' ]
+              - { 'html' : '<h3>Optional</h3>' }
               - [ 'label@@ Tags:'    ,
                   'button button@class=prj-input-tags-clear@Clear',
                   'input text@ name=tags class=prj-input-tags', '' ]
-              - [ 'label@@ Date:'    , '', 'input text@ name=date class=prj-input-date', '' ]
+              - [ 'label@@ Identifier:', '', 'input text@ name=identifier', '' ]
               - [ 'button submit@@Submit', '', 'button button@class=prj-btn-form-reset@Clear Form' ]
 ###form_img_new
             'form_img_new':
@@ -593,6 +596,13 @@ prj:
 
               - [ 'input submit@hidden@','','' ]
 
+###form_dialogs
+            'fd_auth_pubs':
+              cols:
+              - { width : '100%' }
+
+### end of forms block }
+
 ###methods
        methods:
 
@@ -763,6 +773,11 @@ prj:
                 modal: true
                 width: 800
                 height: 700
+
+             dialog_auth_pubs:
+                title: "Author Publications"
+                width: 400
+                height: 600
 
              dialog_pdf_compile_options:
                 title: "PDF Compile Options"

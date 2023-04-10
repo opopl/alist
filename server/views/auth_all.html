@@ -6,7 +6,7 @@
 <table>
 {% for author in authors %}
   <tr>
-    <td> {{ author.id }} </td>
+    <td> <a href="/prj/auth/html?id={{ author.id }}">{{ author.id }} </a></td>
     <td> {{ author.name }} </td>
     <td> {{ author.fb_id }} </td>
     <td> {{ author.fb_url }} </td>
