@@ -3,13 +3,34 @@
 
 {% block content %}
 
-<table>
-{% for target in targets %}
-  <tr>
-    <td> <a href="/prj/target/pdf?target={{target}}" target="_blank">PDF</a> </td>
-    <td> {{ target }} </td>
-  </tr>
-{% endfor %}
-</table>
- 
+<div id="targets" style="display: flex; flex-direction: row;">
+  <div style="display: flex; flex-direction: column; width: 70%;">
+    <div style="display: flex; flex-direction: row; height: 50px;">
+      <button>Shift Left</button>
+      <button>Shift Right</button>
+      <button>Reload</button>
+      <button>Save As</button>
+    </div>
+    <iframe id="iframe_pdf_target" frameborder="1" height="1000px" width="1000px"></iframe>
+  </div>
+
+  <div style="display: flex; flex-direction: column; width: 30%;">
+    <div style="display: flex; flex-direction: row; height: 50px;">
+      <button>Hide</button>
+    </div>
+
+    <ul style="width: 100%">
+    {% for target in targets %}
+      <li>
+        <button class="prj-link-pdf-target" href="/prj/target/pdf?target={{target}}">PDF</button>
+        {{ target }}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+
 {% endblock %}
+
+
