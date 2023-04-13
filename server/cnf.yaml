@@ -385,6 +385,18 @@ prj:
               # }
 
 #end: form_options }
+#
+###form_load_fs_folder
+            'form_load_fs_folder':
+              attr:
+                method: 'POST'
+                enctype: 'multipart/form-data'
+              cols:
+              - { width : '10%' }
+              - { width : '10%' }
+              - { width : '60%' }
+              rows:
+              - [ 'label@@ Files:','','input file@name=file multiple' ]
 
 ###form_saved_import
             'form_saved_import':
@@ -824,6 +836,13 @@ prj:
                       required: 'URL REQUIRED'
                       url: 'MUST BE URL'
                       url_img_db : 'ALREADY IN DB'
+
+###ui.forms.form_load_fs_folder
+             form_load_fs_folder:
+                submit:
+                  url:
+                    path: '/prj/sec/fs/load/folder'
+                    query: { sec : '@@sec' }
 
 ###ui.forms.form_saved_import
              form_saved_import:
