@@ -30,6 +30,8 @@ prj:
          pdf: '/prj/target/pdf?target=vojna.poetry'
        - name: 'Харків'
          pdf: '/prj/target/pdf?target=vojna.harkov'
+       - name: 'mariupol.kultura.art - Маріуполь - Культура - Мистецтво'
+         pdf: '/prj/target/pdf?target=mariupol.kultura.art'
 
        templates:
 ###templates.tabs
@@ -488,7 +490,11 @@ prj:
               - { 'html' : '  </div>' }
               - { 'html' : '<h3>Screenshots from FS</h3>' }
               - { 'html' : '  <div id="upload_scrn_from_fs">' }
-              - [ 'button button@ name=load_scrn_fs @Load Screenshots From Filesystem', '','' ]
+              - [
+                  'button button@ name=load_scrn_fs @Load Screenshots From Filesystem',
+                  'button button@ name=load_scrn_fs_folder @Load Screenshots (Custom Folder)',
+                  ''
+                ]
               - [ 'label@@Scrn Limit:', '', 'input text@name=scrn_limit']
 
               - { 'html' : '  </div>' }
@@ -600,6 +606,10 @@ prj:
             'fd_auth_pubs':
               cols:
               - { width : '100%' }
+              rows:
+              - { 'html' : '<h3>Publications</h3>' }
+              - { 'html' : ' <div tbl="auth_pubs"> <table></table> </div> '
+                }
 
 ### end of forms block }
 
@@ -776,8 +786,8 @@ prj:
 
              dialog_auth_pubs:
                 title: "Author Publications"
-                width: 400
-                height: 600
+                width: 800
+                height: 800
 
              dialog_pdf_compile_options:
                 title: "PDF Compile Options"

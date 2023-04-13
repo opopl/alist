@@ -1266,10 +1266,13 @@ const c_PrjClass = class {
 
       const author_id = _.get(query, 'id', '')
       const proj = _.get(query, 'proj', self.proj)
-      const mode = _.get(query, 'mode', 'simple')
+      const modes = _.get(query, 'modes', 'simple')
+      const modeList = modes.split(',')
+      const modeCnf = {}
+      modeList.map((x,i) => { modeCnf[x] = 1 })
 
       let fields = ['*']
-      if (mode == 'simple') {
+      if (modeCnf.simple) {
         fields = ['sec']
       }
       const f_s = fields.map((x,i) => {
@@ -1290,12 +1293,18 @@ const c_PrjClass = class {
       const secRows = await dbProc.all(self.dbc, q, p)
 
       for(let row of secRows ){
-        if (mode == 'complex') {
+        if (modeCnf.complex) {
           await self.prj.secRowUpdate({ row })
         }
       }
+      var send
+      if (modeCnf.dt) {
+        send = { data : secRows }
+      }else{
+        send = secRows
+      }
 
-      return res.send({ secRows })
+      return res.send(send)
     }
   }
 
