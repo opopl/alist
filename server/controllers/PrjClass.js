@@ -567,7 +567,24 @@ const PrjClass = class {
 
         await dbProc.infoInsert({ db: self.dbc, base2info, tBase, joinCol, joinValue, info })
 
-        if (date) { await self.secInsertChild({ sec: date, proj, child: sec }) }
+        if (date) {
+          //check if 'dated' sec exists
+          const sec_dated = date
+          const title_dated = date.replace(/_/g,'-')
+          const sd_dated = await self.dbSecData({ sec: sec_dated, proj })
+          if(sec != sec_dated){
+            if (!sd_dated) {
+              await self.secNew({
+                sec: sec_dated,
+                seccmd : 'section',
+                title : title_dated,
+                date,
+              })
+            }
+
+            await self.secInsertChild({ sec: sec_dated, proj, child: sec })
+          }
+        }
     }
 
     return { ok, msg }
@@ -978,8 +995,10 @@ const PrjClass = class {
 
     const tagsA = _.get(pic,'tags',[]) || []
     const tags = tagsA.join(',')
+    const url_childof = _.get(pic, 'childof', '')
+    console.log({ url_childof })
 
-    const idb = { rootid, proj, sec, tags, caption, url_parent }
+    const idb = { rootid, proj, sec, tags, caption, url_parent, url_childof }
     //await self.callPrjGetImg({ url, ...idb, cbi })
 
     await self.imgman.dbImgStoreUrl({ iUrl: url, ...idb })

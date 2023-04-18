@@ -494,6 +494,7 @@ prj:
               - { 'html' : '  <div id="upload_pics_by_url">' }
               - [ 'label@@ URL:','','input text@ class=prj-input-url id=input_pic_url name=url' ]
               - [ 'label@@ Caption:','','input text@ name=caption' ]
+              - [ 'label@@ ChildOf:','','input text@ name=childof' ]
               - [
                     'button button@ id=btn_pic_upload @Upload', '',
                     'button button@ id=btn_pic_clear  @Clear Pics', '',
@@ -567,6 +568,7 @@ prj:
               - [ 'label@@ height','','input text@name=height disabled' ]
 
               - [ 'label@@ url_parent','','input text@name=url_parent disabled' ]
+              - [ 'label@@ url_childof','','input text@name=url_childof disabled' ]
               - [
                   'label@@ mtime',
                   #{ 'tag' : 'select', attr: { 'act' : 'update_mtime' }, options : [ 'now', 'fs' ] },
