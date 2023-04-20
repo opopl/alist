@@ -131,6 +131,10 @@ class routerFactory {
     router.get('/prj/sec/html' , self.c_Prj.htmlSecView())
     router.get('/prj/sec/html/story' , self.c_Prj.htmlSecStory())
 
+    router.get('/prj/sec/view/html' , self.c_Prj.htmlSecView())
+    //router.get('/prj/sec/view/html' , async (req, res) => {
+    //})
+
 //@@ Sec/Pdf
     router.post('/prj/sec/pdf/export/zip', self.c_Prj.zipSecPdfExport())
     router.get('/prj/sec/pdf'  , self.c_Prj.pdfSecView())

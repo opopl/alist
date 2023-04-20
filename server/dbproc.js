@@ -21,6 +21,8 @@ const update = sql.update
 const infoInsert = async function({ db, base2info, tBase, joinCol, joinValue, info }) {
 
    for (let [baseCol, baseValue] of Object.entries(info)) {
+     if (baseValue === null || baseValue === undefined) { continue }
+
      const infoList = baseValue.split(',').map(x => x.trim()).filter(x => x.length)
      if (!infoList.length) { continue }
 

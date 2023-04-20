@@ -4,6 +4,8 @@
 
 {% macro tRow(row = {}, cols=[], header={}) -%}
   {% set sec = row.sec %}
+  {% set sec_href = "/prj/sec/html?sec=" + sec %}
+  {% set sec_view = "/prj/sec/view/html?sec=" + sec %}
 <tr sec="{{ sec }}" class="prj-sec-row">
 
   {% for col in cols %}
@@ -24,6 +26,9 @@
 
     {% elif col == '_check' %}
       <td class="prj-sec-{{ col }}" ><input type="checkbox" value="{{ sec }}" /></td>
+
+    {% elif col == 'sec' %}
+      <td class="prj-sec-{{ col }}" ><a href="{{ sec_view }}">{{ sec }}</a></td>
 
     {% elif col == 'authors' %}
       <td class="prj-sec-{{ col }}" >

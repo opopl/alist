@@ -523,8 +523,9 @@ const c_PrjClass = class {
        const ct = new cyr2trans()
 
        const { proj, url, title, date, tags, identifier } = srvUtil.dictGet(data,'proj url title date tags identifier')
+       let url_m = url.replace(/[\/]*\s*$/,'').trim()
 
-       const { authId, authName, authPlain, prefii } = await self.prj.iiDataFromUrl({ url })
+       const { authId, authName, authPlain, prefii } = await self.prj.iiDataFromUrl({ url : url_m })
 
        let secII = ct.transform(title, '_')
                        .toLowerCase()
@@ -553,7 +554,7 @@ const c_PrjClass = class {
        await self.prj.secNew({
             sec,
 
-            url, date, tags,
+            url : url_m, date, tags,
             author_id : authId,
             seccmd, parent, title
        })
@@ -799,6 +800,8 @@ const c_PrjClass = class {
       const sec  = _.get(query, 'sec', '')
       const proj = _.get(query, 'proj', self.proj)
 
+      const force = false
+
       let m = /^(?<day>\d+)_(?<month>\d+)_(?<year>\d+)$/.exec(sec)
       const sd = await self.prj.dbSecData({ proj, sec })
       if (sd) { await self.prj.secRowUpdate({ row: sd, proj }) }
@@ -825,7 +828,7 @@ const c_PrjClass = class {
       }
 
       const target = `_buf.${sec}`
-      const html = await self.prj.htmlTargetOutput({ proj, target })
+      const html = await self.prj.htmlTargetOutput({ proj, target, force })
       const tmplData = { noScript: true }
       if (html) {
         const $ = cheerio.load(html)
