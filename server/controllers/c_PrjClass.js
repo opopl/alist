@@ -894,6 +894,19 @@ const c_PrjClass = class {
     }
   }
 
+//@@ htmlArchive
+  htmlArchive () {
+    const self = this
+
+    return async (req, res) => {
+      const query = req.query
+
+      //const targets = self.getConfig({ path: 'targets' })
+      //const targets = await self.prj.dbTargets()
+      res.render('archive', {})
+    }
+  }
+
 //@@ htmlTargets
   htmlTargets () {
     const self = this

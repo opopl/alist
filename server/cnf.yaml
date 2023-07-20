@@ -166,6 +166,16 @@ prj:
                   },
                   'label@@ vars.layout.doc.class',
                 ]
+              - { 'html' : '<h3>Header</h3>' }
+              - [ 'label@@ Title Cut:',
+                    { 'tag' : 'input',
+                      'attr' : {
+                         'type' : 'text',
+                         'value' : '5',
+                         'name' : 'patch.vars.layout.header.title_cut'
+                       }
+                    }, 'label@@ vars.layout.header.title_cut'
+                ]
               - { 'html' : '</div>' }
               # }
 ###form_options.tex_engine {
@@ -379,6 +389,7 @@ prj:
                          'name' : 'patch.vars.img.gen.ui_import.tab.layout'
                        }
                     }, '' ]
+
 
               # ------------------
               - { 'html' : '</div>' }

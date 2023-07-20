@@ -75,6 +75,9 @@ class routerFactory {
 
     router.get('/prj/targets/html', self.c_Prj.htmlTargets())
 
+//@@ Archive
+    router.get('/prj/archive/html', self.c_Prj.htmlArchive())
+
 //@@ Topics
     router.get('/prj/topics/html' , self.c_Prj.htmlTopics())
 
