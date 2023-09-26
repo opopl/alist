@@ -24,6 +24,12 @@
          </button>
       </td>
 
+    {% elif col == '_archive' %}
+       <td class="prj-sec-{{ col }}" >
+           <input type="button" value="link" class="prj-sec-ia-link" />
+           <input type="button" value="edit" class="prj-sec-ia-edit" />
+       </td>
+
     {% elif col == '_check' %}
       <td class="prj-sec-{{ col }}" ><input type="checkbox" value="{{ sec }}" /></td>
 

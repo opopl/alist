@@ -684,6 +684,7 @@ prj:
           htmlAuthSecs:
              cols:
              - _check
+             - _archive
              - _html
              - _pdf
              - date
@@ -691,6 +692,7 @@ prj:
              - title
              - sec
              header:
+               _archive : 'archive'
                _html : 'html'
                _pdf : 'pdf'
                _check : ''
