@@ -363,6 +363,17 @@ prj:
                   },
                   'label@@ patch/opts_maker/processor/_d2tex/caption/escape_latex',
               ]
+              - [ 'label@@ tex width override:',
+                  {
+                    tag : 'select',
+                    attr : {
+                        name : 'patch/opts_maker/processor/_d2tex/override_width_tex',
+                        #disabled : 1,
+                    },
+                    options : [ 1, 0 ]
+                  },
+                  'label@@ patch/opts_maker/processor/_d2tex/override_width_tex',
+              ]
               #
               - { 'html' : '<h3>UI Import</h3>' }
               - [ 'label@@ (SQL) Limit:',
