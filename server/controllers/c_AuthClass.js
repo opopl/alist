@@ -7,7 +7,7 @@ const update = db.sql.update
 
 const c_AuthClass = class {
   constructor(){
-    this.dbc = db.auth
+    this.dbc = db.prj
   }
 
 //@@ jsonCount

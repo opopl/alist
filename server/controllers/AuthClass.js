@@ -14,7 +14,7 @@ const update = db.sql.update
 
 const AuthClass = class {
   constructor(){
-     this.dbc = db.auth
+     this.dbc = db.prj
   }
 
 //@@ dbAuth

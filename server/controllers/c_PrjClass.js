@@ -104,7 +104,7 @@ const c_PrjClass = class {
                         a.id = ad.id
                     WHERE a.id = ?
                     `
-        const author = await dbProc.get(db.auth, qa, [ author_id ])
+        const author = await dbProc.get(db.prj, qa, [ author_id ])
         if (author) { authors.push(author) }
       }
      }

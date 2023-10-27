@@ -140,7 +140,7 @@ const PrjClass = class {
                   where fb_id = ?`
        const p = [ fbAuthId ]
 
-       rw = await dbProc.get(db.auth, q, p)
+       rw = await dbProc.get(db.prj, q, p)
 
     } else if (fbGroupId) {
        const q = `select a.id, a.name, a.plain from authors a
@@ -149,7 +149,7 @@ const PrjClass = class {
                   where fb_group_id = ?`
        const p = [ fbGroupId ]
 
-       rw = await dbProc.get(db.auth, q, p)
+       rw = await dbProc.get(db.prj, q, p)
     }
 
     if (rw) { authId = rw.id; authName = rw.name; authPlain = rw.plain }
